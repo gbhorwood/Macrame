@@ -1,0 +1,25 @@
+{
+    "name": "gbhorwood/macrame",
+    "description": "A library for building command line applications",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Gbhorwood\\Macrame\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "grant horwood",
+            "email": "ghorwood@fruitbat.studio"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^10.2",
+        "php-mock/php-mock-phpunit": "^2.7"
+    }
+}
