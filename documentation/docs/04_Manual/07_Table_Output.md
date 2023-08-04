@@ -1,5 +1,17 @@
 Macrame allows for the creation of ascii-style tables, similar to the output from the mysql client, from data arrays.
 
+<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em'>
+    <span>
+        <div style='color:#cc5500; padding-bottom:0.3em; padding-top:0.3em'>
+            <b>Warning concerning emojis</b>
+        </div>
+        <div style='margin-left:1em;'>
+            Due to changes in PHP 8.1's multibyte string extension, emojis may not be aligned properly
+            in table output when using older versions of PHP.
+        </div>
+    </span>
+</div>
+
 # Quickref
 ```PHP
 $headers = [
