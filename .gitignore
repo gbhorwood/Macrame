@@ -18,3 +18,4 @@ swagger/node_modules
 *.bak
 og*
 vfs:*
+documentation/static

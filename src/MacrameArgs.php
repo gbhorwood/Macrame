@@ -2,7 +2,7 @@
 namespace Gbhorwood\Macrame;
 
 /**
- * Handle command line arguments and options
+ * Handle command line arguments
  *
  */
 class MacrameArgs
@@ -87,23 +87,23 @@ class MacrameArgs
     }
 
     /**
-     * Returns the first value associated with $argname
+     * Returns the first value associated with $argname,
      * if any
      *
      * @return ?String
      */
     public function first():?String {
-        return $this->argval->values[0] ?? null;
+        return array_values(array_filter($this->argval->values, fn($v) => strlen($v)>0))[0] ?? null;
     }
 
     /**
-     * Returns all the values associated with $argname
+     * Returns all the values associated with $argname,
      * if any
      *
      * @return Array<String>
      */
     public function all():Array {
-        return $this->argval->values;
+        return array_values(array_filter($this->argval->values));
     }
 }
 

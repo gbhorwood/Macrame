@@ -1,0 +1,14 @@
+{
+    "title": "",
+    "tagline": "",
+    "author": "",
+    "html": {
+        "repo": "gbhorwood/Macrame",
+        "theme": "daux-green",
+        "links": {
+            "GitHub Repo": "https://github.com/gbhorwood/Macrame",
+            "Mastodon": "https://mastodon.social/@ghorwood",
+            "Fruitbat": "https://fruitbat.studio"
+        }
+    }
+}

@@ -47,6 +47,7 @@ class MacrameTable {
      *
      * @param  Array<String> $headers
      * @param  Array<String> $data
+     * @param  MacrameText   $text
      */
     public function __construct(Array $headers, Array $data, MacrameText $text)
     {
@@ -135,6 +136,7 @@ class MacrameTable {
          * Create an array keyed by column position of the length longest lines in each column.
          * Used for padding.
          */
+        $pads = [];
         for($i=0;$i<count($this->headers);$i++) {
             $pads[$i] = max(array_map(fn($data) => max($this->text->mb_strwidth_ansi($data[$i]), $this->text->mb_strwidth_ansi($this->headers[$i])), $this->data));
         }
@@ -143,7 +145,7 @@ class MacrameTable {
          * Function to create one outputtable line, padded to fit.
          * Note: str_pad does not use ansi-safe string lengths.
          */
-        $makePaddedLine = function($k, $v) use($pads) {
+        $makePaddedLine = function(Int $k, String $v) use($pads):String {
             $contentLength = $this->text->mb_strwidth_ansi($v);
             switch(@$this->alignments[$k]) {
                 case CENTRE:
@@ -167,7 +169,7 @@ class MacrameTable {
         /**
          * Create all the data lines
          */
-        $dataLines = join(PHP_EOL, array_map(function($d) use($makePaddedLine){
+        $dataLines = join(PHP_EOL, array_map(function(Array $d) use($makePaddedLine){ // @phpstan-ignore-line
             return '| ' . join('', array_map($makePaddedLine, array_keys($d), $d));
         }, $this->data)).PHP_EOL;
 

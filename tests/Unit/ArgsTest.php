@@ -56,9 +56,9 @@ class ArgsTest extends TestCase
     public static function argvProvider():Array
     {
         return [
-            [ ['macrame', '--foo', '--foo'], ['foo' => ['count' => 2, 'first' => null, 'all' => [null, null], 'positional' => [] ]] ],
-            [ ['macrame', '--foo=someval', '--foo'], ['foo' => ['count' => 2, 'first' => 'someval', 'all' => ['someval', null], 'positional' => [] ]] ],
-            [ ['macrame', '--foo', '--foo=someval'], ['foo' => ['count' => 2, 'first' => null, 'all' => [null, 'someval'], 'positional' => [] ]] ],
+            [ ['macrame', '--foo', '--foo'], ['foo' => ['count' => 2, 'first' => null, 'all' => [], 'positional' => [] ]] ],
+            [ ['macrame', '--foo=someval', '--foo'], ['foo' => ['count' => 2, 'first' => 'someval', 'all' => ['someval'], 'positional' => [] ]] ],
+            [ ['macrame', '--foo', '--foo=someval'], ['foo' => ['count' => 2, 'first' => 'someval', 'all' => ['someval'], 'positional' => [] ]] ],
             [ ['macrame', '-fff'], ['f' => ['count' => 3, 'first' => null, 'all' => [], 'positional' => [] ]] ],
             [ ['macrame', '-f', '-f', '-f'], ['f' => ['count' => 3, 'first' => null, 'all' => [], 'positional' => [] ]] ],
             [ ['macrame', 'positional1', 'positional2'], ['positional' => ['count' => 2, 'first' => 'positional1', 'all' => ['positional1', 'positional2'], 'positional' => ['positional1', 'positional2'] ]] ],

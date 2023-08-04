@@ -24,6 +24,41 @@ class Macrame
         }
     }
 
+    /**
+     * Verify the system is capable of running Macrame.
+     * die() on failure.
+     *
+     * @return void
+     */
+    public function preflight():void
+    {
+        $phpversion_array = explode('.', phpversion());
+        if ((int)$phpversion_array[0].$phpversion_array[1] < 74) {
+            die('minimum php required is 7.4. exiting');
+        }
+
+        if(!extension_loaded('posix')) {
+            die('posix required. exiting');
+        }
+
+        if(!extension_loaded('mbstring')) {
+            die('mbstring required. exiting');
+        }
+    }
+
+    /**
+     * Determine if the command is running on the command line
+     *
+     * @return bool
+     * @todo   Handle weirdness with cron
+     */
+    public function running():bool
+    {
+        if(PHP_SAPI == 'cli') {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Creates and returns a MacrameArgs object for accessing a command line argument
@@ -45,6 +80,17 @@ class Macrame
     public function text(String $text):MacrameText
     {
         return new MacrameText($text);
+    }
+
+    /**
+     * Creates and returns a MacrameFile object for reading and writing files
+     *
+     * @param  String $path
+     * @return MacrameFile
+     */
+    public function file(String $path):MacrameFile
+    {
+        return new MacrameFile($path);
     }
 
     /**
