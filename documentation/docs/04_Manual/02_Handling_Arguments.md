@@ -1,5 +1,18 @@
 Command line scripts often accept arguments; things like `--help` or `-vvv` or `/path/to/input`. Macrame provides a set of tools for parsing and accessing argument data.
 
+
+<div style='background-color:#F5F2F0; border-left: solid #808080 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em; margin-right:-20px'>
+<div style="width:100%; text-align:right;padding-right:30px"><a style="text-decoration: none; font-size: large;"><b>Contents</b></a></div>
+<a href="#quickref">Quickref</a><br>
+<a href="#types-of-arguments">Types of arguments</a><br>
+<a href="#parsing-arguments">Parsing arguments</a><br>
+<a href="#testing-if-an-argument-was-passed">Testing if an argument was passed</a><br>
+<a href="#getting-the-count-of-an-argument">Getting the count of an argument</a><br>
+<a href="#getting-the-value-of-an-argument-assignment">Getting the value of an argument assignment</a><br>
+<a href="#handling-positional-arguments">Handling positional arguments</a><br>
+<a href="#full-example">Full example</a><br>
+</div>
+
 # Quickref
 ```PHP
 $macrame = new Macrame();
@@ -81,7 +94,7 @@ $macrame->args('v')->count();     // 2
 $macrame->args('h')->count();     // 2
 ```
 
-<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.1em; margin-top:0.5em; margin-bottom:0.5em'>
+<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.1em; margin-top:0.5em; margin-bottom:0.5em; margin-right:-20px'>
     <span>
         <div style='color:#cc5500; padding-bottom:0.3em; padding-top:0.3em'>
             <b>Note</b>
@@ -144,7 +157,7 @@ $macrame->args('positional')->all();    // ['first positional', 'second position
 ```
 
 # Full example
-<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em'>
+<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em; margin-right:-20px'>
     <span>
         <div style='color:#cc5500; padding-bottom:0.3em; padding-top:0.3em'>
             <b>Note</b>

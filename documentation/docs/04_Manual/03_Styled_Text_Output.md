@@ -1,6 +1,4 @@
-Macrame provides a `text` object that allows building ANSI-styled and formatted text. 
-
-<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em'>
+<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em; margin-right:-20px'>
     <span>
         <div style='color:#cc5500; padding-bottom:0.3em; padding-top:0.3em'>
             <b>Warning concerning emojis</b>
@@ -11,6 +9,25 @@ Macrame provides a `text` object that allows building ANSI-styled and formatted 
         </div>
     </span>
 </div>
+
+Macrame provides a `text` object that allows building ANSI-styled and formatted text. 
+
+<div style='background-color:#F5F2F0; border-left: solid #808080 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em; margin-right:-20px'>
+<div style="width:100%; text-align:right;padding-right:30px"><a style="text-decoration: none; font-size: large;"><b>Contents</b></a></div>
+<a href="#quickref">Quickref</a><br>
+<a href="#creating-text">Creating text</a><br>
+<a href="#getting-and-outputting-text">Getting and outputting text</a><br>
+<a href="#applying-colour-to-text">Applying colour to text</a><br>
+<a href="#applying-background-colour-to-text">Applying background colour to text</a><br>
+<a href="#applying-styles-to-text">Applying styles colour to text</a><br>
+<a href="#combining-coloured-and-styled-strings">Combining coloured and styled strings</a><br>
+<a href="#using-tags-to-style-text">Using tags to style text</a><br>
+<a href="#aligning-text">Aligning text</a><br>
+<a href="#wraping-wide-text">Wrapping wide text</a><br>
+<a href="#paging-long-text">Paging long text</a><br>
+<a href="#notice-levels">Notice levels</a><br>
+</div>
+
 
 # Quickref
 ```PHP
@@ -99,7 +116,7 @@ Macrame can set the foreground colour of text with the `colour()` method. The `c
 $macrame->text('Hello world')->colour('red')->write(); // Output text in red to screen
 ```
 
-<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em'>
+<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em; margin-right:-20px'>
     <span>
         <div style='color:#cc5500; padding-bottom:0.3em; padding-top:0.3em'>
             <b>🇺🇸 Note</b>
@@ -133,14 +150,14 @@ $macrame->text('Hello world')->colour('green')->colour('red')->write(); // red t
 
 Will result in red text.
 
-# Applying background colours to text
+# Applying background colour to text
 Macrame can set the background colour of text with the `backgroundColour()` method. The `backgroundColour()` method takes the name of the colour as its only argument.
 
 ```PHP
 $macrame->text('Hello world')->backgroundColour('red')->write(); // Output text with background red to screen
 ```
 
-<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em'>
+<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em; margin-right:-20px'>
     <span>
         <div style='color:#cc5500; padding-bottom:0.3em; padding-top:0.3em'>
             <b>🇺🇸 Note</b>
@@ -233,11 +250,145 @@ Will output:
 <code><b style="color:white; background-color:red">WARNING</b>: Proceed at your own risk. <i>you have been warned</i></code>
 
 # Using tags to style text
+Macrame can style parts of a string using styling tags:
+
+```PHP
+$taggedString =<<<TXT
+This text is <!RED!>red<!CLOSE!> and
+this text is <!BOLD!>bold<!CLOSE!>.
+
+$macrame->text($taggedString)->write();
+TXT;
+```
+
+The above code will output:
+
+<tt>
+This text is <span style="color:red">red</span> and<br>
+this text is <b>bold</b>.
+</tt>
+
+The available tags are:
+
+| tag | description |
+| ---- | ----- |
+| <tt><!BLACK!></tt> | Black text |
+| <tt><!RED!></tt> | Red text |
+| <tt><!GREEN!></tt> | Green text |
+| <tt><!YELLOW!></tt> | Yellow text |
+| <tt><!BLUE!></tt> | Blue text |
+| <tt><!MAGENTA!></tt> | Magenta text |
+| <tt><!CYAN!></tt> | Cyan text |
+| <tt><!WHITE!></tt> | White text |
+| <tt><!BACKGROUND_BLACK!></tt> | Black background for text |
+| <tt><!BACKGROUND_RED!></tt> | Red background for text |
+| <tt><!BACKGROUND_GREEN!></tt> | Green background for text |
+| <tt><!BACKGROUND_YELLOW!></tt> | Yellow background for text |
+| <tt><!BACKGROUND_BLUE!></tt> | Blue background for text |
+| <tt><!BACKGROUND_MAGENTA!></tt> | Magenta background for text |
+| <tt><!BACKGROUND_CYAN!></tt> | Cyan background for text |
+| <tt><!BACKGROUND_WHITE!></tt> | White background for text |
+| <tt><!BOLD!></tt> | Bold style text |
+| <tt><!ITALIC!></tt> | Italic style text |
+| <tt><!UNDERLINE!></tt> | Underline style text |
+| <tt><!STRIKE!></tt> | Strikethrough style text |
+| <tt><!CLOSE!></tt> | Close <i>all</i> preceeding tags |
+
+## The <tt><!CLOSE!></tt> tag behaviour
+The `<!CLOSE!>` tag closes _all_ preceeding tags. Unlike HTML, there is no nested closing of tags. This is a feature of ANSI escape codes. 
+
+In the following example, the 'GREEN' tag is overwritten by the 'RED' tag and then both are closed by the 'CLOSE' tag.
+
+```PHP
+$taggedString =<<<TXT
+Text <!GREEN!>starts green and then <!RED!>turns red<!CLOSE!> and then has no colour<!CLOSE!>.
+TXT;
+
+$macrame->text($taggedString)->write();
+```
+The output of the above snippet will be:
+
+<tt>
+Text <span style="color:green">starts green and then </span><span style="color:red">turns red</span> and then has no colour.
+</tt>
+
+<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em; margin-right:-20px'>
+    <span>
+        <div style='color:#cc5500; padding-bottom:0.3em; padding-top:0.3em'>
+            <b>Note</b>
+        </div>
+        <div style='margin-left:1em;'>
+            Tags can also be written in all lowercase.<br>
+            For instance, <code>&lt;!RED!&gt;</code> can be written as <code>&lt;!red!&gt;</code>
+        </div>
+    </span>
+</div>
 
 # Aligning text
+Text can be aligned in the terminal either `left()`, `right()` or `centre()`. The default alignment is left. 
+
+```PHP
+$alignedText =<<<TEXT
+Multi-line text
+that can be aligned in 
+the terminal.
+TEXT;
+
+$macrame->text($alignedText)->centre()->write();    // align centre
+$macrame->text($alignedText)->right()->write();     // align right
+$macrame->text($alignedText)->left()->write();      // align left (default)
+```
+
+Macrame tries to always leave a margin on the right-hand side of the console when doing alignment, so `right()` and `centre()` alignments will be shifted a little bit leftward.
+
+<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em; margin-right:-20px'>
+    <span>
+        <div style='color:#cc5500; padding-bottom:0.3em; padding-top:0.3em'>
+            <b>🇺🇸 Note</b>
+        </div>
+        <div style='margin-left:1em;'>
+            <code>center()</code> is provided as an alias for <code>centre()</code>
+        </div>
+    </span>
+</div>
 
 # Wrapping wide text
+Text that is too wide for the terminal can be wrapped to the terminal width with the `wrap()` method.
+
+```PHP
+$wrappedText =<<<TEXT
+A line or lines of text that are too wide for the 
+current terminal.
+TEXT;
+
+$macrame->text($wrappedText)->wrap()->write();  // wrapped to terminal width
+```
+
+Macrame tries to always leave a margin on the right-hand side of the console when doing alignment, so `wrap()` will usually have some space on the right.
 
 # Paging long text
+Text that is too long to fit in the terminal screen can be paged using the `page()` method.
+
+```PHP
+$pagedText =<<<TEXT
+Text that is too long
+for the terminal height.
+TEXT;
+
+$macrame->text($pagedText)->page()->write();  // page on terminal height
+```
+
+The `page()` method outputs a number of lines of text to fill the current terminal size and then prompts the user for the next page. The user can respond to the prompt in three ways:
+
+| keys | result |
+| ---- | ------ |
+| `<SPACE>` | The next full page is output |
+| `<RETURN>` | The next single line is output |
+| `q` | Output is stopped and the script continues |
 
 # Notice levels
+
+
+
+
+

@@ -45,8 +45,8 @@ define('BACKGROUND_WHITE_ANSI', ESC."[47m");
  * Alignment definitions
  */
 if(!defined('LEFT')) define('LEFT', 0);
-if(!defined('CENTRE')) define('CENTRE', 1);
-if(!defined('RIGHT')) define('RIGHT', 2);
+if(!defined('CENTRE')) define('CENTRE', 2);
+if(!defined('RIGHT')) define('RIGHT', 1);
 
 /**
  * Handle creation and output of styled text.

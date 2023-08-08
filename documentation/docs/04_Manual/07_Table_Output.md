@@ -1,6 +1,16 @@
 Macrame allows for the creation of ascii-style tables, similar to the output from the mysql client, from data arrays.
 
-<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em'>
+<div style='background-color:#F5F2F0; border-left: solid #808080 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em; margin-right:-20px'>
+<div style="width:100%; text-align:right;padding-right:30px"><a style="text-decoration: none; font-size: large;"><b>Contents</b></a></div>
+<a href="#quickref">Quickref</a><br>
+<a href="#creating-a-table">Creating a table</a><br>
+<a href="#output">Output</a><br>
+<a href="#validating-input">Validating input</a><br>
+<a href="#aligning-columns">Aligning columns</a><br>
+<a href="#applying-styles">Applying styles</a><br>
+</div>
+
+<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em; margin-right:-20px'>
     <span>
         <div style='color:#cc5500; padding-bottom:0.3em; padding-top:0.3em'>
             <b>Warning concerning emojis</b>
@@ -30,10 +40,10 @@ $macrame->table($headers, $data)->write();              // void. Output table to
 $table = $macrame->table($headers, $data)->get();       // string. Get table as string
 
 // column indexes start at 0
-$macrame->table($headers, $data)->centre(1)->write();   // void. Centre align column 1
-$macrame->table($headers, $data)->center(1)->write();   // void. Alias of centre()
+$macrame->table($headers, $data)->centre(1)->write();  // void. Centre align column 1
+$macrame->table($headers, $data)->center(1)->write();  // void. Alias of centre()
 $macrame->table($headers, $data)->right(1)->write();    // void. Right align column 1
-$macrame->table($headers, $data)->left(0)->write();     // void. Left align column 1
+$macrame->table($headers, $data)->left(0)->write();      // void. Left align column 1
 ```
 
 # Creating a table
@@ -120,7 +130,7 @@ $myTable->right(0);
 $myTable->center(1);
 $myTable->write();
 ```
-<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em'>
+<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em; margin-right:-20px'>
     <span>
         <div style='color:#cc5500; padding-bottom:0.3em; padding-top:0.3em'>
             <b>🇺🇸 Note</b>
@@ -162,7 +172,7 @@ $macrame->table($headers, $data)->centre(0)->right(1)->write();
 ```
 
 # Applying styles
-<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em'>
+<div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em; margin-right:-20px'>
     <span>
         <div style='color:#cc5500; padding-bottom:0.3em; padding-top:0.3em'>
             <b>Note</b>
