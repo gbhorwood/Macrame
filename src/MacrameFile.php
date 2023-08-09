@@ -25,12 +25,15 @@ class MacrameFile
         $this->path = $path;
     }
 
-
+    /**
+     * Reads a file using a generator
+     *
+     * @return Generator
+     */ 
     public function byLine():\Generator
     {
         if(!$this->readable()) {
-            $warning = new MacrameText('Cannot read file at '.$this->path);
-            $warning->warning();
+            $this->warn('Cannot read file at '.$this->path);
             yield;
         }
         else {
@@ -42,6 +45,35 @@ class MacrameFile
 
             fclose($fp);
         }
+    }
+
+    /**
+     * Write the string $text to the file. Throw warnings on access or disk space errors.
+     * Return true on success.
+     *
+     * @param  String $text  The text to write to file
+     * @return bool
+     */
+    public function write(String $text):bool
+    {
+        // test permissions
+        if(!$this->writable()) {
+            $this->warn('Cannot write to file at '.$this->path);
+            return false;
+        }
+
+        // test disk space
+        if(!$this->enoughSpace($text)) {
+            $this->warn('Note enough space on device to write to '.$this->path);
+            return false;
+        }
+
+        // write to file
+        $fp = fopen($this->handleTilde($this->path), 'w');
+        fwrite($fp, $text);
+        fclose($fp);
+
+        return true;
     }
 
     /**
@@ -82,6 +114,30 @@ class MacrameFile
     }
 
     /**
+     * Count the number of bytes in a given string of any encoding.
+     * Used for calculating disk space requirements.
+     *
+     * @param  String $text The text to get the bytes of
+     * @return Int The number of bytes
+     */
+    public function byteCount(String $text):Int
+    {
+        return mb_strlen($text, '8bit');
+    }
+
+    /**
+     * Tests if there is enough space on the disk partition of the target
+     * file for the string $text. 
+     *
+     * @param  String $text The text to write to file
+     * @return bool If there is enough space
+     */
+    public function enoughSpace(String $text):bool
+    {
+        return disk_free_space(dirname($this->handleTilde($this->path))) > $this->byteCount($text);
+    }
+
+    /**
      * Handles substition of the path to the user's home directory for ~
      * as would happen in bash or any other modern shell.
      *
@@ -92,5 +148,17 @@ class MacrameFile
     private function handleTilde(String $path):String
     {
         return substr(trim($path), 0, 1) == '~' ? posix_getpwuid(posix_getuid())['dir'].substr(trim($path),1) : trim($path);
+    }
+
+    /**
+     * Output a warning
+     *
+     * @param  String $warning
+     * @return void
+     */
+    private function warn(String $warning):void
+    {
+        $warning = new MacrameText($warning);
+        $warning->warning();
     }
 }
