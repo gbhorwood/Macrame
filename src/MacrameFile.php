@@ -33,14 +33,15 @@ class MacrameFile
             $warning->warning();
             yield;
         }
+        else {
+            $fp = fopen($this->handleTilde($this->path), 'r');
 
-        $fp = fopen($this->handleTilde($this->path), 'r');
+            while(!feof($fp)) {
+                yield fgets($fp);
+            }
 
-        while(!feof($fp)) {
-            yield fgets($fp);
+            fclose($fp);
         }
-
-        fclose($fp);
     }
 
     /**
