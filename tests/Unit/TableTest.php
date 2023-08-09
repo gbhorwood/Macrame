@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[UsesClass(\Gbhorwood\Macrame\MacrameTable::class)]
 class TableTest extends TestCase
 {
-    
-
     /**
      * Test table()->get()
      *

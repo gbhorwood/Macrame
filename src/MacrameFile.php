@@ -54,12 +54,18 @@ class MacrameFile
     }
 
     /**
-     * Determines if the $path file exists and is writable
+     * Determines if the $path file is writable
      *
      * @return bool
      */
     public function writable():bool
     {
+        // file exists
+        if(file_exists($this->handleTilde($this->path))) {
+            return is_writable($this->handleTilde($this->path));
+        }
+
+        // file does not exist. intention is to create.
         return file_exists(dirname($this->handleTilde($this->path))) &&
             is_writable(dirname($this->handleTilde($this->path)));
     }
