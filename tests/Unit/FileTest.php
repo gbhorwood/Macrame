@@ -15,6 +15,9 @@ use org\bovigo\vfs\vfsStreamWrapper;
 #[UsesClass(\Gbhorwood\Macrame\MacrameFile::class)]
 class FileTest extends TestCase
 {
+
+    use \phpmock\phpunit\PHPMock;
+
     /**
      * Test readable()
      *
@@ -61,6 +64,20 @@ class FileTest extends TestCase
     }
 
     /**
+     * Test byteCount()
+     *
+     * @dataProvider bytecountProvider
+     */
+    public function testByteCount(String $text, Int $count)
+    {
+        $urls = $this->buildFilesystem("some content");
+        $cli = new \Gbhorwood\Macrame\Macrame();
+        $file = $cli->file($urls['file_open']);
+
+        $this->assertEquals($count, $file->byteCount($text));
+    }
+
+    /**
      * Test byLine()
      *
      */
@@ -82,6 +99,98 @@ class FileTest extends TestCase
             $this->assertEquals(trim($line), trim($contentArray[$i]));
             $i++;
         }
+    }
+
+    /**
+     * test read()
+     *
+     */
+    public function testRead()
+    {
+        $content = "some file content";
+        $urls = $this->buildFilesystem($content);
+
+        $cli = new \Gbhorwood\Macrame\Macrame();
+        $result = $cli->file($urls['file_open'])->read();
+
+        $this->assertEquals($content, $result);
+    }
+
+    /**
+     * test read()
+     * No permissions
+     *
+     */
+    public function testReadNoPermissions()
+    {
+        $content = "some file content";
+        $urls = $this->buildFilesystem($content);
+
+        $cli = new \Gbhorwood\Macrame\Macrame();
+
+        $this->expectOutputRegex("/WARNING/");
+        $result = $cli->file($urls['file_writeonly'])->read();
+
+    }
+
+    /**
+     * Test write()
+     *
+     */
+    public function testWrite()
+    {
+        $testContent = "BEHOLD TEST CONTENT";
+        $urls = $this->buildFilesystem("some content");
+
+        /**
+         * Mock enoughSpace()
+         */
+        $mockedMacrame = $this->getMockBuilder(\Gbhorwood\Macrame\MacrameFile::class)->setConstructorArgs([$urls['file_open']])->onlyMethods(['enoughSpace'])->getMock();
+        $mockedMacrame->expects($this->any())->method('enoughSpace')->will($this->returnValue(true));
+
+        $mockedMacrame->write($testContent);
+
+        $this->assertEquals($testContent, file_get_contents($urls['file_open']));
+    }
+
+    /**
+     * Test write()
+     * No disk space
+     *
+     */
+    public function testWriteNoDiskSpace()
+    {
+        $testContent = "BEHOLD TEST CONTENT";
+        $urls = $this->buildFilesystem("some content");
+
+        /**
+         * Mock enoughSpace()
+         */
+        $mockedMacrame = $this->getMockBuilder(\Gbhorwood\Macrame\MacrameFile::class)->setConstructorArgs([$urls['file_open']])->onlyMethods(['enoughSpace'])->getMock();
+        $mockedMacrame->expects($this->any())->method('enoughSpace')->will($this->returnValue(false));
+
+        $this->expectOutputRegex("/WARNING/");
+        $mockedMacrame->write($testContent);
+    }
+
+    /**
+     * Test write()
+     * No write access
+     *
+     */
+    public function testWriteNoWriteAccess()
+    {
+        $testContent = "BEHOLD TEST CONTENT";
+        $urls = $this->buildFilesystem("some content");
+
+        /**
+         * Mock enoughSpace()
+         */
+        $mockedMacrame = $this->getMockBuilder(\Gbhorwood\Macrame\MacrameFile::class)->setConstructorArgs([$urls['file_readonly']])->onlyMethods(['enoughSpace'])->getMock();
+        $mockedMacrame->expects($this->any())->method('enoughSpace')->will($this->returnValue(true));
+
+        $this->expectOutputRegex("/WARNING/");
+        $mockedMacrame->write($testContent);
     }
 
     /**
@@ -125,5 +234,20 @@ class FileTest extends TestCase
             'file_readonly' => vfsStream::newFile('readonly', 0444)->at($public)->withContent($content)->url(), // r--r--r--
         ];
         return $urls;
+    }
+
+    /**
+     * Provides strings and bytecounts to test byteCount() 
+     *
+     * @return Array
+     */
+    public static function bytecountProvider():Array
+    {
+        return [
+            ['i am damo', 9],
+            ['한국어로 된 문자열', 26],
+            ['한국어로 된 문자열 and this is latin', 44],
+            ['🔋🪫🔌💻🖥️🖨️⌨️🖱️🖲️💽💾💿📀🧮', 70],
+        ];
     }
 }

@@ -97,6 +97,17 @@ class MacrameArgs
     }
 
     /**
+     * Returns the last value associated with $argname,
+     * if any
+     *
+     * @return ?String
+     */
+    public function last():?String {
+        $vals = array_values(array_filter($this->argval->values, fn($v) => strlen($v)>0)) ?? [];
+        return $vals[array_key_last($vals)] ?? null;
+    }
+
+    /**
      * Returns all the values associated with $argname,
      * if any
      *

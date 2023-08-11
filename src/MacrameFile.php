@@ -25,12 +25,31 @@ class MacrameFile
         $this->path = $path;
     }
 
+    /**
+     * Return contents of the file as string
+     *
+     * @return ?String
+     */
+    public function read():?String
+    {
+        if(!$this->readable()) {
+            $this->warn('Cannot read file at '.$this->path);
+            return null;
+        }
 
+        return file_get_contents($this->handleTilde($this->path), 'r');
+    }
+
+    /**
+     * Reads the file using a generator.
+     * Displays warning on permissions errors.
+     *
+     * @return \Generator
+     */ 
     public function byLine():\Generator
     {
         if(!$this->readable()) {
-            $warning = new MacrameText('Cannot read file at '.$this->path);
-            $warning->warning();
+            $this->warn('Cannot read file at '.$this->path);
             yield;
         }
         else {
@@ -45,7 +64,37 @@ class MacrameFile
     }
 
     /**
-     * Determines if the $path file exists and is readable
+     * Write the string $text to the file.
+     * Displays warnings on access or disk space errors.
+     * Return true on success.
+     *
+     * @param  String $text  The text to write to file
+     * @return bool
+     */
+    public function write(String $text):bool
+    {
+        // test permissions
+        if(!$this->writable()) {
+            $this->warn('Cannot write to file at '.$this->path);
+            return false;
+        }
+
+        // test disk space
+        if(!$this->enoughSpace($text)) {
+            $this->warn('Note enough space on device to write to '.$this->path);
+            return false;
+        }
+
+        // write to file
+        $fp = fopen($this->handleTilde($this->path), 'w');
+        fwrite($fp, $text);
+        fclose($fp);
+
+        return true;
+    }
+
+    /**
+     * Determines if the file exists and is readable
      *
      * @return bool
      */
@@ -55,7 +104,7 @@ class MacrameFile
     }
 
     /**
-     * Determines if the $path file is writable
+     * Determines if the file is writable
      *
      * @return bool
      */
@@ -82,6 +131,40 @@ class MacrameFile
     }
 
     /**
+     * Synonym for clobbers()
+     *
+     * @return bool
+     */
+    public function exists():bool
+    {
+        return $this->clobbers();
+    }
+
+    /**
+     * Count the number of bytes in a given string of any encoding.
+     * Used for calculating disk space requirements.
+     *
+     * @param  String $text The text to get the bytes of
+     * @return Int The number of bytes
+     */
+    public function byteCount(String $text):Int
+    {
+        return mb_strlen($text, '8bit');
+    }
+
+    /**
+     * Tests if there is enough space on the disk partition of the target
+     * file for the string $text. 
+     *
+     * @param  String $text The text to write to file
+     * @return bool If there is enough space
+     */
+    public function enoughSpace(String $text):bool
+    {
+        return disk_free_space(dirname($this->handleTilde($this->path))) > $this->byteCount($text);
+    }
+
+    /**
      * Handles substition of the path to the user's home directory for ~
      * as would happen in bash or any other modern shell.
      *
@@ -92,5 +175,17 @@ class MacrameFile
     private function handleTilde(String $path):String
     {
         return substr(trim($path), 0, 1) == '~' ? posix_getpwuid(posix_getuid())['dir'].substr(trim($path),1) : trim($path);
+    }
+
+    /**
+     * Outputs a warning
+     *
+     * @param  String $warning
+     * @return void
+     */
+    private function warn(String $warning):void
+    {
+        $warning = new MacrameText($warning);
+        $warning->warning();
     }
 }
