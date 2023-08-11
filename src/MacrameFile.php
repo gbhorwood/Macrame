@@ -26,9 +26,25 @@ class MacrameFile
     }
 
     /**
-     * Reads a file using a generator
+     * Return contents of the file as string
      *
-     * @return Generator
+     * @return ?String
+     */
+    public function read():?String
+    {
+        if(!$this->readable()) {
+            $this->warn('Cannot read file at '.$this->path);
+            return null;
+        }
+
+        return file_get_contents($this->handleTilde($this->path), 'r');
+    }
+
+    /**
+     * Reads the file using a generator.
+     * Displays warning on permissions errors.
+     *
+     * @return \Generator
      */ 
     public function byLine():\Generator
     {
@@ -48,7 +64,8 @@ class MacrameFile
     }
 
     /**
-     * Write the string $text to the file. Throw warnings on access or disk space errors.
+     * Write the string $text to the file.
+     * Displays warnings on access or disk space errors.
      * Return true on success.
      *
      * @param  String $text  The text to write to file
@@ -77,7 +94,7 @@ class MacrameFile
     }
 
     /**
-     * Determines if the $path file exists and is readable
+     * Determines if the file exists and is readable
      *
      * @return bool
      */
@@ -87,7 +104,7 @@ class MacrameFile
     }
 
     /**
-     * Determines if the $path file is writable
+     * Determines if the file is writable
      *
      * @return bool
      */
@@ -111,6 +128,16 @@ class MacrameFile
     public function clobbers():bool
     {
         return file_exists($this->handleTilde($this->path));
+    }
+
+    /**
+     * Synonym for clobbers()
+     *
+     * @return bool
+     */
+    public function exists():bool
+    {
+        return $this->clobbers();
     }
 
     /**
@@ -151,7 +178,7 @@ class MacrameFile
     }
 
     /**
-     * Output a warning
+     * Outputs a warning
      *
      * @param  String $warning
      * @return void

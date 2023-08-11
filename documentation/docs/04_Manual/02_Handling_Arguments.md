@@ -130,9 +130,29 @@ If the assignment argument is given to the script more than once, the left-most 
 $macrame->args('foo')->first(); // 'bar'
 ```
 
-Only the a valid, non-null value will be returned. Long arguments and null-assignments will be ignored.
+Only a valid, non-null value will be returned. Long arguments and null-assignments will be ignored.
 ```PHP
 // script.php --foo= --foo --foo=bar
+$macrame->args('foo')->first(); // 'bar'
+```
+
+
+## Getting the last value
+The `last()` method returns the last valid value of an argument, if any.
+```PHP
+// script.php --foo=bar 
+$macrame->args('foo')->last(); // bar
+```
+
+If the assignment argument is given to the script more than once, the right-most value will be returned as the last.
+```PHP
+// script.php --foo=bar --foo="baz quux"
+$macrame->args('foo')->last(); // 'baz quux'
+```
+
+Only a valid, non-null value will be returned. Long arguments and null-assignments will be ignored.
+```PHP
+// script.php --foo= --foo=bar --foo
 $macrame->args('foo')->first(); // 'bar'
 ```
 

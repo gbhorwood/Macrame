@@ -102,6 +102,38 @@ class FileTest extends TestCase
     }
 
     /**
+     * test read()
+     *
+     */
+    public function testRead()
+    {
+        $content = "some file content";
+        $urls = $this->buildFilesystem($content);
+
+        $cli = new \Gbhorwood\Macrame\Macrame();
+        $result = $cli->file($urls['file_open'])->read();
+
+        $this->assertEquals($content, $result);
+    }
+
+    /**
+     * test read()
+     * No permissions
+     *
+     */
+    public function testReadNoPermissions()
+    {
+        $content = "some file content";
+        $urls = $this->buildFilesystem($content);
+
+        $cli = new \Gbhorwood\Macrame\Macrame();
+
+        $this->expectOutputRegex("/WARNING/");
+        $result = $cli->file($urls['file_writeonly'])->read();
+
+    }
+
+    /**
      * Test write()
      *
      */
