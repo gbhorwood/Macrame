@@ -83,6 +83,16 @@ class Macrame
     }
 
     /**
+     * Creates and returns a MacrameInput object
+     *
+     * @return MacrameInput
+     */
+    public function input():MacrameInput
+    {
+        return new MacrameInput();
+    }
+
+    /**
      * Creates and returns a MacrameFile object for reading and writing files
      *
      * @param  String $path
