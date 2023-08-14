@@ -39,6 +39,64 @@ class TableTest extends TestCase
     }
 
     /**
+     * Test table()->write()
+     *
+     */
+    public function testTableWrite()
+    {
+        $cli = new \Gbhorwood\Macrame\Macrame();
+
+        /**
+         * Data
+         */
+        $headers = ["one", "two"];
+        $data = [["data1", "data2"]];
+
+        /**
+         * Test
+         */
+        $tableOutput =<<<TXT
+        +-------+-------+
+        | one   | two   |
+        +-------+-------+
+        | data1 | data2 |
+        +-------+-------+
+
+        TXT;
+        $this->expectOutputString($tableOutput);
+        $cli->table($headers, $data)->write();
+
+    }
+
+    /**
+     * Test table()->get()
+     * ColumnMismatch
+     *
+     */
+    public function testTableGetColumnMismatch()
+    {
+        $cli = new \Gbhorwood\Macrame\Macrame();
+
+        $headers = ["one", "two", "three"];
+        $data = [["one", "two"]];
+
+        /**
+         * Test
+         */
+        $this->expectOutputRegex('/Table column mismatch/');
+        $table = $cli->table($headers, $data);
+        $result = $table->get();
+        ob_clean();
+        
+        $headers = ["one", "two", "three"];
+        $data = [["one", "two", "three"], ["one", "two"]];
+
+        $this->expectOutputRegex('/Table column mismatch/');
+        $table = $cli->table($headers, $data);
+        $result = $table->get();
+    }
+
+    /**
      * Provide $argv and expeted content
      *
      * @return Array

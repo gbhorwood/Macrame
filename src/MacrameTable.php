@@ -127,8 +127,7 @@ class MacrameTable {
             $t = $e->getTrace();
             $file = $t[1]['file'];
             $line = $t[1]['line'];
-            $warning = new MacrameText('Table column mismatch at '.$file.' line '.$line.'. No table created.');
-            $warning->warning();
+            $this->text->text('Table column mismatch at '.$file.' line '.$line.'. No table created.')->warning();
             return new MacrameText();
         }
 
@@ -164,13 +163,13 @@ class MacrameTable {
         /**
          * Create the header line
          */
-        $headLine = '| ' . join('', array_map($makePaddedLine, array_keys($this->headers), $this->headers)).PHP_EOL;
+        $headLine = trim('| ' . join('', array_map($makePaddedLine, array_keys($this->headers), $this->headers))).PHP_EOL;
 
         /**
          * Create all the data lines
          */
         $dataLines = join(PHP_EOL, array_map(function(Array $d) use($makePaddedLine){ // @phpstan-ignore-line
-            return '| ' . join('', array_map($makePaddedLine, array_keys($d), $d));
+            return trim('| ' . join('', array_map($makePaddedLine, array_keys($d), $d)));
         }, $this->data)).PHP_EOL;
 
         /**
