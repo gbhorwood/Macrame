@@ -17,6 +17,7 @@ Macrame provides a `text` object that allows building ANSI-styled and formatted 
 <a href="#quickref">Quickref</a><br>
 <a href="#creating-text">Creating text</a><br>
 <a href="#getting-and-outputting-text">Getting and outputting text</a><br>
+<a href="#changing-and-appending-text">Changing and appending text</a><br>
 <a href="#applying-colour-to-text">Applying colour to text</a><br>
 <a href="#applying-background-colour-to-text">Applying background colour to text</a><br>
 <a href="#applying-styles-to-text">Applying styles colour to text</a><br>
@@ -108,6 +109,53 @@ $myTextString = $macrame->text('Hello world')->get();  // string. Get text as st
 $myText = $macrame->text('Hello world');               // MacrameText. Get text object
 $myText->write();
 ```
+
+# Changing and appending text
+The text in a text object can be changed or added to after creation.
+
+Changing the text of a text object can be done by calling the `text()` method.
+```PHP
+// Set the text on creation
+$myText = $macrame->text('Hello world');
+
+$myText->write(); // Hello world
+
+// Change the text
+$myText->text('Something different');
+$myText->write(); // Something different
+```
+
+Note that any colours or styles that are set are still applied to the new text.
+
+Appending text to a text object can be done with `append()`. For instance, to append each element of an array to an existing MacrameText object:
+
+```PHP
+// an array of strings to add to a text object
+$options = [
+    'walk',
+    'bike', 
+    'bus',
+];
+
+// create the text object with initial text
+$ouput = $macrame->text("Transportation options".PHP_EOL);
+
+// append each element of the array to the text object
+foreach($options as $option) {
+    $ouput->append("  - ".$option.PHP_EOL);
+}
+
+$ouput->write();
+```
+The above code will output:
+
+<tt>
+Transportation options <br>
+  - walk <br>
+  - bike <br>
+  - bus <br>
+</tt>
+<p />
 
 # Applying colour to text
 Macrame can set the foreground colour of text with the `colour()` method. The `colour()` method takes the name of the colour as its only argument.
