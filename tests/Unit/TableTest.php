@@ -77,23 +77,122 @@ class TableTest extends TestCase
     {
         $cli = new \Gbhorwood\Macrame\Macrame();
 
+        /**
+         * Data
+         */
         $headers = ["one", "two", "three"];
         $data = [["one", "two"]];
 
         /**
-         * Test
+         * Test and assertions
          */
         $this->expectOutputRegex('/Table column mismatch/');
         $table = $cli->table($headers, $data);
         $result = $table->get();
         ob_clean();
         
+        /**
+         * Data
+         */
         $headers = ["one", "two", "three"];
         $data = [["one", "two", "three"], ["one", "two"]];
 
+        /**
+         * Test and assertions
+         */
         $this->expectOutputRegex('/Table column mismatch/');
         $table = $cli->table($headers, $data);
         $result = $table->get();
+    }
+
+    /**
+     * Test table->solid()->write()
+     *
+     */
+    public function testTableSolid()
+    {
+        $cli = new \Gbhorwood\Macrame\Macrame();
+
+        /**
+         * Data
+         */
+        $headers = ["one", "two", "three",];
+        $data = [["data1", "data2", "datac"], ['data3','data4', "datad"]];
+        $tableOutput =<<<TXT
+        ┌───────┬───────┬───────┐
+        │ one   │  two  │ three │
+        ├───────┼───────┼───────┤
+        │ data1 │ data2 │ datac │
+        │ data3 │ data4 │ datad │
+        └───────┴───────┴───────┘
+
+        TXT;
+
+        /**
+         * Test and assertions
+         */
+        $this->expectOutputString($tableOutput);
+        $cli->table($headers, $data)->centre(1)->double()->solid()->write();
+    }
+
+    /**
+     * Test table->double()->write()
+     *
+     */
+    public function testTableDouble()
+    {
+        $cli = new \Gbhorwood\Macrame\Macrame();
+
+        /**
+         * Data
+         */
+        $headers = ["one", "two", "three",];
+        $data = [["data1", "data2", "datac"], ['data3','data4', "datad"]];
+        $tableOutput =<<<TXT
+        ╔═══════╦═══════╦═══════╗
+        ║ one   ║  two  ║ three ║
+        ╠═══════╬═══════╬═══════╣
+        ║ data1 ║ data2 ║ datac ║
+        ║ data3 ║ data4 ║ datad ║
+        ╚═══════╩═══════╩═══════╝
+
+        TXT;
+
+        /**
+         * Test and assertions
+         */
+        $this->expectOutputString($tableOutput);
+        $cli->table($headers, $data)->centre(1)->solid()->double()->write();
+    }
+
+    /**
+     * Test table->standard()->write()
+     *
+     */
+    public function testTableStandard()
+    {
+        $cli = new \Gbhorwood\Macrame\Macrame();
+
+        /**
+         * Data
+         */
+        $headers = ["one", "two", "three",];
+        $data = [["data1", "data2", "datac"], ['data3','data4', "datad"]];
+        $tableOutput =<<<TXT
+        +-------+-------+-------+
+        | one   |  two  | three |
+        +-------+-------+-------+
+        | data1 | data2 | datac |
+        | data3 | data4 | datad |
+        +-------+-------+-------+
+
+        TXT;
+
+        /**
+         * Test and assertions
+         */
+        $this->expectOutputString($tableOutput);
+        $cli->table($headers, $data)->centre(1)->solid()->standard()->write();
     }
 
     /**
