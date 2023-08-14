@@ -74,10 +74,10 @@ class Macrame
     /**
      * Creates and returns a MacrameText object for styling the string $text
      *
-     * @param  String $text
+     * @param  ?String $text
      * @return MacrameText
      */
-    public function text(String $text):MacrameText
+    public function text(String $text = null):MacrameText
     {
         return new MacrameText($text);
     }

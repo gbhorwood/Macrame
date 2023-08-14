@@ -57,6 +57,46 @@ class TextTest extends TestCase
     }
 
     /**
+     * Test text()->text() 
+     *
+     */
+    public function testTextText()
+    {
+        $cli = new \Gbhorwood\Macrame\Macrame();
+
+        /**
+         * Data
+         */
+        $originalText = 'original';
+        $replacementText = 'replacement';
+
+        /**
+         * Tests and assertions
+         */
+        $this->assertEquals($cli->text($originalText)->text($replacementText)->get(), $replacementText);
+    }
+
+    /**
+     * Test text()->append() 
+     *
+     */
+    public function testTextAppend()
+    {
+        $cli = new \Gbhorwood\Macrame\Macrame();
+
+        /**
+         * Data
+         */
+        $originalText = 'original';
+        $appendText = 'appended';
+
+        /**
+         * Tests and assertions
+         */
+        $this->assertEquals($cli->text($originalText)->append($appendText)->get(), $originalText.$appendText);
+    }
+
+    /**
      * Test text()->writeError() 
      *
      */
@@ -74,6 +114,24 @@ class TextTest extends TestCase
          */
         $this->expectOutputString($testText);
         $cli->text($testText)->writeError();
+    }
+
+    /**
+     * Test text()->get()
+     * Handle null text in format()
+     *
+     */
+    public function testTextNull()
+    {
+        $cli = new \Gbhorwood\Macrame\Macrame();
+
+        /**
+         * Tests and assertions
+         */
+        $this->assertEquals($cli->text()->get(), null);
+
+        $this->expectOutputString('');
+        $cli->text()->write();
     }
 
     /**

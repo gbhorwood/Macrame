@@ -220,12 +220,36 @@ class MacrameText {
     }
 
     /**
+     * Set the text string of the object
+     *
+     * @param  ?String $text
+     * @return MacrameText
+     */
+    public function text(?String $text=null):MacrameText
+    {
+        $this->text = $text;
+        return $this;
+    }
+
+    /**
+     * Append to the text string of the object
+     *
+     * @param  String $text
+     * @return MacrameText
+     */
+    public function append(String $text):MacrameText 
+    {
+        $this->text .= $text;
+        return $this;
+    }
+
+    /**
      * Apply ANSI colour format to $text
      *
      * @param  String $colour The string name of the colour, ie. 'red'
-     * @return object
+     * @return MacrameText
      */
-    public function colour(String $colour):object {
+    public function colour(String $colour):MacrameText {
         $this->formatting[] = isset($this->ansiColours[$colour]) ? $this->ansiColours[$colour] : null;
         return $this;
     }
@@ -234,9 +258,9 @@ class MacrameText {
      * Alias of colour
      *
      * @param  String $colour The string name of the colour, ie. 'red'
-     * @return object
+     * @return MacrameText
      */
-    public function color(String $colour):object {
+    public function color(String $colour):MacrameText {
         return $this->colour($colour);
     }
 
@@ -244,9 +268,9 @@ class MacrameText {
      * Apply ANSI background colour format to $text
      *
      * @param  String $colour The string name of the colour, ie. 'red'
-     * @return object
+     * @return MacrameText
      */
-    public function backgroundColour(String $colour):object {
+    public function backgroundColour(String $colour):MacrameText {
         $this->formatting[] = isset($this->ansiBackgroundColours[$colour]) ? $this->ansiBackgroundColours[$colour] : null;
         return $this;
     }
@@ -255,9 +279,9 @@ class MacrameText {
      * Alias of backgroundColour
      *
      * @param  String $colour The string name of the colour, ie. 'red'
-     * @return object
+     * @return MacrameText
      */
-    public function backgroundColor(String $colour):object {
+    public function backgroundColor(String $colour):MacrameText {
         return $this->backgroundColour($colour);
     }
 
@@ -265,9 +289,9 @@ class MacrameText {
      * Apply ANSI style format to $text
      *
      * @param  String[] ...$styles The strings of the styles to apply, ie 'bold', 'italic'
-     * @return object
+     * @return MacrameText
      */
-    public function style(String ...$styles):object {
+    public function style(String ...$styles):MacrameText {
         array_map(fn($style) => $this->formatting[] = isset($this->ansiStyles[$style]) ? $this->ansiStyles[$style] : null, $styles);
         return $this;
     }
@@ -275,9 +299,9 @@ class MacrameText {
     /**
      * Set alignment to centre
      *
-     * @return object This object
+     * @return MacrameText
      */
-    public function centre():object {
+    public function centre():MacrameText {
         $this->alignment = CENTRE;
         return $this;
     }
@@ -285,18 +309,18 @@ class MacrameText {
     /**
      * Alias of centre
      *
-     * @return object This object
+     * @return MacrameText
      */
-    public function center():object {
+    public function center():MacrameText {
         return $this->centre();
     }
 
     /**
      * Set alignment to right
      *
-     * @return object This object
+     * @return MacrameText
      */
-    public function right():object {
+    public function right():MacrameText {
         $this->alignment = RIGHT;
         return $this;
     }
@@ -304,9 +328,9 @@ class MacrameText {
     /**
      * Set alignment to left
      *
-     * @return object This object
+     * @return MacrameText
      */
-    public function left():object
+    public function left():MacrameText
     {
         $this->alignment = LEFT;
         return $this;
@@ -315,9 +339,9 @@ class MacrameText {
     /**
      * Set output to wrap to terminal width
      *
-     * @return object This object
+     * @return MacrameText
      */
-    public function wrap():object
+    public function wrap():MacrameText
     {
         $this->wrap = true;
         return $this;
@@ -341,7 +365,7 @@ class MacrameText {
      */
     public function write(bool $newline = false):void
     {
-        fwrite($this->stream('out'), $newline ? $this->format(). PHP_EOL : $this->format());
+        fwrite($this->stream('out'), $newline ? $this->format() . PHP_EOL : $this->format());
     }
 
     /**
