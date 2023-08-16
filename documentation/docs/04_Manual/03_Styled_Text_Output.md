@@ -41,6 +41,13 @@ $macrame->text('Hello world')->write(true);             // Add newline
 // Write text to screen on STDERR
 $macrame->text('Goodbye world')->writeError();
 
+// changing text content
+$myText = $macrame->text('Hello world');
+$myText->text('Goodbye world')->write();
+
+// appending text content
+$myText = $macrame->text('Hello')->append(' world')->write();
+
 // Get text as string
 $txt = $macrame->text('Hello world')->get();
 
@@ -435,7 +442,50 @@ The `page()` method outputs a number of lines of text to fill the current termin
 | `q` | Output is stopped and the script continues |
 
 # Notice levels
+Macrame provides convenience methods for outputting notices for various levels such as 'ok' or 'error'.
 
+```PHP
+$macrame->text('that worked!')->ok();
+```
+
+Will write the following line to `STDOUT`.
+
+<tt>
+[<b style="color:green">OK</b>] that worked!<p />
+</tt>
+
+The colouration of the level can be reversed by passing `true` to notice level method. For instance, to reverse the OK colouration:
+
+```PHP
+$macrame->text('that worked!')->ok(true);
+```
+
+<tt>
+<span style="color:white;background-color:green">[<b>OK</b>]</span> that worked!<p />
+</tt>
+
+Macrame has the following methods for notice level outputs:
+
+| method | example | output |
+| ------ | ------- | ------ |
+| `ok()` | `$macrame->text('message')->ok()` | <tt>[<b style="color:green">OK</b>] message</tt> |
+| `ok(true)` | `$macrame->text('message')->ok(true)` | <tt><span style="color:white;background-color:green">[<b>OK</b>]</span> message<tt> |
+| `debug()` | `$macrame->text('message')->debug()` | <tt>[<b style="color:green">DEBUG</b>] message</tt> |
+| `debug(true)` | `$macrame->text('message')->debug(true)` | <tt><span style="color:white;background-color:green">[<b>DEBUG</b>]</span> message<tt> |
+| `info()` | `$macrame->text('message')->info()` | <tt>[<b style="color:green">INFO</b>] message</tt> |
+| `info(true)` | `$macrame->text('message')->info(true)` | <tt><span style="color:white;background-color:green">[<b>INFO</b>]</span> message<tt> |
+| `message()` | `$macrame->text('message')->message()` | <tt>[<b style="color:green">MESSAGE</b>] message</tt> |
+| `message(true)` | `$macrame->text('message')->message(true)` | <tt><span style="color:white;background-color:green">[<b>MESSAGE</b>]</span> message<tt> |
+| `warning()` | `$macrame->text('message')->warning()` | <tt>[<b style="color:#F6BE00;">WARNING</b>] message</tt> |
+| `warning(true)` | `$macrame->text('message')->warning(true)` | <tt><span style="color:white;background-color:#F6BE00;">[<b>WARNING</b>]</span> message<tt> |
+| `alert()` | `$macrame->text('message')->alert()` | <tt>[<b style="color:#F6BE00;">ALERT</b>] message</tt> |
+| `alert(true)` | `$macrame->text('message')->alert(true)` | <tt><span style="color:white;background-color:#F6BE00;">[<b>ALERT</b>]</span> message<tt> |
+| `error()` | `$macrame->text('message')->error()` | <tt>[<b style="color:red">ERROR</b>] message</tt> |
+| `error(true)` | `$macrame->text('message')->error(true)` | <tt><span style="color:white;background-color:red">[<b>ERROR</b>]</span> message<tt> |
+| `critical()` | `$macrame->text('message')->critical()` | <tt>[<b style="color:red">CRITICAL</b>] message</tt> |
+| `critical(true)` | `$macrame->text('message')->critical(true)` | <tt><span style="color:white;background-color:red">[<b>CRITICAL</b>]</span> message<tt> |
+| `emergency()` | `$macrame->text('message')->emergency()` | <tt>[<b style="color:red">EMERGENCY</b>] message</tt> |
+| `emergency(true)` | `$macrame->text('message')->emergency(true)` | <tt><span style="color:white;background-color:red">[<b>EMERGENCY</b>]</span> message<tt> |
 
 
 

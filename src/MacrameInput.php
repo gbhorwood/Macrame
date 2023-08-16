@@ -23,6 +23,48 @@ class MacrameInput
     }
 
     /**
+     * Add a validator function for min length
+     * to list of validators to run against the input
+     *
+     * @param  Int    $min The minimum mb string length of the input
+     * @param  String $errorMessage The optional message to display if validation fails
+     * @return MacrameInput
+     */
+    public function isLengthMin(Int $min, String $errorMessage = null):MacrameInput
+    {
+        $this->validators[] = $this->validator()->functionIsLengthMin($min, $errorMessage);
+        return $this;
+    }
+
+    /**
+     * Add a validator function for max length
+     * to list of validators to run against the input
+     *
+     * @param  Int    $max The maximum mb string length of the input
+     * @param  String $errorMessage The optional message to display if validation fails
+     * @return MacrameInput
+     */
+    public function isLengthMax(Int $max, String $errorMessage = null):MacrameInput
+    {
+        $this->validators[] = $this->validator()->functionIsLengthMax($max, $errorMessage);
+        return $this;
+    }
+
+    /**
+     * Add a validator function for a preg expression match
+     * to list of validators to run against the input
+     *
+     * @param  String $expression The expression for preg_match
+     * @param  String $errorMessage The optional message to display if validation fails
+     * @return MacrameInput
+     */
+    public function isPregMatch(String $expression, String $errorMessage = null):MacrameInput
+    {
+        $this->validators[] = $this->validator()->functionIsPregMatch($expression, $errorMessage);
+        return $this;
+    }
+
+    /**
      * Continue reading a line of data from the user with optional $prompt
      * displayed until all validations, if any, pass.
      *
@@ -32,7 +74,7 @@ class MacrameInput
      */
     public function readline(String $prompt = null, Array $tabCompletions = []):String
     {
-        readline_completion_function(fn($line,$index) => $tabCompletions);
+        readline_completion_function(fn($line, $index) => $tabCompletions);
 
         do {
             $input = trim(readline($prompt));

@@ -8,6 +8,7 @@ Macrame allows for the creation of ascii-style tables, similar to the output fro
 <a href="#validating-input">Validating input</a><br>
 <a href="#aligning-columns">Aligning columns</a><br>
 <a href="#applying-styles">Applying styles</a><br>
+<a href="#setting-border-styles">Setting border styles</a><br>
 </div>
 
 <div style='background-color:#EFF5F1; border-left: solid #CC5500 4px; border-radius: 4px; padding-left:0.5em; padding-bottom:0.5em; margin-top:0.5em; margin-bottom:0.5em; margin-right:-20px'>
@@ -40,10 +41,15 @@ $macrame->table($headers, $data)->write();              // void. Output table to
 $table = $macrame->table($headers, $data)->get();       // string. Get table as string
 
 // column indexes start at 0
-$macrame->table($headers, $data)->centre(1)->write();  // void. Centre align column 1
-$macrame->table($headers, $data)->center(1)->write();  // void. Alias of centre()
+$macrame->table($headers, $data)->centre(1)->write();   // void. Centre align column 1
+$macrame->table($headers, $data)->center(1)->write();   // void. Alias of centre()
 $macrame->table($headers, $data)->right(1)->write();    // void. Right align column 1
-$macrame->table($headers, $data)->left(0)->write();      // void. Left align column 1
+$macrame->table($headers, $data)->left(0)->write();     // void. Left align column 1
+
+// style tables
+$macrame->table($headers, $data)->solid()->write();     // void. Solid border
+$macrame->table($headers, $data)->double()->write();    // void. Double-lined border
+$macrame->table($headers, $data)->standard()->write();  // void. standard border
 ```
 
 # Creating a table
@@ -209,3 +215,50 @@ The output of the above code will look like:
 </tt>
 
 Styles can be applied to strings used in both the `$headers` and `$data` arrays.
+
+# Setting border styles
+Three different border styles can be applied to tables:
+
+* `standard()`: A MySql-style dashed border using ASCII characters. This is the default
+* `solid()`: A solid-line border
+* `double()`: A solid-line border with double lines
+
+```PHP
+$macrame->table($headers, $data)->solid()->write();
+```
+<tt>
+┌────────────────────────┬────────────┐<br>
+│ Artist&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; │ Album&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  │<br>
+├────────────────────────┼────────────┤<br>
+│ The Velvet Underground │ And Nico&nbsp;&nbsp; │<br>
+│ Monk, Thelonious&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; │ Misterioso │<br>
+└────────────────────────┴────────────┘<br>
+</tt>
+
+```PHP
+$macrame->table($headers, $data)->double()->write();
+```
+
+<tt>
+╔════════════════════════╦════════════╗<br>
+║ Artist&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ║ Album&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ║<br>
+╠════════════════════════╬════════════╣<br>
+║ The Velvet Underground ║ And Nico&nbsp;&nbsp; ║<br>
+║ Monk, Thelonious&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ║ Misterioso ║<br>
+╚════════════════════════╩════════════╝<br>
+</tt>
+
+
+```PHP
+$macrame->table($headers, $data)->standard()->write();
+// or
+$macrame->table($headers, $data)->write();
+```
+<tt>
++------------------------+------------+<br />
+| Artist&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Album&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br />
++------------------------+------------+<br />
+| The Velvet Underground | And Nico&nbsp;&nbsp;&nbsp;|<br /> 
+| Monk, Thelonious&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Misterioso |<br /> 
++------------------------+------------+<br />
+</tt>

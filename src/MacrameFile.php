@@ -37,7 +37,7 @@ class MacrameFile
             return null;
         }
 
-        return file_get_contents($this->handleTilde($this->path), 'r');
+        return file_get_contents($this->handleTilde($this->path));
     }
 
     /**
