@@ -93,7 +93,7 @@ class MacrameValidator
      * it is one of the elements of $validList
      * Returns true on pass, false on fail. Displays error message
      *
-     * @param  Array  $validList The array of valid values
+     * @param  Array<String>  $validList The array of valid values
      * @param  String $error The optional error message to display if the validation fails
      * @return callable The validation function
      */
@@ -119,7 +119,7 @@ class MacrameValidator
     public function functionIsInt(String $error = null):callable
     {
         return function(String $value) use($error): bool {
-            if(!filter_var($value, FILTER_VALIDATE_INT)) {
+            if(!filter_var($value, FILTER_VALIDATE_INT) && $value != '0') {
                 self::displayError($error);
                 return false;
             }
@@ -138,7 +138,7 @@ class MacrameValidator
     public function functionIsNumber(String $error = null):callable
     {
         return function(String $value) use($error): bool {
-            if(!filter_var($value, FILTER_VALIDATE_FLOAT)) {
+            if(!filter_var($value, FILTER_VALIDATE_FLOAT) && $value != "0") {
                 self::displayError($error);
                 return false;
             }
@@ -177,25 +177,6 @@ class MacrameValidator
     {
         return function(String $value) use($error): bool {
             if(!filter_var($value, FILTER_VALIDATE_URL)) {
-                self::displayError($error);
-                return false;
-            }
-            return true;
-        };
-    }
-
-    /**
-     * Returns a function that accepts a value and tests if
-     * it is a valid domain, ie 'example.ca'.
-     * Returns true on pass, false on fail. Displays error message
-     *
-     * @param  String $error The optional error message to display if the validation fails
-     * @return callable The validation function
-     */
-    public function functionIsDomain(String $error = null):callable
-    {
-        return function(String $value) use($error): bool {
-            if(!filter_var($value, FILTER_VALIDATE_DOMAIN)) {
                 self::displayError($error);
                 return false;
             }

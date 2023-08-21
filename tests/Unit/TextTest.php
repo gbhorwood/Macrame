@@ -541,22 +541,28 @@ class TextTest extends TestCase
     public function testPageOneLine()
     {
 
+        /**
+         * data
+         */
         $testText = '';
         for($i=0;$i<100;$i++) {
             $testText .= "line ".$i.PHP_EOL;
         }
+        $keydowns = array_fill(0, 200, chr(10));
 
         /**
-         * Mock getKeystroke()
+         * Mocks
          */
-        $mockedMacrame = $this->getMockBuilder(\Gbhorwood\Macrame\MacrameText::class)->setConstructorArgs([$testText])->onlyMethods(['readKeystroke'])->getMock();
-        $mockedMacrame->expects($this->any())->method('readKeystroke')->will($this->returnValue(chr(10)));
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$keydowns);
 
         /**
          * Test and assertion
          */
+        $cli = new \Gbhorwood\Macrame\Macrame();
         $this->expectOutputRegex("/^line 0/i");
-        $mockedMacrame->page();
+        $cli->text($testText)->page();
     }
 
     /**
@@ -566,22 +572,29 @@ class TextTest extends TestCase
     public function testPageOnePage()
     {
 
+        /**
+         * Data
+         */
         $testText = '';
         for($i=0;$i<100;$i++) {
             $testText .= "line ".$i.PHP_EOL;
         }
+        $keydowns = array_fill(0, 200, ' ');
+
 
         /**
-         * Mock getKeystroke()
+         * Mocks
          */
-        $mockedMacrame = $this->getMockBuilder(\Gbhorwood\Macrame\MacrameText::class)->setConstructorArgs([$testText])->onlyMethods(['readKeystroke'])->getMock();
-        $mockedMacrame->expects($this->any())->method('readKeystroke')->will($this->returnValue(chr(32)));
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$keydowns);
 
         /**
          * Test and assertion
          */
+        $macrame = new \Gbhorwood\Macrame\Macrame();
         $this->expectOutputRegex("/^line 0/i");
-        $mockedMacrame->page();
+        $macrame->text($testText)->page();
     }
 
     /**
@@ -596,16 +609,18 @@ class TextTest extends TestCase
         }
 
         /**
-         * Mock getKeystroke()
+         * Mocks
          */
-        $mockedMacrame = $this->getMockBuilder(\Gbhorwood\Macrame\MacrameText::class)->setConstructorArgs([$testText])->onlyMethods(['readKeystroke'])->getMock();
-        $mockedMacrame->expects($this->any())->method('readKeystroke')->will($this->returnValue('q'));
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->any())
+                 ->willReturnOnConsecutiveCalls('q');
 
         /**
          * Test and assertion
          */
+        $macrame = new \Gbhorwood\Macrame\Macrame();
         $this->expectOutputRegex("/^line 0/i");
-        $mockedMacrame->page();
+        $macrame->text($testText)->page();
     }
 
     /**

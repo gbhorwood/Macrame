@@ -430,7 +430,7 @@ Text that is too long
 for the terminal height.
 TEXT;
 
-$macrame->text($pagedText)->page()->write();  // page on terminal height
+$macrame->text($pagedText)->wrap()->page()->write();  // page on terminal height. note usage of wrap()
 ```
 
 The `page()` method outputs a number of lines of text to fill the current terminal size and then prompts the user for the next page. The user can respond to the prompt in three ways:
@@ -440,6 +440,8 @@ The `page()` method outputs a number of lines of text to fill the current termin
 | `<SPACE>` | The next full page is output |
 | `<RETURN>` | The next single line is output |
 | `q` | Output is stopped and the script continues |
+
+Note that for `page()` to work consistently, `wrap()` should be applied to the text. Paging is done on line endings and, without `wrap()` it is not guaranteed that lines will be shorter than the screen width.
 
 # Notice levels
 Macrame provides convenience methods for outputting notices for various levels such as 'ok' or 'error'.
