@@ -243,6 +243,44 @@ class MacrameValidator
     }
 
     /**
+     * Returns a function that accepts a value and tests if
+     * it contains a substring
+     * Returns true on pass, false on fail. Displays error message
+     *
+     * @param  String $substring The substring the value must contain
+     * @return callable The validation function
+     */
+    public static function functionDoesContain(String $substring, String $error = null):callable
+    {
+        return function(String $value) use($substring, $error): bool {
+            if(mb_strpos($value, $substring) === false) {
+                self::displayError($error);
+                return false;
+            }
+            return true;
+        };
+    }
+
+    /**
+     * Returns a function that accepts a value and tests if
+     * it does not contain a substring
+     * Returns true on pass, false on fail. Displays error message
+     *
+     * @param  String $substring The substring the value must not contain
+     * @return callable The validation function
+     */
+    public static function functionDoesNotContain(String $substring, String $error = null):callable
+    {
+        return function(String $value) use($substring, $error): bool {
+            if(mb_strpos($value, $substring) !== false) {
+                self::displayError($error);
+                return false;
+            }
+            return true;
+        };
+    }
+
+    /**
      * Writes $message as error to STDERR if it exists
      *
      * @param  ?String $message The error message to print on STDERR

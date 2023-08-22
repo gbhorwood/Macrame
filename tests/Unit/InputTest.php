@@ -248,6 +248,78 @@ class InputTest extends TestCase
     }
 
     /**
+     * test doesContain()->readline()
+     *
+     */
+    public function testReadlineWithDoesContain()
+    {
+        /**
+         * data
+         */
+        $errorOutput = uniqid();
+        $validInput = 'somefoobar';
+        $userInputs = [
+            'bazquux',
+            $validInput,
+        ];
+
+        /**
+         * mocks
+         */
+        $readline = $this->getFunctionMock('gbhorwood\macrame', "readline");
+        $readline->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$userInputs);
+
+        /**
+         * test
+         */
+        $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
+        $this->expectOutputRegex("/$erroroutput/");
+        $result = $input->doesContain('foo', $erroroutput)->readline();
+
+        /**
+         * assertions
+         */
+        $this->assertEquals($result, $validInput);
+    }
+
+    /**
+     * test doesNotContain()->readline()
+     *
+     */
+    public function testReadlineWithDoesNotContain()
+    {
+        /**
+         * data
+         */
+        $errorOutput = uniqid();
+        $validInput = 'bazquux';
+        $userInputs = [
+            'somefoobar',
+            $validInput,
+        ];
+
+        /**
+         * mocks
+         */
+        $readline = $this->getFunctionMock('gbhorwood\macrame', "readline");
+        $readline->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$userInputs);
+
+        /**
+         * test
+         */
+        $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
+        $this->expectOutputRegex("/$erroroutput/");
+        $result = $input->doesNotContain('foo', $erroroutput)->readline();
+
+        /**
+         * assertions
+         */
+        $this->assertEquals($result, $validInput);
+    }
+
+    /**
      * Test isInt()->readline()
      *
      */

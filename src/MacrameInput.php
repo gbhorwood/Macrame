@@ -117,6 +117,34 @@ class MacrameInput
     }
 
     /**
+     * Add a validator function to test if value contains a substring
+     * to list of validators to run against the input
+     *
+     * @param  String $substring    The substring the value must contain
+     * @param  String $errorMessage The optional message to display if validation fails
+     * @return MacrameInput
+     */
+    public function doesContain(String $substring, String $errorMessage = null):MacrameInput
+    {
+        $this->validators[] = $this->validator()->functionDoesContain($substring, $errorMessage);
+        return $this;
+    }
+
+    /**
+     * Add a validator function to test if value does not contain a substring
+     * to list of validators to run against the input
+     *
+     * @param  String $substring    The substring the value must not contain
+     * @param  String $errorMessage The optional message to display if validation fails
+     * @return MacrameInput
+     */
+    public function doesNotContain(String $substring, String $errorMessage = null):MacrameInput
+    {
+        $this->validators[] = $this->validator()->functionDoesNotContain($substring, $errorMessage);
+        return $this;
+    }
+
+    /**
      * Add a validator function to test if value is an integer
      * to list of validators to run against the input
      *
