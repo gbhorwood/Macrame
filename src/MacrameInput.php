@@ -103,6 +103,20 @@ class MacrameInput
     }
 
     /**
+     * Add a validator function to test if value is of a minimum entropy
+     * to list of validators to run against the input
+     *
+     * @param  Float  $entropyMin   The minimum entropy       
+     * @param  String $errorMessage The optional message to display if validation fails
+     * @return MacrameInput
+     */
+    public function isEntropyMin(Float $entropyMin, String $errorMessage = null):MacrameInput
+    {
+        $this->validators[] = $this->validator()->functionIsEntropyMin($entropyMin, $errorMessage);
+        return $this;
+    }
+
+    /**
      * Add a validator function to test if value is an integer
      * to list of validators to run against the input
      *

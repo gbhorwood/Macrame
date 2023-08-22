@@ -223,6 +223,26 @@ class MacrameValidator
     }
 
     /**
+     * Returns a function that accepts a value and tests if
+     * it is of a minimum entropy.
+     * Returns true on pass, false on fail. Displays error message
+     *
+     * @param  Float $entropy The minimum entropy
+     * @return callable The validation function
+     */
+    public static function functionIsEntropyMin(Float $entropy, String $error = null):callable
+    {
+        return function(String $value) use($entropy, $error): bool {
+            $calculated = array_reduce(count_chars($value, 1), fn($t, $c) => $t + abs(($c/mb_strlen($value)) * log(($c/mb_strlen($value))) / log(2)));
+            if($calculated < $entropy) {
+                self::displayError($error);
+                return false;
+            }
+            return true;
+        };
+    }
+
+    /**
      * Writes $message as error to STDERR if it exists
      *
      * @param  ?String $message The error message to print on STDERR

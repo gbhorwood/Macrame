@@ -212,6 +212,42 @@ class InputTest extends TestCase
     }
 
     /**
+     * test isEntropyMin()->readline()
+     *
+     */
+    public function testReadlineWithIsEntropyMin()
+    {
+        /**
+         * data
+         */
+        $errorOutput = uniqid();
+        $validInput = 'some#con!tent';
+        $userInputs = [
+            'eeeeeeeeee',
+            $validInput,
+        ];
+
+        /**
+         * mocks
+         */
+        $readline = $this->getFunctionMock('gbhorwood\macrame', "readline");
+        $readline->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$userInputs);
+
+        /**
+         * test
+         */
+        $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
+        $this->expectOutputRegex("/$erroroutput/");
+        $result = $input->isEntropyMin(2.5, $erroroutput)->readline();
+
+        /**
+         * assertions
+         */
+        $this->assertEquals($result, $validInput);
+    }
+
+    /**
      * Test isInt()->readline()
      *
      */
