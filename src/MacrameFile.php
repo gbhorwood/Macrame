@@ -22,7 +22,28 @@ class MacrameFile
      */
     public function __construct(String $path)
     {
+        clearstatcache(true);
         $this->path = $path;
+    }
+
+    /**
+     * Creates an empty file the object's file path with permissions 0755.
+     * Displays warnings if file cannot be created due to permissions or
+     * bad structure. Expands ~ to path to home dir.
+     *
+     * @return MacrameFile
+     */
+    public function create():MacrameFile
+    {
+        $path = $this->handleTilde($this->path);
+        if(!file_exists($path)) {
+            $mkdirWorked = file_exists(dirname($path)) ? true : @mkdir(dirname($path), 0755, true);
+            $touchWorked = @touch($path);
+            if(!$mkdirWorked || !$touchWorked) {
+                $this->warn("Could not create file at $path");
+            }
+        }
+        return $this;
     }
 
     /**

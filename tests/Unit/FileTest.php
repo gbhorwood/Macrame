@@ -64,6 +64,20 @@ class FileTest extends TestCase
     }
 
     /**
+     * Test exists()
+     * exists is a synonym of clobbers
+     *
+     */
+    public function testExists()
+    {
+        $urls = $this->buildFilesystem("some content");
+
+        $cli = new \Gbhorwood\Macrame\Macrame();
+        $this->assertTrue($cli->file($urls['file_open'])->exists());
+        $this->assertFalse($cli->file($urls['dir_public'].'/newfile')->exists());
+    }
+
+    /**
      * Test byteCount()
      *
      * @dataProvider bytecountProvider
@@ -213,6 +227,68 @@ class FileTest extends TestCase
 
         foreach($generator->byLine() as $line) {
         }
+    }
+
+    /**
+     * Test create()
+     *
+     * @see https://stackoverflow.com/questions/36609046/phpunit-is-it-possible-to-test-mkdir-tempnam-realpath-and-move-uploaded-file?rq=3
+     */
+    public function testCreate()
+    {
+        /**
+         * Data
+         */
+        $testFile = './kill2/tmpfile';
+        $testContent = uniqid();
+
+        if(file_exists($testFile)) {
+            unlink($testFile);
+        }
+
+        /**
+         * Tests
+         */
+        $macrameFile = new \Gbhorwood\Macrame\MacrameFile($testFile);
+        $macrameFile->create()->write($testContent);
+
+        /**
+         * Assertions
+         */
+        $fileExists = file_exists($testFile);
+        unlink($testFile);
+        rmdir(dirname($testFile));
+        $this->assertTrue($fileExists);
+
+    }
+
+    /**
+     * Test createPermissions()
+     * create() fails due to permissions
+     *
+     */
+    public function testCreatePermissions()
+    {
+        /**
+         * Data
+         */
+        $testFile = './kill/tmpfile';
+        $testContent = uniqid();
+
+        if(file_exists($testFile)) {
+            unlink($testFile);
+        }
+        mkdir(dirname($testFile), 0444);
+
+        /**
+         * Tests and assertions
+         */
+        $this->expectOutputRegex("/WARNING/");
+        $macrameFile = new \Gbhorwood\Macrame\MacrameFile($testFile);
+        $macrameFile->create();
+
+        rmdir(dirname($testFile));
+        unlink($testFile);
     }
 
     /**
