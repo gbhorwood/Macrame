@@ -208,6 +208,60 @@ class ValidatorTest extends TestCase
     }
 
     /**
+     * Test functionDoesContain()
+     *
+     * @dataProvider doesContainProvider
+     */
+    public function testFunctionDoesContain($value, $contains, $passes)
+    {
+        $validator = new \Gbhorwood\Macrame\MacrameValidator();
+        $error = 'error '.uniqid();
+        $testFunction = $validator->functionDoesContain($contains, $error);
+
+        if(!$passes) {
+            $this->expectOutputRegex("/$error/");
+        }
+
+        $this->assertEquals($passes, $testFunction($value));
+    }
+
+    /**
+     * Test functionDoesNotContain()
+     *
+     * @dataProvider doesNotContainProvider
+     */
+    public function testFunctionDoesNotContain($value, $contains, $passes)
+    {
+        $validator = new \Gbhorwood\Macrame\MacrameValidator();
+        $error = 'error '.uniqid();
+        $testFunction = $validator->functionDoesNotContain($contains, $error);
+
+        if(!$passes) {
+            $this->expectOutputRegex("/$error/");
+        }
+
+        $this->assertEquals($passes, $testFunction($value));
+    }
+
+    /**
+     * Test isEntropyMin()
+     *
+     * @dataProvider isEntropyMinProvider
+     */
+    public function testFunctionIsEntropyMin($value, $minentropy, $passes)
+    {
+        $validator = new \Gbhorwood\Macrame\MacrameValidator();
+        $error = 'error '.uniqid();
+        $testFunction = $validator->functionIsEntropyMin($minentropy, $error);
+
+        if(!$passes) {
+            $this->expectOutputRegex("/$error/");
+        }
+
+        $this->assertEquals($passes, $testFunction($value));
+    }
+
+    /**
      * Provide isNumber test cases
      *
      * @return Array
@@ -413,6 +467,49 @@ class ValidatorTest extends TestCase
             ['$19.78', "/\\\$?((\d{1,3}(,\d{3})*)|(\d+))(\.\d{2})?$/", true ],
             ['$09.78', "/\\\$?((\d{1,3}(,\d{3})*)|(\d+))(\.\d{2})?$/", true ],
             ['not dollars', "/\\\$?((\d{1,3}(,\d{3})*)|(\d+))(\.\d{2})?$/", false ],
+        ];
+    }
+
+    /**
+     * Provide doesContain test cases
+     *
+     * @return Array
+     */
+    public static function doesContainProvider():Array
+    {
+        return [
+            ['foobar', 'foo', true],
+            ['foobar', 'bar', true],
+            ['foobar', 'oba', true],
+            ['foobar', 'xjz', false],
+        ];
+    }
+
+    /**
+     * Provide doesNotContain test cases
+     *
+     * @return Array
+     */
+    public static function doesNotContainProvider():Array
+    {
+        return [
+            ['foobar', 'foo', false],
+            ['foobar', 'bar', false],
+            ['foobar', 'oba', false],
+            ['foobar', 'xjz', true],
+        ];
+    }
+
+    /**
+     * Provide isEntropyMin test cases
+     *
+     * @return Array
+     */
+    public static function isEntropyMinProvider():Array
+    {
+        return [
+            ['foobar', 3.0, false],
+            ['foobar', 1.2, true],
         ];
     }
 }
