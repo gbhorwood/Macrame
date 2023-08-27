@@ -55,6 +55,9 @@ if($macrame->running()) {
             $macrame->text(preg_replace($patterns, $replacements, $line))->write();
         }
     }
+
+    // exit cleanly
+    $macrame->exit();
 }
 ```
 

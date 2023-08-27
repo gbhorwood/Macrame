@@ -22,6 +22,8 @@ if($macrame->running()) {
      */
     $macrame->text($macrame->file('/path/to/file')->read())->page();
 
+    // exit cleanly
+    $macrame->exit();
 }
 ```
 

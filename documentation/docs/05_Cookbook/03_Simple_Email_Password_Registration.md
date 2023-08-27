@@ -42,6 +42,9 @@ if($macrame->running()) {
     $macrame->input()
             ->isEqualTo($password, 'Passwords must match.')
             ->readPassword("Repeat password: ");
+
+    // exit cleanly
+    $macrame->exit();
 }
 ```
 
