@@ -303,6 +303,16 @@ class MacrameInput
     }
 
     /**
+     * Reads content piped in on STDIN
+     *
+     * @return ?String The content from STDIN, if any
+     */
+    public function readPipe():?String
+    {
+        return MacrameIO::getPipedContent();
+    }
+
+    /**
      * Run all validators against $text, return false if any fail.
      *
      * @param  String $text The text to validate

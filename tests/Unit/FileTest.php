@@ -352,15 +352,15 @@ class FileTest extends TestCase
     }
 
     /**
-     * Test deleteOnQuit()
+     * Test deleteOnExit()
      *
      */
-    public function testDeleteOnQuit()
+    public function testDeleteOnExit()
     {
         $urls = $this->buildFilesystem("some content");
 
         $cli = new \Gbhorwood\Macrame\Macrame();
-        $cli->file($urls['file_open'])->deleteOnQuit();
+        $cli->file($urls['file_open'])->deleteOnExit();
         $cli->file($urls['file_readonly']);
 
         $this->assertEquals(['vfs://home/public/open'], \Gbhorwood\Macrame\MacrameFile::$toDelete);

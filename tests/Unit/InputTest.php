@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(\Gbhorwood\Macrame\Macrame::class)]
 #[CoversClass(\Gbhorwood\Macrame\MacrameInput::class)]
+#[CoversClass(\Gbhorwood\Macrame\MacrameIO::class)]
 #[UsesClass(\Gbhorwood\Macrame\Macrame::class)]
 #[UsesClass(\Gbhorwood\Macrame\MacrameInput::class)]
 class InputTest extends TestCase
@@ -653,6 +654,60 @@ class InputTest extends TestCase
          */
         $this->assertEquals($expected, $result);
         ob_end_clean();
+    }
+
+    /**
+     * Test readPipe()
+     *
+     */
+    public function testReadPipe()
+    {
+        $validPipedContent =<<<TXT
+        line one
+        line two
+        TXT;
+        $validPipedContentArray = array_map(fn($line) => $line.PHP_EOL, explode(PHP_EOL, $validPipedContent));
+
+        /**
+         * Override stream_select to return true
+         */
+        $streamSelect = $this->getFunctionMock('Gbhorwood\Macrame', "stream_select");
+        $streamSelect->expects($this->once())->willReturn(true);
+
+        /**
+         * Override fgets to return valid content instead of STDIN
+         */
+        $fgets = $this->getFunctionMock('Gbhorwood\Macrame', "fgets");
+        $fgets->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$validPipedContentArray);
+
+
+        $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
+
+        $pipedContent = $input->readPipe();
+
+        $this->assertEquals($validPipedContent, trim($pipedContent));
+    }
+
+    /**
+     * Test readPipe()
+     * No content
+     *
+     */
+    public function testReadPipeNoContent()
+    {
+
+        /**
+         * Override stream_select to return true
+         */
+        $streamSelect = $this->getFunctionMock('Gbhorwood\Macrame', "stream_select");
+        $streamSelect->expects($this->once())->willReturn(false);
+
+        $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
+
+        $pipedContent = $input->readPipe();
+
+        $this->assertEquals(null, $pipedContent);
     }
 
     /**

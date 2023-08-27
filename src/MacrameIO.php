@@ -132,6 +132,38 @@ class MacrameIO {
     }
 
     /**
+     * Tests if there is content on STDIN from pipe
+     *
+     * @return bool True if piped content exists.
+     */
+    public static function pipedContentExists():bool
+    {
+        $streams = [STDIN];
+        $write_array = [];
+        $except_array = [];
+        $seconds = 0;
+        return (bool)@stream_select($streams, $write_array, $except_array, $seconds);
+    }
+
+    /**
+     * Returns content read from STDIN
+     *
+     * @return ?String The piped content, if any
+     */
+    public static function getPipedContent():?String
+    {
+        $pipedContent = null;
+        if(self::pipedContentExists()) {
+            while ($line = fgets(STDIN)) {
+                $pipedContent .= $line;
+            }
+        }
+
+        return $pipedContent;
+    }
+
+
+    /**
      * Returns the stream to write to for output based on argument $stream.
      * $stream 'out' for STDOUT, $stream 'error' for 'STDERR'. Default is STDOUT.
      *

@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(\Gbhorwood\Macrame\Macrame::class)]
 #[CoversClass(\Gbhorwood\Macrame\MacrameText::class)]
+#[CoversClass(\Gbhorwood\Macrame\MacrameIO::class)]
 #[UsesClass(\Gbhorwood\Macrame\Macrame::class)]
 #[UsesClass(\Gbhorwood\Macrame\MacrameText::class)]
 class TextTest extends TestCase
