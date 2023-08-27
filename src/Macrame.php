@@ -114,10 +114,26 @@ class Macrame
     {
         return new MacrameTable($headers, $data, new MacrameText());
     }
+
+    /**
+     * Does cleanup and exits the script with 0
+     *
+     * @return Int
+     */
+    public function exit():Int
+    {
+        $this->unlinkFiles();
+        exit(0);
+    }
+
+    /**
+     * Removes all files in the $toDelete array in MacrameFile
+     * This is part of cleanup on exit.
+     *
+     * @return void
+     */
+    private function unlinkFiles():void
+    {
+        array_map(fn($f) => @unlink($f), MacrameFile::$toDelete);
+    }
 }
-
-
-
-
-
-

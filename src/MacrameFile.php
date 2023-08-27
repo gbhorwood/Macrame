@@ -15,6 +15,13 @@ class MacrameFile
     private String $path;
 
     /**
+     * Array of file paths to delete on shutdown
+     *
+     * @var Array<String>
+     */
+    public static Array $toDelete;
+
+    /**
      * Constructor
      *
      * @param  String $path
@@ -94,6 +101,9 @@ class MacrameFile
      */
     public function write(String $text):bool
     {
+        // ensure file exists
+        $this->create();
+
         // test permissions
         if(!$this->writable()) {
             $this->warn('Cannot write to file at '.$this->path);
@@ -159,6 +169,29 @@ class MacrameFile
     public function exists():bool
     {
         return $this->clobbers();
+    }
+
+    /**
+     * Sets this file to be deleted on script termination.
+     *
+     * @return MacrameFile
+     * @see    Macrame::exit()
+     */
+    public function deleteOnQuit():MacrameFile
+    {
+        self::$toDelete[] = $this->path;
+        return $this;
+    }
+
+    /**
+     * Synonym for deleteOnQuit
+     *
+     * @return MacrameFile
+     * @see    Macrame::exit()
+     */
+    public function deleteOnExit():MacrameFile
+    {
+        return $this->deleteOnQuit();
     }
 
     /**
