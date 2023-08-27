@@ -125,6 +125,36 @@ class MacrameFile
     }
 
     /**
+     * Append the string $text to the file.
+     * Displays warnings on access or disk space errors.
+     * Return true on success.
+     *
+     * @param  String $text  The text to append to file
+     * @return bool
+     */
+    public function append(String $text):bool
+    {
+        // test permissions
+        if(!$this->writable()) {
+            $this->warn('Cannot write to file at '.$this->path);
+            return false;
+        }
+
+        // test disk space
+        if(!$this->enoughSpace($text)) {
+            $this->warn('Note enough space on device to write to '.$this->path);
+            return false;
+        }
+
+        // write to file
+        $fp = fopen($this->handleTilde($this->path), 'a');
+        fwrite($fp, $text);
+        fclose($fp);
+
+        return true;
+    }
+
+    /**
      * Determines if the file exists and is readable
      *
      * @return bool

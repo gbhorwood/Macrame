@@ -208,6 +208,66 @@ class FileTest extends TestCase
     }
 
     /**
+     * Test append()
+     *
+     */
+    public function testAppend()
+    {
+        $testContent = "BEHOLD TEST CONTENT";
+        $urls = $this->buildFilesystem("some content");
+
+        /**
+         * Mock enoughSpace()
+         */
+        $mockedMacrame = $this->getMockBuilder(\Gbhorwood\Macrame\MacrameFile::class)->setConstructorArgs([$urls['file_open']])->onlyMethods(['enoughSpace'])->getMock();
+        $mockedMacrame->expects($this->any())->method('enoughSpace')->will($this->returnValue(true));
+
+        $mockedMacrame->append($testContent);
+
+        $this->assertEquals("some content".$testContent, file_get_contents($urls['file_open']));
+    }
+
+    /**
+     * Test append()
+     * No disk space
+     *
+     */
+    public function testAppendNoDiskSpace()
+    {
+        $testContent = "BEHOLD TEST CONTENT";
+        $urls = $this->buildFilesystem("some content");
+
+        /**
+         * Mock enoughSpace()
+         */
+        $mockedMacrame = $this->getMockBuilder(\Gbhorwood\Macrame\MacrameFile::class)->setConstructorArgs([$urls['file_open']])->onlyMethods(['enoughSpace'])->getMock();
+        $mockedMacrame->expects($this->any())->method('enoughSpace')->will($this->returnValue(false));
+
+        $this->expectOutputRegex("/WARNING/");
+        $mockedMacrame->append($testContent);
+    }
+
+    /**
+     * Test append()
+     * No write access
+     *
+     */
+    public function testAppendNoWriteAccess()
+    {
+        $testContent = "BEHOLD TEST CONTENT";
+        $urls = $this->buildFilesystem("some content");
+
+        /**
+         * Mock enoughSpace()
+         */
+        $mockedMacrame = $this->getMockBuilder(\Gbhorwood\Macrame\MacrameFile::class)->setConstructorArgs([$urls['file_readonly']])->onlyMethods(['enoughSpace'])->getMock();
+        $mockedMacrame->expects($this->any())->method('enoughSpace')->will($this->returnValue(true));
+
+        $this->expectOutputRegex("/WARNING/");
+        $mockedMacrame->append($testContent);
+    }
+
+    /**
      * Test byLine() unreadable file
      *
      */
