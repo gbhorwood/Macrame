@@ -11,6 +11,7 @@ use org\bovigo\vfs\vfsStreamWrapper;
 
 #[CoversClass(\Gbhorwood\Macrame\Macrame::class)]
 #[CoversClass(\Gbhorwood\Macrame\MacrameFile::class)]
+#[CoversClass(\Gbhorwood\Macrame\MacrameIO::class)]
 #[UsesClass(\Gbhorwood\Macrame\Macrame::class)]
 #[UsesClass(\Gbhorwood\Macrame\MacrameFile::class)]
 class FileTest extends TestCase

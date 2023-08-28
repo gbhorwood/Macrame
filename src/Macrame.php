@@ -2,11 +2,6 @@
 namespace Gbhorwood\Macrame;
 
 /**
- * Tell phpunit when using processIsolation what STDIN is
- */
-if(!defined('STDIN')) define('STDIN', fopen("php://stdin","r"));
-
-/**
  * Create command line applications in php
  *
  */

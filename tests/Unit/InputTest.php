@@ -5,6 +5,11 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+/**
+ * Tell phpunit when using processIsolation what STDIN is
+ */
+if(!defined('STDIN')) define('STDIN', fopen("php://stdin","r"));
+
 #[CoversClass(\Gbhorwood\Macrame\Macrame::class)]
 #[CoversClass(\Gbhorwood\Macrame\MacrameInput::class)]
 #[CoversClass(\Gbhorwood\Macrame\MacrameIO::class)]
