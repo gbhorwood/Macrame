@@ -88,7 +88,7 @@ $macrame->file('/path/to/my/file')->write($someString); // return bool
 
 If `write()` succeeds it returns `true`. On any error `false` is returned.
 
-The `write()` method tests if the target file exists, has write permissions and if there is enough space on the target permission to write the content. Any failure results in a warning output to the consle and a return value of `false`.
+The `write()` method tests if the target file has write permissions and if there is enough space on the target partition to write the content. Any failure results in a warning output to the consle and a return value of `false`. If the file does not exist, `write()` attempts to create it.
 
 ## Testing for writability
 The write permissions of a file can be explicitly tested before writing with the `writable()` method.
@@ -180,7 +180,17 @@ The `write()` method does not test if the target file will be overwritten.
 
 
 # Appending to an existing file
-TBD
+Strings can be appended to files using the `append()` method.
+
+```PHP
+$someString = "Hello world";
+
+$macrame->file('/path/to/my/file')->append($someString); // return bool
+```
+
+If `append()` succeeds it returns `true`. On any error `false` is returned.
+
+The `append()` method tests if the target file has write permissions and if there is enough space on the target partition to write the content. Any failure results in a warning output to the consle and a return value of `false`. If the target file does not exist, `append()` will attempt to create it.
 
 # Creating a new file
 Creating a new file without writing to it can be done with the `create()` method.
