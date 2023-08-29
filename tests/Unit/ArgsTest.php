@@ -27,6 +27,7 @@ class ArgsTest extends TestCase
             $cli = new \Gbhorwood\Macrame\MacrameArgs($argName);
             $this->assertEquals($cli->count(), $results['count']);
             $this->assertEquals($cli->first(), $results['first']);
+            $this->assertEquals($cli->last(), $results['last']);
             $this->assertEquals($cli->all(), $results['all']);
             $this->assertEquals($cli->exists(), true);
 
@@ -56,12 +57,12 @@ class ArgsTest extends TestCase
     public static function argvProvider():Array
     {
         return [
-            [ ['macrame', '--foo', '--foo'], ['foo' => ['count' => 2, 'first' => null, 'all' => [null, null], 'positional' => [] ]] ],
-            [ ['macrame', '--foo=someval', '--foo'], ['foo' => ['count' => 2, 'first' => 'someval', 'all' => ['someval', null], 'positional' => [] ]] ],
-            [ ['macrame', '--foo', '--foo=someval'], ['foo' => ['count' => 2, 'first' => null, 'all' => [null, 'someval'], 'positional' => [] ]] ],
-            [ ['macrame', '-fff'], ['f' => ['count' => 3, 'first' => null, 'all' => [], 'positional' => [] ]] ],
-            [ ['macrame', '-f', '-f', '-f'], ['f' => ['count' => 3, 'first' => null, 'all' => [], 'positional' => [] ]] ],
-            [ ['macrame', 'positional1', 'positional2'], ['positional' => ['count' => 2, 'first' => 'positional1', 'all' => ['positional1', 'positional2'], 'positional' => ['positional1', 'positional2'] ]] ],
+            [ ['macrame', '--foo', '--foo'], ['foo' => ['count' => 2, 'first' => null, 'last' => null, 'all' => [], 'positional' => [] ]] ],
+            [ ['macrame', '--foo=someval', '--foo'], ['foo' => ['count' => 2, 'first' => 'someval', 'last' => 'someval', 'all' => ['someval'], 'positional' => [] ]] ],
+            [ ['macrame', '--foo', '--foo=someval'], ['foo' => ['count' => 2, 'first' => 'someval', 'last' => 'someval', 'all' => ['someval'], 'positional' => [] ]] ],
+            [ ['macrame', '-fff'], ['f' => ['count' => 3, 'first' => null, 'last' => null, 'all' => [], 'positional' => [] ]] ],
+            [ ['macrame', '-f', '-f', '-f'], ['f' => ['count' => 3, 'first' => null, 'last' => null, 'all' => [], 'positional' => [] ]] ],
+            [ ['macrame', 'positional1', 'positional2'], ['positional' => ['count' => 2, 'first' => 'positional1', 'last' => 'positional2', 'all' => ['positional1', 'positional2'], 'positional' => ['positional1', 'positional2'] ]] ],
         ];
     } // argvProvider
 }
