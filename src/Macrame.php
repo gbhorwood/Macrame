@@ -49,10 +49,7 @@ class Macrame
      */
     public function running():bool
     {
-        if(PHP_SAPI == 'cli') {
-            return true;
-        }
-        return false;
+        return PHP_SAPI == 'cli';
     }
 
     /**
