@@ -701,9 +701,8 @@ class InputTest extends TestCase
      */
     public function testReadPipeNoContent()
     {
-
         /**
-         * Override stream_select to return true
+         * Override stream_select to return false
          */
         $streamSelect = $this->getFunctionMock('Gbhorwood\Macrame', "stream_select");
         $streamSelect->expects($this->once())->willReturn(false);
@@ -713,6 +712,103 @@ class InputTest extends TestCase
         $pipedContent = $input->readPipe();
 
         $this->assertEquals(null, $pipedContent);
+    }
+
+    /**
+     * Test readPipeByLine()
+     *
+     */
+    public function testReadPipeByLine()
+    {
+        $validPipedContent =<<<TXT
+        line one
+        line two
+        TXT;
+        $validPipedContentArray = array_map(fn($line) => $line.PHP_EOL, explode(PHP_EOL, $validPipedContent));
+
+        /**
+         * Override stream_select to return true
+         */
+        $streamSelect = $this->getFunctionMock('Gbhorwood\Macrame', "stream_select");
+        $streamSelect->expects($this->once())->willReturn(true);
+
+        /**
+         * Override fgets to return valid content instead of STDIN
+         */
+        $fgets = $this->getFunctionMock('Gbhorwood\Macrame', "fgets");
+        $fgets->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$validPipedContentArray);
+
+
+        $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
+
+        $i = 0;
+        foreach($input->readPipeByLine() as $line) {
+            $this->assertEquals(trim($line), trim($validPipedContentArray[$i]));
+            $i++;
+        }
+    }
+
+    /**
+     * Test readKey()
+     *
+     */
+    public function testReadKey()
+    {
+        $char = 'j';
+        $prompt = "some prompt";
+
+        /**
+         * Override stream_select to return true
+         */
+        $streamSelect = $this->getFunctionMock('Gbhorwood\Macrame', "stream_select");
+        $streamSelect->expects($this->once())->willReturn(true);
+
+        /**
+         * Override stream_get_contents() to return $char
+         */
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->once())->willReturn($char);
+
+        $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
+
+        $this->expectOutputRegex("/$prompt/");
+        $keyContent = $input->readKey($prompt);
+
+        $this->assertEquals($char, $keyContent);
+    }
+
+    /**
+     * Test readKey()
+     * isOneOf
+     */
+    public function testReadKeyIsOneOf()
+    {
+        $chars = ['a', 'n'];
+        $streamSelects = [true, true];
+        $prompt = "some prompt";
+        $errorMessage = "some error";
+
+        /**
+         * Override stream_select to return true
+         */
+        $streamSelect = $this->getFunctionMock('Gbhorwood\Macrame', "stream_select");
+        $streamSelect->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$streamSelects);
+
+        /**
+         * Override stream_get_contents() to return $char
+         */
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$chars);
+
+        $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
+
+        $this->expectOutputRegex("/$errorMessage/");
+        $keyContent = $input->isOneOf(['y', 'n'], $errorMessage)->readKey();
+
+        $this->assertEquals('n', $keyContent);
     }
 
     /**
