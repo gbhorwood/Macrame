@@ -37,7 +37,7 @@ class MacrameIO {
      */
     public static function eraseLine():void
     {
-        fwrite(self::outStream('out'), "\033[F\033[2K");
+        self::writeStdout("\033[F\033[2K");
     }
 
     /**
@@ -47,7 +47,7 @@ class MacrameIO {
      */
     public static function backspace():void
     {
-        fwrite(self::outStream('out'), chr(8));
+        self::writeStdout(chr(8));
     }
 
     /**
@@ -57,7 +57,7 @@ class MacrameIO {
      */
     public static function eraseToEndOfLine():void
     {
-        fwrite(self::outStream('out'), "\033[0K");
+        self::writeStdout("\033[0K");
     }
 
     /**
@@ -65,10 +65,23 @@ class MacrameIO {
      *
      * @return String
      */
-    public static function keyStroke():String
+    public static function keyStroke(?String $prompt = null):String
     {
-        return stream_get_contents(STDIN, 1);
-    }
+        $c = null;
+        readline_callback_handler_install($prompt, function () { });
+        while (true) {
+            $r = array(STDIN);
+            $w = null;
+            $e = null;
+            $n = stream_select($r, $w, $e, null);
+            if ($n && in_array(STDIN, $r)) {
+                $c = stream_get_contents(STDIN, 1);
+                self::writeStdout(PHP_EOL);
+                break;
+            }
+        }
+        return $c;
+    } // anyKey
 
 
     /**
@@ -160,6 +173,24 @@ class MacrameIO {
         }
 
         return $pipedContent;
+    }
+
+    /**
+     * Yields content read from STDIN by line
+     *
+     * @return \Iterator
+     */
+    public static function getPipedContentGenerator():\Iterator
+    {
+        if(!self::pipedContentExists()) {
+            //yield;
+            return [];
+        }
+        else {
+            while ($line = fgets(STDIN)) {
+                yield rtrim($line, PHP_EOL);
+            }
+        }
     }
 
 
