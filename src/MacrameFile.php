@@ -72,9 +72,9 @@ class MacrameFile
      * Reads the file using a generator.
      * Displays warning on permissions errors.
      *
-     * @return \Generator
+     * @return \Iterator
      */ 
-    public function byLine():\Generator
+    public function byLine():\Iterator
     {
         if(!$this->readable()) {
             $this->warn('Cannot read file at '.$this->path);
