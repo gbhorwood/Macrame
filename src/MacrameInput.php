@@ -309,7 +309,33 @@ class MacrameInput
      */
     public function readPipe():?String
     {
-        return MacrameIO::getPipedContent();
+        return IO::getPipedContent();
+    }
+
+    /**
+     * Iterates over content piped in on STDIN
+     *
+     * @return \Iterator
+     */
+    public function readPipeByLine():\Iterator
+    {
+        return IO::getPipedContentGenerator();
+    }
+
+    /**
+     * Reads and returns one keystroke. Accepts and displayes option prompt.
+     *
+     * @param  ?String $prompt  The optional prompt to display
+     * @return String
+     */
+    public function readKey(?String $prompt = null):String
+    {
+        do {
+            IO::writeStdout($prompt);
+            $input = IO::keyStroke();
+        }
+        while(!$this->isValid($input));
+        return $input;
     }
 
     /**
