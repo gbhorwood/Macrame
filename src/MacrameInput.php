@@ -292,7 +292,7 @@ class MacrameInput
         };
 
         /**
-         * Call pollForPassword until validations pass
+         * Call $pollForPassword until validations pass
          */
         do {
             $input = $pollForPassword($prompt);
@@ -331,11 +331,22 @@ class MacrameInput
     public function readKey(?String $prompt = null):String
     {
         do {
-            IO::writeStdout($prompt);
+            if($prompt) {
+                IO::writeStdout($prompt);
+            }
             $input = IO::keyStroke();
+            IO::newline();
         }
         while(!$this->isValid($input));
         return $input;
+    }
+
+    public function readOption(Array $options, ?String $default = null, ?String $prompt = null, ?String $error = null):String
+    {
+        $validOptions = array_unique(array_filter(array_merge(array_map(fn($o) => $o[0], $options), [@$default[0]])));
+        $this->isOneOf($default ? array_merge($validOptions, [chr(10)]) : $validOptions, $error);
+        $j = $this->readKey($prompt);
+        return $j;
     }
 
     /**

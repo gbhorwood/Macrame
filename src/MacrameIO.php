@@ -65,10 +65,10 @@ class MacrameIO {
      *
      * @return String
      */
-    public static function keyStroke(?String $prompt = null):String
+    public static function keyStroke():String
     {
         $c = null;
-        readline_callback_handler_install($prompt, function () { });
+        readline_callback_handler_install(null, function () { });
         while (true) {
             $r = array(STDIN);
             $w = null;
@@ -76,13 +76,21 @@ class MacrameIO {
             $n = stream_select($r, $w, $e, null);
             if ($n && in_array(STDIN, $r)) {
                 $c = stream_get_contents(STDIN, 1);
-                self::writeStdout(PHP_EOL);
                 break;
             }
         }
         return $c;
     } // anyKey
 
+    /**
+     * Output a newline
+     *
+     * @return void
+     */
+    public static function newline():void
+    {
+        self::writeStdout(PHP_EOL);
+    }
 
     /**
      * Returns the number of cols to wrap output on.

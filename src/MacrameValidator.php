@@ -1,6 +1,8 @@
 <?php
 namespace Gbhorwood\Macrame;
 
+use \Gbhorwood\Macrame\MacrameIO as IO;
+
 /**
  * Handle validation of user data
  *
