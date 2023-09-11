@@ -102,7 +102,7 @@ class MacrameValidator
     public function functionIsOneOf(Array $validList, String $error = null):callable
     {
         return function(String $value) use($validList, $error): bool {
-            if(!in_array(trim($value), $validList)) {
+            if(!in_array($value, $validList)) {
                 self::displayError($error);
                 return false;
             }
