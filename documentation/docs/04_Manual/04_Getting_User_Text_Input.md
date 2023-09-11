@@ -7,6 +7,8 @@ Macrame provides several methods to read user text input, either as lines or sin
 <a href="#validating-readline-input">Validating readline input</a><br>
 <a href="#validator-list">Validator list</a><br>
 <a href="#adding-custom-validators">Adding custom validators</a><br>
+<a href="#reading-password-input">Reading password input</a><br>
+<a href="#reading-piped-input">Reading piped input</a><br>
 </div>
 
 # Quickref
@@ -137,4 +139,50 @@ $userString = $macrame->input()
 
 Custom validators can be chained with the pre-existing, provided validators. There can be an arbitrary number of them.
 
+# Reading password input
 
+User password input, or other input that should not be echoed to the screen during entry, can be read using `readPassword()`.
+
+The `readPassword()` method behaves like `readline()`, but echoes asterisks to the console rather than the characters typed.
+
+```PHP
+$userSecret = $macrame->input()->readPassword();
+```
+
+Like `readline()`, validators can be used to validate the input to `readPassword()`.
+
+```PHP
+$password = $macrame->input()
+                    ->isLengthMin(8, 'Must be at least eight characters.')
+                    ->doesNotContain(explode('@', $email)[0], 'Must not contain your name')
+                    ->isPregMatch('/[0-9]+/', 'Must contain at least one number')
+                    ->isPregMatch('/[A-Z]+/', 'Must contain at least one uppercase letter')
+                    ->isPregMatch('/[a-z]+/', 'Must contain at least one lowercase letter')
+                    ->isPregMatch('/[^\w]/', 'Must contain at least one special character')
+                    ->isEntropyMin(3.0, 'Password not complex enough')
+                    ->readPassword("Password: ");
+```
+
+# Reading piped input 
+
+Sometimes, it is desired to read user input that is supplied to the script by the shell's pipe operator. ie.
+
+```bash
+echo "some content" | php ./my_script.php
+```
+
+Reading input that has been piped in can be done with the `readPipe()` method.
+
+```PHP
+$content = $macrame->input()->readPipe();
+```
+
+The `readPipe()` method returns a string that contains all the piped input. If no input is piped into the script, null is returned.
+
+Piped content can also be iterated over at read time, line-by-line, using `readPipeByLine()`. 
+
+```PHP
+foreach($macrame->input()->readPipeByLine() as $line){
+    print $line.PHP_EOL;
+}
+```
