@@ -779,6 +779,68 @@ class InputTest extends TestCase
     }
 
     /**
+     * Test readOption()
+     *
+     */
+    public function testReadOption()
+    {
+        $char = 'j';
+        $prompt = "some prompt";
+        $options = ['h', 'i', 'j'];
+        $default = 'k';
+
+        /**
+         * Override stream_select to return true
+         */
+        $streamSelect = $this->getFunctionMock('Gbhorwood\Macrame', "stream_select");
+        $streamSelect->expects($this->once())->willReturn(true);
+
+        /**
+         * Override stream_get_contents() to return $char
+         */
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->once())->willReturn($char);
+
+        $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
+
+        $this->expectOutputRegex("/$prompt/");
+        $keyContent = $input->readOption($options, $default, $prompt, 'invalid option');
+
+        $this->assertEquals($char, $keyContent);
+    }
+
+    /**
+     * Test readOptionDefault()
+     *
+     */
+    public function testReadOptionDefault()
+    {
+        $char = chr(10);
+        $prompt = "some prompt";
+        $options = ['h', 'i', 'j'];
+        $default = 'k';
+
+        /**
+         * Override stream_select to return true
+         */
+        $streamSelect = $this->getFunctionMock('Gbhorwood\Macrame', "stream_select");
+        $streamSelect->expects($this->once())->willReturn(true);
+
+        /**
+         * Override stream_get_contents() to return $char
+         */
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->once())->willReturn($char);
+
+        $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
+
+        $this->expectOutputRegex("/$prompt/");
+        $keyContent = $input->readOption($options, $default, $prompt, 'invalid option');
+
+        $this->assertEquals($default, $keyContent);
+    }
+
+    /**
      * Test readKey()
      * isOneOf
      */
@@ -812,7 +874,44 @@ class InputTest extends TestCase
     }
 
     /**
-     * 
+     * Test addValidator()
+     *
+     */
+    public function testAddValidator()
+    {
+        /**
+         * Data
+         */
+        $errorOutput = uniqid();
+        $validInput = 'VALID';
+        $userInputs = [
+            'notvalid',
+            $validInput,
+        ];
+
+        /**
+         * Mocks
+         */
+        $readline = $this->getFunctionMock('Gbhorwood\Macrame', "readline");
+        $readline->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$userInputs);
+
+        /**
+         * Test
+         */
+        $isUpper = fn($text) => strtoupper($text) == $text;
+        $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
+        $this->expectOutputRegex("/$errorOutput/");
+        $result = $input->addValidator($isUpper, $errorOutput)->readline();
+
+        /**
+         * Assertions
+         */
+        $this->assertEquals($result, $validInput);
+    }
+
+    /**
+     * Provider for successful passwords 
      *
      * @return Array
      */
