@@ -359,12 +359,20 @@ class MacrameInput
         return $input;
     }
 
+    /**
+     * Reads one keydown stroke validated against a list of $options
+     *
+     * @param  Array   $options  The list of valid option characters
+     * @param  ?String $default  The option returned if <RETURN> is hit
+     * @param  ?String $prompt   The optional prompt to display 
+     * @param  ?String $error    The optional message to display if validation fails
+     */
     public function readOption(Array $options, ?String $default = null, ?String $prompt = null, ?String $error = null):String
     {
         $validOptions = array_unique(array_filter(array_merge(array_map(fn($o) => $o[0], $options), [@$default[0]])));
         $this->isOneOf($default ? array_merge($validOptions, [chr(10)]) : $validOptions, $error);
-        $j = $this->readKey($prompt);
-        return $j;
+        $key =  $this->readKey($prompt);
+        return $key == chr(10) ? @$default[0] : $key;
     }
 
     /**
