@@ -6,6 +6,7 @@ Macrame provides several methods to read user text input, either as lines or sin
 <a href="#reading-a-line-of-user-input">Reading a line of user input</a><br>
 <a href="#validating-readline-input">Validating readline input</a><br>
 <a href="#validator-list">Validator list</a><br>
+<a href="#adding-custom-validators">Adding custom validators</a><br>
 </div>
 
 # Quickref
@@ -104,6 +105,36 @@ $userString = $macrame->input()
 | `isIpAddress(?string $errorMessage)` | Is a valid ipv4 or ipv6 address |
 | `isDate(?string $errorMessage)` | Is a valid date of any format |
 
+# Adding custom validators
 
+Custom validators can be written and added to the input object using the `addValidator()` method.
+
+Custom validators are functions that accept the user input as an argument and return a boolean value. The body of the function tests if the user input meets the validation criteria and returns true if it passes, false otherwise.
+
+This example shows a custom validator that tests if the user input text is all uppercase.
+
+```PHP
+// the custom validator as an arrow function
+$validator = fn($input) => strtoupper($input) == $input;
+
+// or as a long-form function. either notation is fine.
+$validator = function(String $input):bool {
+    return strtoupper($input) == $input;
+};
+
+$userString = $macrame->input()
+                      ->addValidator($validator)
+                      ->readline();
+```
+
+The `addValidator()` method accepts an optional error message as the second argument.
+
+```PHP
+$userString = $macrame->input()
+                      ->addValidator($validator, 'Invalid input')
+                      ->readline();
+```
+
+Custom validators can be chained with the pre-existing, provided validators. There can be an arbitrary number of them.
 
 
