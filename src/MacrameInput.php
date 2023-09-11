@@ -223,6 +223,24 @@ class MacrameInput
     }
 
     /**
+     * Add a custom validator function to the validator list.
+     *
+     * @param  callable $validator The validator function
+     * @return MacrameInput
+     */
+    public function addValidator(callable $validator, String $errorMessage = null):MacrameInput
+    {
+        $this->validators[] = function(String $value) use($validator, $errorMessage) {
+            if(!$validator($value)) {
+                MacrameValidator::displayError($errorMessage);
+                return false;
+            }
+            return true;
+        };
+        return $this;
+    }
+
+    /**
      * Continue reading a line of data from the user with optional $prompt
      * displayed until all validations, if any, pass.
      *
