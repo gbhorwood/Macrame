@@ -1,6 +1,19 @@
 <?php
 namespace Gbhorwood\Macrame;
 
+/**
+ * ANSI: Convenience defines
+ */
+if(!defined('ESC')) define('ESC', "\033");
+
+/**
+ * ANSI: Cursor control
+ */
+if(!defined('LINE_UP')) define('LINE_UP', ESC."[F");
+if(!defined('LINE_ERASE')) define('LINE_ERASE', ESC."[2K");
+if(!defined('LINE_ERASE_TO_END')) define('LINE_ERASE_TO_END', ESC."[0K");
+if(!defined('BACKSPACE')) define('BACKSPACE', chr(8));
+
 
 /**
  * Handle input and output
@@ -37,7 +50,19 @@ class MacrameIO {
      */
     public static function eraseLine():void
     {
-        self::writeStdout("\033[F\033[2K");
+        self::writeStdout(LINE_UP.LINE_ERASE);
+    }
+
+    /**
+     * Erase $count lines and move cursor up
+     *
+     * @return void
+     */
+    public static function eraseLines(Int $count):void
+    {
+        for ($i = 0;$i<$count;$i++) {
+            self::writeStdout(LINE_UP.LINE_ERASE);
+        }
     }
 
     /**
@@ -47,7 +72,7 @@ class MacrameIO {
      */
     public static function backspace():void
     {
-        self::writeStdout(chr(8));
+        self::writeStdout(BACKSPACE);
     }
 
     /**
@@ -57,7 +82,7 @@ class MacrameIO {
      */
     public static function eraseToEndOfLine():void
     {
-        self::writeStdout("\033[0K");
+        self::writeStdout(LINE_ERASE_TO_END);
     }
 
     /**
@@ -68,7 +93,7 @@ class MacrameIO {
     public static function keyStroke():String
     {
         $c = null;
-        readline_callback_handler_install(null, function () { });
+        readline_callback_handler_install('', function () { });
         while (true) {
             $r = array(STDIN);
             $w = null;
@@ -80,7 +105,7 @@ class MacrameIO {
             }
         }
         return $c;
-    } // anyKey
+    }
 
     /**
      * Output a newline
