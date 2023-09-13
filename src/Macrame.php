@@ -108,6 +108,16 @@ class Macrame
     }
 
     /**
+     * Creates and returns a MacrameMenu object for menu input
+     *
+     * @return MacrameMenu
+     */
+    public function menu():MacrameMenu
+    {
+        return new MacrameMenu(new MacrameText());
+    }
+
+    /**
      * Does cleanup and exits the script with 0
      *
      * @return Int
