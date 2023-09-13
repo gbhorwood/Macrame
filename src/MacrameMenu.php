@@ -31,6 +31,34 @@ class MacrameMenu
     private MacrameText $text;
 
     /**
+     * Foreground colour of option
+     * @var ?String
+     * @access private
+     */
+    private ?String $colourOption;
+
+    /**
+     * Foreground colour of selected option
+     * @var ?String
+     * @access private
+     */
+    private ?String $colourSelected;
+
+    /**
+     * Styles for options
+     * @var Array
+     * @access private
+     */
+    private Array $styleOption = [];
+
+    /**
+     * Styles for selected
+     * @var Array
+     * @access private
+     */
+    private Array $styleSelected = [];
+
+    /**
      * Constructor
      *
      * @param  MacrameText   $text
@@ -38,6 +66,76 @@ class MacrameMenu
     public function __construct(MacrameText $text)
     {
         $this->text = $text;
+    }
+
+    /**
+     * Set foreground colour of options of menu
+     *
+     * @param  String $colour The colour as defined in MacrameText
+     * @return MacrameMenu
+     */
+    public function colourOption(String $colour):MacrameMenu
+    {
+        $this->colourOption = $colour;
+        return $this;
+    }
+
+    /**
+     * Alias of colourOption
+     *
+     * @param  String $colour The colour as defined in MacrameText
+     * @return MacrameMenu
+     */
+    public function colorOption(String $colour):MacrameMenu
+    {
+        return $this->colourOption($colour);
+    }
+
+    /**
+     * Set foreground colour of the selected option of menu
+     *
+     * @param  String $colour The colour as defined in MacrameText
+     * @return MacrameMenu
+     */
+    public function colourSelected(String $colour):MacrameMenu
+    {
+        $this->colourSelected = $colour;
+        return $this;
+    }
+
+    /**
+     * Alias of colourSelected
+     *
+     * @param  String $colour The colour as defined in MacrameText
+     * @return MacrameMenu
+     */
+    public function colorSelected(String $colour):MacrameMenu
+    {
+        return $this->colourSelected($colour);
+    }
+
+    /**
+     * Set style of options of menu
+     *
+     * @param  String $style The style as defined in MacrameText
+     * @return MacrameMenu
+     */
+    public function styleOption(String $style):MacrameMenu
+    {
+        $this->styleOption[] = $style;
+        return $this;
+    }
+
+    /**
+     * Set style of the selected option of menu
+     *
+     * @param  String $style The style as defined in MacrameText
+     * @return MacrameMenu
+     */
+    public function styleSelected(String $style):MacrameMenu
+    {
+        $this->styleSelected[] = $style;
+        return $this;
     }
 
     /**
@@ -147,9 +245,29 @@ class MacrameMenu
 
         // write each menu option with current selected highlited reverse
         foreach($displayOptions as $i => $t) {
-            $text = new MacrameText($t);
             if($i == $selected) {
+                $text = new MacrameText($t);
+
+                if(isset($this->colourSelected)) {
+                    $text->colour($this->colourSelected);
+                }
+
+                foreach($this->styleSelected as $style) {
+                    $text->style($style);
+                }
+
                 $text->reverse();
+            }
+            else {
+                $text = new MacrameText($t);
+
+                if(isset($this->colourOption)) {
+                    $text->colour($this->colourOption);
+                }
+
+                foreach($this->styleOption as $style) {
+                    $text->style($style);
+                }
             }
             $text->write(true);
         }
