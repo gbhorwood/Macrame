@@ -362,7 +362,7 @@ class MacrameInput
     /**
      * Reads one keydown stroke validated against a list of $options
      *
-     * @param  Array   $options  The list of valid option characters
+     * @param  Array<String> $options  The list of valid option characters
      * @param  ?String $default  The option returned if <RETURN> is hit
      * @param  ?String $prompt   The optional prompt to display 
      * @param  ?String $error    The optional message to display if validation fails
