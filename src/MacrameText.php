@@ -4,11 +4,11 @@ namespace Gbhorwood\Macrame;
 use \Gbhorwood\Macrame\MacrameIO as IO;
 
 /**
- * ANSI: Convenience defines of meta characters
+ * ANSI: Convenience defines
  */
-define('BACKSPACE', chr(8));
-define('ESC', "\033"); // for use with ANSI codes
-define('ERASE_TO_END_OF_LINE', "\033[0K");
+if(!defined('BACKSPACE')) define('BACKSPACE', chr(8));
+if(!defined('ESC')) define('ESC', "\033");
+if(!defined('ERASE_TO_END_OF_LINE')) define('ERASE_TO_END_OF_LINE', "\033[0K");
 
 /**
  * ANSI: styles
@@ -18,6 +18,7 @@ define('BOLD_ANSI', ESC."[1m");
 define('ITALIC_ANSI', ESC."[3m");
 define('UNDERLINE_ANSI', ESC."[4m");
 define('STRIKETHROUGH_ANSI', ESC."[9m");
+define('REVERSE_ANSI', ESC."[7m");
 
 /**
  * ANSI: colours
@@ -67,6 +68,7 @@ class MacrameText {
         'underline' => UNDERLINE_ANSI,
         'strike' => STRIKETHROUGH_ANSI,
         'strikethrough' => STRIKETHROUGH_ANSI,
+        'reverse' => REVERSE_ANSI,
     ];
 
     /**
@@ -299,6 +301,16 @@ class MacrameText {
     }
 
     /**
+     * Appli ANSI style to reverse $text
+     *
+     * @return MacrameText
+     */
+    public function reverse():MacrameText {
+        array_unshift($this->formatting, $this->ansiStyles['reverse']);
+        return $this;
+    }
+
+    /**
      * Set alignment to centre
      *
      * @return MacrameText
@@ -357,6 +369,16 @@ class MacrameText {
     public function get():?String
     {
         return $this->text ? $this->format() : null;
+    }
+
+    /**
+     * Get the number of rows this object will occupy when printed
+     *
+     * @return Int
+     */
+    public function rowCount():Int
+    {
+        return count(explode(PHP_EOL, $this->format()));
     }
 
     /**
@@ -674,7 +696,7 @@ class MacrameText {
         // function to pad one line to the alignment
         $padder = function($text) use($alignment, $colWidth) {
             $padAmount = (int)floor(($colWidth - $this->mb_strwidth_ansi($text))/$alignment);
-            $pad = array_fill(0, $padAmount, ".");
+            $pad = array_fill(0, $padAmount, " ");
             return join('', array_fill(0, $padAmount, ' ')).$text;
         };
 
