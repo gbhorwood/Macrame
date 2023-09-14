@@ -151,11 +151,13 @@ class MacrameText {
         '{\<\!underline\!\>}' => UNDERLINE_ANSI,
         '{\<\!STRIKE\!\>}' => STRIKETHROUGH_ANSI,
         '{\<\!strike\!\>}' => STRIKETHROUGH_ANSI,
+        '{\<\!REVERSE\!\>}' => REVERSE_ANSI,
+        '{\<\!reverse\!\>}' => REVERSE_ANSI,
     ];
 
     /**
      * Display tags for output levels, ie [OK]
-     * RFC 5424 6.2.1
+     * RFC 5424 6.2.1 (ish)
      * @var Array<String, Array<String>>
      * @access Private
      */

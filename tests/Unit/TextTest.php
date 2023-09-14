@@ -546,7 +546,6 @@ class TextTest extends TestCase
      */
     public function testPageOneLine()
     {
-
         /**
          * data
          */
@@ -577,7 +576,6 @@ class TextTest extends TestCase
      */
     public function testPageOnePage()
     {
-
         /**
          * Data
          */
@@ -609,6 +607,9 @@ class TextTest extends TestCase
      */
     public function testPageQuit()
     {
+        /**
+         * Data
+         */
         $testText = '';
         for($i=0;$i<100;$i++) {
             $testText .= "line ".$i.PHP_EOL;
@@ -630,6 +631,49 @@ class TextTest extends TestCase
     }
 
     /**
+     * Test rowCount()
+     * 
+     */
+    public function testRowCount()
+    {
+        /**
+         * Data
+         */
+        $testText =<<<TXT
+        one
+        two
+        three
+        TXT;
+
+        /**
+         * Test and assertion
+         */
+        $macrame = new \Gbhorwood\Macrame\Macrame();
+        $result = $macrame->text($testText)->rowCount();
+        $this->assertEquals(3, $result);
+    }
+
+    /**
+     * Test reverse()
+     * 
+     */
+    public function testReverse()
+    {
+        /**
+         * Data
+         */
+        $testText = "some text";
+        $expected = "\033[7m".$testText."\033[0m";
+
+        /**
+         * Test and assertion
+         */
+        $macrame = new \Gbhorwood\Macrame\Macrame();
+        $result = $macrame->text($testText)->reverse()->get();
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
      * mb_strwidth_ansi() 
      *
      * @dataProvider strlenProvider
@@ -638,6 +682,26 @@ class TextTest extends TestCase
     {
         $cliText = new \Gbhorwood\Macrame\MacrameText('');
         $this->assertEquals($cliText->mb_strwidth_ansi($string), $length);
+    }
+
+    /**
+     * Test tags
+     * 
+     */
+    public function testTags()
+    {
+        /**
+         * Data
+         */
+        $testText = "<!REVERSE!>reverse<!CLOSE!> <!RED!>red<!CLOSE!>";
+        $expected = "\033[7mreverse\033[0m \033[31mred\033[0m";
+
+        /**
+         * Test and assertion
+         */
+        $macrame = new \Gbhorwood\Macrame\Macrame();
+        $result = $macrame->text($testText)->get();
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -654,7 +718,7 @@ class TextTest extends TestCase
 
         return [
             ["string!", 7],
-            ["striñg!", 7],         // non-roman
+            ["striñg!", 7],
             ["\ttab", 7],           // tab
             ["仝string", 8],        // utf-8
             ["🌈string", 8],        // emoji
