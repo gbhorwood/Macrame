@@ -16,6 +16,12 @@ if(!defined('KEY_BACKSPACE')) define('KEY_BACKSPACE', 127);
 if(!defined('KEY_DELETE')) define('KEY_DELETE', 126);
 if(!defined('KEY_O')) define('KEY_O', 111);
 
+/**
+ * Alignment definitions
+ */
+if(!defined('LEFT')) define('LEFT', 0);
+if(!defined('CENTRE')) define('CENTRE', 2);
+if(!defined('RIGHT')) define('RIGHT', 1);
 
 /**
  * Handle menus
@@ -46,17 +52,31 @@ class MacrameMenu
 
     /**
      * Styles for options
-     * @var Array
+     * @var Array<String>
      * @access private
      */
     private Array $styleOption = [];
 
     /**
      * Styles for selected
-     * @var Array
+     * @var Array<String>
      * @access private
      */
     private Array $styleSelected = [];
+
+    /**
+     * Alignment of options in menu. One of LEFT, RIGHT, CENTRE.
+     * @var Int
+     * @access private
+     */
+    private int $optionAlignment = LEFT;
+
+    /**
+     * Alignment of menu. One of LEFT, RIGHT, CENTRE.
+     * @var Int
+     * @access private
+     */
+    private int $menuAlignment = LEFT;
 
     /**
      * Constructor
@@ -66,6 +86,92 @@ class MacrameMenu
     public function __construct(MacrameText $text)
     {
         $this->text = $text;
+    }
+
+    /**
+     * Set alignment of options to left
+     *
+     * @return MacrameMenu
+     */
+    public function optionLeft():MacrameMenu
+    {
+        $this->optionAlignment = LEFT;
+        return $this;
+    }
+
+    /**
+     * Set alignment of options to right
+     *
+     * @return MacrameMenu
+     */
+    public function optionRight():MacrameMenu
+    {
+        $this->optionAlignment = RIGHT;
+        return $this;
+    }
+
+    /**
+     * Set alignment of options to centre
+     *
+     * @return MacrameMenu
+     */
+    public function optionCentre():MacrameMenu
+    {
+        $this->optionAlignment = CENTRE;
+        return $this;
+    }
+
+    /**
+     * Alias of optionCentre()
+     *
+     * @return MacrameMenu
+     */
+    public function optionCenter():MacrameMenu
+    {
+        return $this->optionCentre();
+    }
+
+    /**
+     * Set alignment of menu to left
+     *
+     * @return MacrameMenu
+     */
+    public function menuLeft():MacrameMenu
+    {
+        $this->menuAlignment = LEFT;
+        return $this;
+    }
+
+    /**
+     * Set alignment of menu to right
+     *
+     * @return MacrameMenu
+     */
+    public function menuRight():MacrameMenu
+    {
+        $this->menuAlignment = RIGHT;
+        return $this;
+    }
+
+    /**
+     * Set alignment of menu to centre
+     *
+     * @return MacrameMenu
+     */
+    public function menuCentre():MacrameMenu
+    {
+        $this->menuAlignment = CENTRE;
+        return $this;
+    }
+
+    /**
+     * Alias of menuCentre()
+     *
+     * @return MacrameMenu
+     */
+    public function menuCenter():MacrameMenu
+    {
+        return $this->menuCentre();
     }
 
     /**
@@ -179,6 +285,17 @@ class MacrameMenu
                 // select item
                 case KEY_RETURN:
                     return $options[$selectedIndex];
+
+                // all other keys
+                default:
+                    for($i=0; $i<count($optionsTagless);$i++) {
+                        if(str_starts_with(strtolower($optionsTagless[$i]), strtolower($key))) {
+                            $selectedIndex = $i;
+                            break;
+                        }
+                    }
+                    $this->printInteractiveMenu($optionsTagless, $selectedIndex, $header);
+                    break;
             }
         }
     }
@@ -217,34 +334,88 @@ class MacrameMenu
          * @param  Int    $width
          * @return String
          */
-        $getPad = function(String $text, Int $width):String {
+        $getRightPad = function(String $text, Int $width):String {
+            if($this->optionAlignment == RIGHT) {
+                return '';
+            }
+            if($this->optionAlignment == CENTRE && $this->menuAlignment == LEFT) {
+                $padAmount = (int)floor(($width - ($this->text->mb_strwidth_ansi($text)/$this->optionAlignment)));
+                return join(array_fill(0, $padAmount, " "));
+            }
+            if($this->optionAlignment == CENTRE && $this->menuAlignment != LEFT) {
+                $padAmount = (int)ceil(($width - $this->text->mb_strwidth_ansi($text)) / $this->optionAlignment);
+                return join(array_fill(0, $padAmount, " "));
+            }
             $padAmount = (int)floor(($width - $this->text->mb_strwidth_ansi($text)));
             return join(array_fill(0, $padAmount, " "));
         };
 
+        /**
+         * Get a string of spaces to left pad a given option string
+         *
+         * @param  String $text
+         * @param  Int    $width
+         * @param  Int    $indent The number of spaces to indent if left-aligned. Default 0.
+         * @return String
+         */
+        $getLeftPad = function(String $text, Int $width, Int $indent = 0):String {
+            if($this->optionAlignment == RIGHT) {
+                $padAmount = (int)floor(($width - $this->text->mb_strwidth_ansi($text)));
+                return join(array_fill(0, $padAmount, " "));
+            }
+            if($this->optionAlignment == CENTRE) {
+                $padAmount = (int)floor(($width - $this->text->mb_strwidth_ansi($text)) /2);
+                return join(array_fill(0, $padAmount, " "));
+            }
+
+            return join(array_fill(0, $indent, ' '));
+        };
+
         $maxWidth = $getMaxWidth($options);
 
-        // get array of options suitable for display, ie. with multi-line handled and padding added
-        $displayOptions = array_map(function($t) use($getPad, $maxWidth){
+        /**
+         * get array of options suitable for display, ie. with multi-line handled and padding added
+         */
+        $displayOptions = array_map(function($t) use($getRightPad, $getLeftPad, $maxWidth){
             $ttext = new MacrameText($t);
             $optionWrapped = explode(PHP_EOL, $ttext->wrap()->get());
-            return join(PHP_EOL, array_map(fn($t) => ' '.$t.$getPad($t, $maxWidth),$optionWrapped));
+            return join(PHP_EOL, array_map(fn($t) => $getLeftPad($t, $maxWidth, 1).$t.$getRightPad($t, $maxWidth),$optionWrapped));
         }, $options);
 
-        // determine how many rows the menu is so we can erase them before redraw
+        /**
+         * determine how many rows the menu is then erase them so we can redraw
+         */
         $rowCount = array_sum(array_map(function($t) {
             $ttext = new MacrameText($t);
             return count(explode(PHP_EOL, $ttext->wrap()->get()));
         }, $options)) + $headerText->rowCount();
-
-        // erase the menu
         IO::eraseLines($rowCount);
 
-        // write the menu header
-        $headerText->write(true);
+        /**
+         * write the menu header, padded for alignement
+         */
+        array_map(function($h) use($getRightPad, $getLeftPad, $maxWidth) {
+            $headerPadded = new MacrameText($getLeftPad($h, $maxWidth).$h.$getRightPad($h, $maxWidth));
+            switch($this->menuAlignment) {
+                case LEFT:
+                    $headerPadded->left();
+                    break;
+                case RIGHT:
+                    $headerPadded->right();
+                    break;
+                case CENTRE:
+                    $headerPadded->centre();
+                    break;
+            }
+            $headerPadded->write(true);
+        }, explode(PHP_EOL, $headerText->wrap()->get()));
 
-        // write each menu option with current selected highlited reverse
+        /**
+         * write each menu option with padding for alignement and 
+         * current selected option highlighted
+         */
         foreach($displayOptions as $i => $t) {
+            // handle the selected option styling
             if($i == $selected) {
                 $text = new MacrameText($t);
 
@@ -256,8 +427,12 @@ class MacrameMenu
                     $text->style($style);
                 }
 
-                $text->reverse();
+                // if no styles are colours are applied to selected, use reverse
+                if(count($this->styleSelected) == 0 && !isset($this->colourSelected)) {
+                    $text->reverse();
+                }
             }
+            // handle non-selected option styling
             else {
                 $text = new MacrameText($t);
 
@@ -269,6 +444,20 @@ class MacrameMenu
                     $text->style($style);
                 }
             }
+
+            // align the menu option
+            switch($this->menuAlignment) {
+                case LEFT:
+                    $text->left();
+                    break;
+                case RIGHT:
+                    $text->right();
+                    break;
+                case CENTRE:
+                    $text->centre();
+                    break;
+            }
+
             $text->write(true);
         }
     }
