@@ -19,7 +19,7 @@ class MacrameFile
      *
      * @var Array<String>
      */
-    public static Array $toDelete;
+    public static Array $toDelete = [];
 
     /**
      * Constructor

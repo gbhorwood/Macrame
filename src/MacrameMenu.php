@@ -253,6 +253,8 @@ class MacrameMenu
      */
     public function interactive(Array $options, ?String $header = null):String
     {
+        IO::hideCursor();
+
         // strip all macrame formatting tags from the string
         $optionsTagless = array_map(fn($t) => preg_replace('/<![A-Za-z]+!>/', '', $t), $options);
 
@@ -284,6 +286,7 @@ class MacrameMenu
 
                 // select item
                 case KEY_RETURN:
+                    IO::showCursor();
                     return $options[$selectedIndex];
 
                 // all other keys
@@ -298,6 +301,137 @@ class MacrameMenu
                     break;
             }
         }
+    }
+
+    /**
+     * Execute a date picker menu and return the selected option
+     *
+     * @param  String  $date The starting date in any valid date format
+     * @param  ?String $header  The optional header to show
+     * @return String  The selected option string
+     */
+    public function datePicker(String $date, ?String $header = null):String
+    {
+        IO::hideCursor();
+
+        $index = 0;
+        $dateObj = new \DateTime($date);
+
+        /**
+         * Function to output date as horizontal menu
+         *
+         * @param  DateTime $dateObj The DateTime object
+         * @param  Int      $index
+         * @return void
+         */
+        $display = function(\DateTime $dateObj, Int $index) use($header) {
+            $parts[0] = $dateObj->format('Y');
+            $parts[1] = $dateObj->format('M');
+            $parts[2] = $dateObj->format('d');
+            $this->printHorizontalMenu($parts, $index, $header);
+        };
+
+        /**
+         * Function to increment/decrement the date object by one unit
+         *
+         * @param  DateTime $dateObj   The DateTime object
+         * @param  Int      $index     The field in the menu that maps to the date part. ie. 0 for year, 1 for month and 2 for day.
+         * @param  String   $increment The amount of increment/decrement for DateTime's modify(), ie. '+1'
+         * @return DateTime
+         */
+        $update = function(\DateTime $dateObj, Int $index, String $increment):\DateTime {
+            $fields = ['year', 'month', 'day'];
+            $dateObj->modify($increment.' '.$fields[$index]);
+            return $dateObj;
+        };
+
+        $display($dateObj, $index);
+
+        // poll for user input
+        while(true) {
+            $key = IO::keyStroke();
+
+            // handle user input
+            switch(ord($key)) {
+
+                // right menu
+                case KEY_RIGHT_ARROW:
+                case KEY_TAB:
+                    $index = $index >= 2 ? 0 : $index + 1; // rollover to top
+                    $display($dateObj, $index);
+                    break;
+
+                // left menu
+                case KEY_LEFT_ARROW:
+                    $index = $index <= 0 ? 2 : $index - 1; // rollover to bottom
+                    $display($dateObj, $index);
+                    break;
+
+                case KEY_DOWN_ARROW:
+                    $dateObj = $update($dateObj, $index, '+1');
+                    $display($dateObj, $index);
+                    break;
+
+                case KEY_UP_ARROW:
+                    $dateObj = $update($dateObj, $index, '-1');
+                    $display($dateObj, $index);
+                    break;
+
+                case KEY_RETURN:
+                    IO::showCursor();
+                    return (string)$dateObj->format('Y-m-d');
+            }
+        }
+    }
+
+    /**
+     * Prints a horizontal interactive menu
+     *
+     * @param  Array<String>  $options
+     * @param  Int $selected The index of the option to show as currentlys selected
+     * @param  ?String $header The optional header
+     * @return void
+     */
+    private function printHorizontalMenu(Array $options, Int $selected, ?String $header = null):void
+    {
+        // erase menu and write header, if any
+        IO::eraseLines(1);
+        if($header) {
+            $headerText = new MacrameText($header);
+            IO::eraseLines($headerText->rowCount());
+            $headerText->write(true);
+        }
+
+        // build menu options with styling as array
+        $displayOptions = [];
+        for($i=0;$i<count($options);$i++) {
+            $text = new MacrameText($options[$i]);
+            if($i == $selected) {
+                if(isset($this->colourSelected)) {
+                    $text->colour($this->colourSelected);
+                }
+                foreach($this->styleSelected as $style) {
+                    $text->style($style);
+                }
+                if(count($this->styleSelected) == 0 && !isset($this->colourSelected)) {
+                    $text->reverse();
+                }
+            }
+            else {
+                if(isset($this->colourOption)) {
+                    $text->colour($this->colourOption);
+                }
+
+                foreach($this->styleOption as $style) {
+                    $text->style($style);
+                }
+            }
+            $displayOptions[] = $text->get();
+        }
+
+        // output menu options
+        $output = new MacrameText(join(' ', $displayOptions));
+        $output->write(true);
     }
 
     /**

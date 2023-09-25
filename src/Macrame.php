@@ -1,6 +1,8 @@
 <?php
 namespace Gbhorwood\Macrame;
 
+use \Gbhorwood\Macrame\MacrameIO as IO;
+
 /**
  * Create command line applications in php
  *
@@ -14,9 +16,20 @@ class Macrame
      */
     public function __construct(String $name=null)
     {
+        pcntl_async_signals(true);
+
         if($name) {
             cli_set_process_title($name);
         }
+
+        register_shutdown_function(function() {
+            self::shutdown();
+        });
+
+        pcntl_signal(SIGINT,  fn() => self::shutdown());
+        pcntl_signal(SIGTERM, fn() => self::shutdown());
+        pcntl_signal(SIGHUP,  fn() => self::shutdown());
+        pcntl_signal(SIGUSR1, fn() => self::shutdown());
     }
 
     /**
@@ -122,10 +135,21 @@ class Macrame
      *
      * @return Int
      */
-    public function exit():Int
+    public static function shutdown()
     {
-        $this->unlinkFiles();
+        IO::showCursor();
+        self::unlinkFiles();
         exit(0);
+    }
+
+    /**
+     * Does cleanup and exits the script with 0
+     *
+     * @return void
+     */
+    public function exit():void
+    {
+        self::shutdown();
     }
 
     /**
@@ -134,7 +158,7 @@ class Macrame
      *
      * @return void
      */
-    private function unlinkFiles():void
+    public static function unlinkFiles():void
     {
         array_map(fn($f) => @unlink($f), MacrameFile::$toDelete);
     }

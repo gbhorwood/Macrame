@@ -15,6 +15,8 @@ if(!defined('LINE_ERASE_TO_END')) define('LINE_ERASE_TO_END', ESC."[0K");
 if(!defined('CLEAR_SCREEN')) define('CLEAR_SCREEN', ESC."[2J");
 if(!defined('HOME_CURSOR')) define('HOME_CURSOR', ESC."[0;0f");
 if(!defined('BACKSPACE')) define('BACKSPACE', chr(8));
+if(!defined('HIDE_CURSOR')) define('HIDE_CURSOR', ESC."[?25l");
+if(!defined('SHOW_CURSOR')) define('SHOW_CURSOR', ESC."[?25h");
 
 /**
  * Handle input and output
@@ -67,6 +69,26 @@ class MacrameIO {
     }
 
     /**
+     * Hide cursor
+     *
+     * @return void
+     */
+    public static function hideCursor():void
+    {
+        self::writeStdout(HIDE_CURSOR);
+    }
+
+    /**
+     * Show cursor
+     *
+     * @return void
+     */
+    public static function showCursor():void
+    {
+        self::writeStdout(SHOW_CURSOR);
+    }
+
+    /**
      * Move character back one space on current line as <BACKSPACE>
      *
      * @return void
@@ -110,7 +132,7 @@ class MacrameIO {
             $r = array(STDIN);
             $w = null;
             $e = null;
-            $n = stream_select($r, $w, $e, null);
+            $n = @stream_select($r, $w, $e, null);
             if ($n && in_array(STDIN, $r)) {
                 $c = stream_get_contents(STDIN, 1);
                 break;
