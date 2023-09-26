@@ -317,6 +317,8 @@ class MacrameMenu
         $index = 0;
         $dateObj = new \DateTime($date);
 
+        $inputString = '';
+
         /**
          * Function to output date as horizontal menu
          *
@@ -345,6 +347,66 @@ class MacrameMenu
             return $dateObj;
         };
 
+        /**
+         * Function to handle leader keys. ie. if the user presses 'm' and then 'a' when the index
+         * is on the month field, set date object month to 'may'.
+         * 
+         * @param  DateTime $dateObj   The DateTime object
+         * @param  Int      $index     The field in the menu that maps to the date part. ie. 0 for year, 1 for month and 2 for day.
+         * @param  String   $inputString The string of leader keys pressed by the user
+         * @return Array    First element is $dateObj, second element is updated $inputString
+         */
+        $handleLeaderKeys = function(\DateTime $dateObj, Int $index, String $inputString) {
+            $parts[0] = $dateObj->format('Y');
+            $parts[1] = $dateObj->format('m');
+            $parts[2] = $dateObj->format('d');
+            switch ($index) {
+                // year 
+                case 0;
+                    $y = str_pad($inputString, 4, '0');
+                    return [
+                        new \DateTime($y.$parts[1].$parts[2]),
+                        $inputString,
+                    ];
+                    break;
+
+                // month
+                case 1;
+                    $monthNumber = $parts[1];
+                    $months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+                    $valid = false;
+                    foreach($months as $monthIndex => $month) {
+                        if(preg_match("/^$inputString/", $month)) {
+                            $monthNumber = str_pad((string)($monthIndex + 1), 2, '0', STR_PAD_LEFT);
+                            $valid = true;
+                            break;
+                        }
+                    }
+                    return [
+                        new \DateTime($parts[0].$monthNumber.$parts[2]),
+                        $valid ? $inputString : '',
+                    ];
+                    break;
+                    
+                // day
+                case 2;
+                    $d = substr(str_pad($inputString, 2, '0', STR_PAD_LEFT), -2);
+                    try {
+                        return [
+                            new \DateTime($parts[0].$parts[1].$d),
+                            $inputString,
+                        ];
+                    }
+                    catch(\Exception $e) {
+                        return [
+                            $dateObj,
+                            '',
+                        ];
+                    }
+                    break;
+            }
+        };
+
         $display($dateObj, $index);
 
         // poll for user input
@@ -357,22 +419,26 @@ class MacrameMenu
                 // right menu
                 case KEY_RIGHT_ARROW:
                 case KEY_TAB:
+                    $inputString = '';
                     $index = $index >= 2 ? 0 : $index + 1; // rollover to top
                     $display($dateObj, $index);
                     break;
 
                 // left menu
                 case KEY_LEFT_ARROW:
+                    $inputString = '';
                     $index = $index <= 0 ? 2 : $index - 1; // rollover to bottom
                     $display($dateObj, $index);
                     break;
 
                 case KEY_DOWN_ARROW:
+                    $inputString = '';
                     $dateObj = $update($dateObj, $index, '+1');
                     $display($dateObj, $index);
                     break;
 
                 case KEY_UP_ARROW:
+                    $inputString = '';
                     $dateObj = $update($dateObj, $index, '-1');
                     $display($dateObj, $index);
                     break;
@@ -380,6 +446,22 @@ class MacrameMenu
                 case KEY_RETURN:
                     IO::showCursor();
                     return (string)$dateObj->format('Y-m-d');
+
+                case KEY_BACKSPACE:
+                    $inputString = substr($inputString, 0, -1);
+                    $result = $handleLeaderKeys($dateObj, $index, $inputString);
+                    $dateObj = $result[0];
+                    $inputString = $result[1];
+                    $display($dateObj, $index);
+                    break;
+
+                case ctype_alnum($key):
+                    $inputString .= $key;
+                    $result = $handleLeaderKeys($dateObj, $index, $inputString);
+                    $dateObj = $result[0];
+                    $inputString = $result[1];
+                    $display($dateObj, $index);
+                    break;
             }
         }
     }
