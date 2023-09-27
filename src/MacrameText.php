@@ -602,8 +602,6 @@ class MacrameText {
         }
         $text = $this->applyMarkup($this->text);
         $text = $this->applyStyles($text);
-        #$text = $this->wrap ? $this->applyAnsiWrapper($text, $this->getColWidth()) : $text;
-        #$text = $this->align($text, $this->alignment, $this->getColWidth());
         $text = $this->wrap ? $this->applyAnsiWrapper($text, IO::getColWidth()) : $text;
         $text = $this->align($text, $this->alignment, IO::getColWidth());
         return $text;
