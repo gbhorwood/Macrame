@@ -315,9 +315,8 @@ class MacrameMenu
         IO::hideCursor();
 
         $index = 0;
+        $leaderString = '';
         $dateObj = new \DateTime($date);
-
-        $inputString = '';
 
         /**
          * Function to output date as horizontal menu
@@ -334,7 +333,7 @@ class MacrameMenu
         };
 
         /**
-         * Function to increment/decrement the date object by one unit
+         * Function to increment/decrement the date object by one unit. ie. on arrow up or down.
          *
          * @param  DateTime $dateObj   The DateTime object
          * @param  Int      $index     The field in the menu that maps to the date part. ie. 0 for year, 1 for month and 2 for day.
@@ -353,30 +352,36 @@ class MacrameMenu
          * 
          * @param  DateTime $dateObj   The DateTime object
          * @param  Int      $index     The field in the menu that maps to the date part. ie. 0 for year, 1 for month and 2 for day.
-         * @param  String   $inputString The string of leader keys pressed by the user
-         * @return Array    First element is $dateObj, second element is updated $inputString
+         * @param  String   $leaderString The string of leader keys pressed by the user
+         * @return Array    First element is $dateObj, second element is updated $leaderString
          */
-        $handleLeaderKeys = function(\DateTime $dateObj, Int $index, String $inputString) {
+        $handleLeaderKeys = function(\DateTime $dateObj, Int $index, String $leaderString) {
             $parts[0] = $dateObj->format('Y');
             $parts[1] = $dateObj->format('m');
             $parts[2] = $dateObj->format('d');
+
             switch ($index) {
-                // year 
+                /**
+                 * Year
+                 */
                 case 0;
-                    $y = str_pad($inputString, 4, '0');
+                    $leaderString = strlen($leaderString) > 4 ? substr($leaderString, -1) : $leaderString;
+                    $y = str_pad($leaderString, 4, '0');
                     return [
                         new \DateTime($y.$parts[1].$parts[2]),
-                        $inputString,
+                        $leaderString,
                     ];
-                    break;
 
-                // month
+                /**
+                 * Month
+                 */
                 case 1;
+                    $leaderString = strlen($leaderString) > 3 ? substr($leaderString, -1) : $leaderString;
                     $monthNumber = $parts[1];
                     $months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
                     $valid = false;
                     foreach($months as $monthIndex => $month) {
-                        if(preg_match("/^$inputString/", $month)) {
+                        if(preg_match("/^$leaderString/", $month)) {
                             $monthNumber = str_pad((string)($monthIndex + 1), 2, '0', STR_PAD_LEFT);
                             $valid = true;
                             break;
@@ -384,17 +389,19 @@ class MacrameMenu
                     }
                     return [
                         new \DateTime($parts[0].$monthNumber.$parts[2]),
-                        $valid ? $inputString : '',
+                        $valid ? $leaderString : '',
                     ];
-                    break;
                     
-                // day
+                /**
+                 * Day
+                 */
                 case 2;
-                    $d = substr(str_pad($inputString, 2, '0', STR_PAD_LEFT), -2);
+                    $leaderString = strlen($leaderString) > 2 ? substr($leaderString, -1) : $leaderString;
+                    $d = substr(str_pad($leaderString, 2, '0', STR_PAD_LEFT), -2);
                     try {
                         return [
                             new \DateTime($parts[0].$parts[1].$d),
-                            $inputString,
+                            $leaderString,
                         ];
                     }
                     catch(\Exception $e) {
@@ -403,7 +410,6 @@ class MacrameMenu
                             '',
                         ];
                     }
-                    break;
             }
         };
 
@@ -419,49 +425,54 @@ class MacrameMenu
                 // right menu
                 case KEY_RIGHT_ARROW:
                 case KEY_TAB:
-                    $inputString = '';
+                    $leaderString = '';
                     $index = $index >= 2 ? 0 : $index + 1; // rollover to top
                     $display($dateObj, $index);
                     break;
 
                 // left menu
                 case KEY_LEFT_ARROW:
-                    $inputString = '';
+                    $leaderString = '';
                     $index = $index <= 0 ? 2 : $index - 1; // rollover to bottom
                     $display($dateObj, $index);
                     break;
 
+                // increment date field
                 case KEY_DOWN_ARROW:
-                    $inputString = '';
+                    $leaderString = '';
                     $dateObj = $update($dateObj, $index, '+1');
                     $display($dateObj, $index);
                     break;
 
+                // decrement date field
                 case KEY_UP_ARROW:
-                    $inputString = '';
+                    $leaderString = '';
                     $dateObj = $update($dateObj, $index, '-1');
                     $display($dateObj, $index);
                     break;
 
+                // leader key pressed
+                case ctype_alnum($key):
+                    $leaderString .= $key;
+                    $result = $handleLeaderKeys($dateObj, $index, $leaderString);
+                    $dateObj = $result[0];
+                    $leaderString = $result[1];
+                    $display($dateObj, $index);
+                    break;
+
+                // leader key deleted
+                case KEY_BACKSPACE:
+                    $leaderString = substr($leaderString, 0, -1);
+                    $result = $handleLeaderKeys($dateObj, $index, $leaderString);
+                    $dateObj = $result[0];
+                    $leaderString = $result[1];
+                    $display($dateObj, $index);
+                    break;
+
+                // date selected
                 case KEY_RETURN:
                     IO::showCursor();
                     return (string)$dateObj->format('Y-m-d');
-
-                case KEY_BACKSPACE:
-                    $inputString = substr($inputString, 0, -1);
-                    $result = $handleLeaderKeys($dateObj, $index, $inputString);
-                    $dateObj = $result[0];
-                    $inputString = $result[1];
-                    $display($dateObj, $index);
-                    break;
-
-                case ctype_alnum($key):
-                    $inputString .= $key;
-                    $result = $handleLeaderKeys($dateObj, $index, $inputString);
-                    $dateObj = $result[0];
-                    $inputString = $result[1];
-                    $display($dateObj, $index);
-                    break;
             }
         }
     }
@@ -511,8 +522,16 @@ class MacrameMenu
             $displayOptions[] = $text->get();
         }
 
-        // output menu options
-        $output = new MacrameText(join(' ', $displayOptions));
+        /**
+         * Build date picker line with optional alignment
+         */
+        $menuLine = join(' ', $displayOptions);
+        if($this->menuAlignment != LEFT) {
+            $padAmount = (int)floor((IO::getColWidth() - mb_strwidth($menuLine))/$this->menuAlignment);
+            $menuLine = join(array_fill(0, $padAmount, " ")).$menuLine;
+        }
+
+        $output = new MacrameText($menuLine);
         $output->write(true);
     }
 
@@ -563,6 +582,7 @@ class MacrameMenu
                 return join(array_fill(0, $padAmount, " "));
             }
             $padAmount = (int)floor(($width - $this->text->mb_strwidth_ansi($text)));
+            print "width $width text $text padAmount $padAmount".PHP_EOL.PHP_EOL;
             return join(array_fill(0, $padAmount, " "));
         };
 
