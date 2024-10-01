@@ -22,98 +22,103 @@ class TextTest extends TestCase
     /**
      * Test text()->write() 
      *
+     * @runInSeparateProcess
      */
     public function testTextWrite()
     {
-        $cli = new \Gbhorwood\Macrame\Macrame();
-
         /**
          * Data
          */
         $testText = 'some text'.PHP_EOL.'new line';
+
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
         
         /**
          * Tests and assertions
          */
         $this->expectOutputString($testText);
-        $cli->text($testText)->write();
+        $cli->write();
         ob_clean();
 
         $this->expectOutputString($testText);
-        $cli->text($testText)->wrap()->write();
+        $cli->wrap()->write();
     }
 
     /**
      * Test text()->get() 
      *
+     * @runInSeparateProcess
      */
     public function testTextGet()
     {
-        $cli = new \Gbhorwood\Macrame\Macrame();
-
         /**
          * Data
          */
         $testText = 'some text'.PHP_EOL.'new line';
+
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
         
         /**
          * Tests and assertions
          */
-        $this->assertEquals($cli->text($testText)->get(), $testText);
+        $this->assertEquals($cli->get(), $testText);
     }
 
     /**
      * Test text()->text() 
      *
+     * @runInSeparateProcess
      */
     public function testTextText()
     {
-        $cli = new \Gbhorwood\Macrame\Macrame();
-
         /**
          * Data
          */
         $originalText = 'original';
         $replacementText = 'replacement';
 
+        $cli = new \Gbhorwood\Macrame\MacrameText($originalText);
+
         /**
          * Tests and assertions
          */
-        $this->assertEquals($cli->text($originalText)->text($replacementText)->get(), $replacementText);
+        $this->assertEquals($cli->text($replacementText)->get(), $replacementText);
     }
 
     /**
      * Test text()->append() 
      *
+     * @runInSeparateProcess
      */
     public function testTextAppend()
     {
-        $cli = new \Gbhorwood\Macrame\Macrame();
-
         /**
          * Data
          */
         $originalText = 'original';
         $appendText = 'appended';
 
+        $cli = new \Gbhorwood\Macrame\MacrameText($originalText);
+
         /**
          * Tests and assertions
          */
-        $this->assertEquals($cli->text($originalText)->append($appendText)->get(), $originalText.$appendText);
+        $this->assertEquals($cli->append($appendText)->get(), $originalText.$appendText);
     }
 
     /**
      * Test text()->writeError() 
      *
+     * @runInSeparateProcess
      */
     public function testTextWriteError()
     {
-        $cli = new \Gbhorwood\Macrame\Macrame();
-
         /**
          * Data
          */
         $testText = 'some text'.PHP_EOL.'new line';
+
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
         
         /**
          * Tests and assertions
@@ -126,27 +131,28 @@ class TextTest extends TestCase
      * Test text()->get()
      * Handle null text in format()
      *
+     * @runInSeparateProcess
      */
     public function testTextNull()
     {
-        $cli = new \Gbhorwood\Macrame\Macrame();
+        $cli = new \Gbhorwood\Macrame\MacrameText();
 
         /**
          * Tests and assertions
          */
-        $this->assertEquals($cli->text()->get(), null);
+        $this->assertEquals($cli->get(), null);
 
         $this->expectOutputString('');
-        $cli->text()->write();
+        $cli->write();
     }
 
     /**
      * Test text()->colour()->write() 
      *
+     * @runInSeparateProcess
      */
     public function testTextColourWrite()
     {
-        $cli = new \Gbhorwood\Macrame\Macrame();
 
         /**
          * Data
@@ -166,52 +172,63 @@ class TextTest extends TestCase
          * Tests and assertions
          */
         $this->expectOutputString($blackText);
-        $cli->text($testText)->colour('black')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->colour('black')->write();
         ob_clean();
+
         $this->expectOutputString($blackText);
-        $cli->text($testText)->color('black')->write(); // americans exist
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->color('black')->write(); // americans exist
         ob_clean();
 
         $this->expectOutputString($redText);
-        $cli->text($testText)->colour('red')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->colour('red')->write();
         ob_clean();
 
         $this->expectOutputString($greenText);
-        $cli->text($testText)->colour('green')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->colour('green')->write();
         ob_clean();
 
         $this->expectOutputString($yellowText);
-        $cli->text($testText)->colour('yellow')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->colour('yellow')->write();
         ob_clean();
 
         $this->expectOutputString($blueText);
-        $cli->text($testText)->colour('blue')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->colour('blue')->write();
         ob_clean();
 
         $this->expectOutputString($magentaText);
-        $cli->text($testText)->colour('magenta')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->colour('magenta')->write();
         ob_clean();
 
         $this->expectOutputString($cyanText);
-        $cli->text($testText)->colour('cyan')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->colour('cyan')->write();
         ob_clean();
 
         $this->expectOutputString($whiteText);
-        $cli->text($testText)->colour('white')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->colour('white')->write();
     }
 
     /**
      * Test text()->colour()->colour()->write() 
      *
+     * @runInSeparateProcess
      */
     public function testTextColourColourWrite()
     {
-        $cli = new \Gbhorwood\Macrame\Macrame();
-
         /**
          * Data
          */
         $testText = 'some text';
+
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
         
         $whiteThenRedText = "\033[37m\033[31m".$testText."\033[0m";
 
@@ -219,18 +236,17 @@ class TextTest extends TestCase
          * Tests and assertions
          */
         $this->expectOutputString($whiteThenRedText);
-        $cli->text($testText)->colour('white')->colour('red')->write();
+        $cli->colour('white')->colour('red')->write();
     }
 
 
     /**
      * Test text()->backgroundColour()->write() 
      *
+     * @runInSeparateProcess
      */
     public function testTextBackgroundColourWrite()
     {
-        $cli = new \Gbhorwood\Macrame\Macrame();
-
         /**
          * Data
          */
@@ -249,48 +265,57 @@ class TextTest extends TestCase
          * Tests and assertions
          */
         $this->expectOutputString($blackText);
-        $cli->text($testText)->backgroundColour('black')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->backgroundColour('black')->write();
         ob_clean();
+
         $this->expectOutputString($blackText);
-        $cli->text($testText)->backgroundColor('black')->write(); // americans exist
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->backgroundColor('black')->write(); // americans exist
         ob_clean();
 
         $this->expectOutputString($redText);
-        $cli->text($testText)->backgroundColour('red')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->backgroundColour('red')->write();
         ob_clean();
 
         $this->expectOutputString($greenText);
-        $cli->text($testText)->backgroundColour('green')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->backgroundColour('green')->write();
         ob_clean();
 
         $this->expectOutputString($yellowText);
-        $cli->text($testText)->backgroundColour('yellow')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->backgroundColour('yellow')->write();
         ob_clean();
 
         $this->expectOutputString($blueText);
-        $cli->text($testText)->backgroundColour('blue')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->backgroundColour('blue')->write();
         ob_clean();
 
         $this->expectOutputString($magentaText);
-        $cli->text($testText)->backgroundColour('magenta')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->backgroundColour('magenta')->write();
         ob_clean();
 
         $this->expectOutputString($cyanText);
-        $cli->text($testText)->backgroundColour('cyan')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->backgroundColour('cyan')->write();
         ob_clean();
 
         $this->expectOutputString($whiteText);
-        $cli->text($testText)->backgroundColour('white')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->backgroundColour('white')->write();
     }
 
     /**
      * Test text()->style()->write() 
      *
+     * @runInSeparateProcess
      */
     public function testTextStyleWrite()
     {
-        $cli = new \Gbhorwood\Macrame\Macrame();
-
         /**
          * Data
          */
@@ -306,66 +331,75 @@ class TextTest extends TestCase
          * Tests and assertions
          */
         $this->expectOutputString($boldText);
-        $cli->text($testText)->style('bold')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->style('bold')->write();
         ob_clean();
 
         $this->expectOutputString($italicText);
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
         $cli->text($testText)->style('italic')->write();
         ob_clean();
 
         $this->expectOutputString($underlineText);
-        $cli->text($testText)->style('underline')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->style('underline')->write();
         ob_clean();
 
         $this->expectOutputString($strikeText);
-        $cli->text($testText)->style('strike')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->style('strike')->write();
         ob_clean();
+
         $this->expectOutputString($strikeText);
-        $cli->text($testText)->style('strikethrough')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->style('strikethrough')->write();
         ob_clean();
 
         $this->expectOutputString($boldItalicText);
-        $cli->text($testText)->style('bold', 'italic')->write();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->style('bold', 'italic')->write();
     }
 
     /**
      * Test text()->right()->write() 
      *
+     * @runInSeparateProcess
      */
     public function testTextRightWrite()
     {
-        $cli = new \Gbhorwood\Macrame\Macrame();
-
         /**
          * Data
          */
         $testText = 'some text';
 
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+
         /**
          * Tests and assertions
          */
         $this->expectOutputRegex('/^\\s+'.$testText.'$/');
-        $cli->text($testText)->right()->write();
+        $cli->right()->write();
     }
 
     /**
      * Test text()->centre()->write() 
      *
+     * @runInSeparateProcess
      */
     public function testTextCentreWrite()
     {
-        $cli = new \Gbhorwood\Macrame\Macrame();
-
         /**
          * Data
          */
         $testText = 'some text';
 
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+
         /**
          * Tests and assertions
          */
         $this->expectOutputRegex('/^\\s+'.$testText.'$/');
-        $cli->text($testText)->centre()->write();
+        $cli->centre()->write();
         ob_clean();
 
         $this->expectOutputRegex('/^\\s+'.$testText.'$/');
@@ -375,27 +409,30 @@ class TextTest extends TestCase
     /**
      * Test text()->left()->write() 
      *
+     * @runInSeparateProcess
      */
     public function testTextLeftWrite()
     {
-        $cli = new \Gbhorwood\Macrame\Macrame();
-
         /**
          * Data
          */
         $testText = 'some text';
 
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+
         /**
          * Tests and assertions
          */
         $this->expectOutputRegex('/^'.$testText.'$/');
-        $cli->text($testText)->left()->write();
+        $cli->left()->write();
     }
 
+    /**
+     *
+     * @runInSeparateProcess
+     */
     public function testTextLevels()
     {
-        $cli = new \Gbhorwood\Macrame\Macrame();
-
         /**
          * Data
          */
@@ -415,44 +452,54 @@ class TextTest extends TestCase
          * Tests and assertions
          */
         $this->expectOutputString($okText);
-        $cli->text($testText)->ok();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->ok();
         ob_clean();
 
         $this->expectOutputString($debugText);
-        $cli->text($testText)->debug();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->debug();
         ob_clean();
 
         $this->expectOutputString($infoText);
-        $cli->text($testText)->info();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->info();
         ob_clean();
 
         $this->expectOutputString($noticeText);
-        $cli->text($testText)->notice();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->notice();
         ob_clean();
 
         $this->expectOutputString($warningText);
-        $cli->text($testText)->warning();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->warning();
         ob_clean();
 
         $this->expectOutputString($alertText);
-        $cli->text($testText)->alert();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->alert();
         ob_clean();
 
         $this->expectOutputString($errorText);
-        $cli->text($testText)->error();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->error();
         ob_clean();
 
         $this->expectOutputString($criticalText);
-        $cli->text($testText)->critical();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->critical();
         ob_clean();
 
         $this->expectOutputString($emergencyText);
-        $cli->text($testText)->emergency();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $cli->emergency();
     }
 
     /**
      * applyAnsiWrapper() plain text
      *
+     * @runInSeparateProcess
      */
     public function testApplyAnsiWrapperPlain()
     {
@@ -498,6 +545,7 @@ class TextTest extends TestCase
     /**
      * applyAnsiWrapper() ANSI-styled text
      *
+     * @runInSeparateProcess
      */
     public function testApplyAnsiWrapperStyled()
     {
@@ -543,6 +591,8 @@ class TextTest extends TestCase
     /**
      * Test page()
      * <CR>
+     *
+     * @runInSeparateProcess
      */
     public function testPageOneLine()
     {
@@ -565,14 +615,16 @@ class TextTest extends TestCase
         /**
          * Test and assertion
          */
-        $cli = new \Gbhorwood\Macrame\Macrame();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
         $this->expectOutputRegex("/^line 0/i");
-        $cli->text($testText)->page();
+        $cli->page();
     }
 
     /**
      * Test page()
      * <SPACE>
+     *
+     * @runInSeparateProcess
      */
     public function testPageOnePage()
     {
@@ -596,14 +648,16 @@ class TextTest extends TestCase
         /**
          * Test and assertion
          */
-        $macrame = new \Gbhorwood\Macrame\Macrame();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
         $this->expectOutputRegex("/^line 0/i");
-        $macrame->text($testText)->page();
+        $cli->page();
     }
 
     /**
      * Test page()
      * <q>
+     *
+     * @runInSeparateProcess
      */
     public function testPageQuit()
     {
@@ -625,14 +679,15 @@ class TextTest extends TestCase
         /**
          * Test and assertion
          */
-        $macrame = new \Gbhorwood\Macrame\Macrame();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
         $this->expectOutputRegex("/^line 0/i");
-        $macrame->text($testText)->page();
+        $cli->page();
     }
 
     /**
      * Test rowCount()
      * 
+     * @runInSeparateProcess
      */
     public function testRowCount()
     {
@@ -648,14 +703,15 @@ class TextTest extends TestCase
         /**
          * Test and assertion
          */
-        $macrame = new \Gbhorwood\Macrame\Macrame();
-        $result = $macrame->text($testText)->rowCount();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $result = $cli->rowCount();
         $this->assertEquals(3, $result);
     }
 
     /**
      * Test reverse()
      * 
+     * @runInSeparateProcess
      */
     public function testReverse()
     {
@@ -668,8 +724,8 @@ class TextTest extends TestCase
         /**
          * Test and assertion
          */
-        $macrame = new \Gbhorwood\Macrame\Macrame();
-        $result = $macrame->text($testText)->reverse()->get();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $result = $cli->reverse()->get();
         $this->assertEquals($expected, $result);
     }
 
@@ -677,6 +733,7 @@ class TextTest extends TestCase
      * mb_strwidth_ansi() 
      *
      * @dataProvider strlenProvider
+     * @runInSeparateProcess
      */
     public function testStrlenAnsiSafe($string, $length)
     {
@@ -687,6 +744,7 @@ class TextTest extends TestCase
     /**
      * Test tags
      * 
+     * @runInSeparateProcess
      */
     public function testTags()
     {
@@ -699,8 +757,8 @@ class TextTest extends TestCase
         /**
          * Test and assertion
          */
-        $macrame = new \Gbhorwood\Macrame\Macrame();
-        $result = $macrame->text($testText)->get();
+        $cli = new \Gbhorwood\Macrame\MacrameText($testText);
+        $result = $cli->get();
         $this->assertEquals($expected, $result);
     }
 

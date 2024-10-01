@@ -544,6 +544,7 @@ class InputTest extends TestCase
     /**
      * Test readPassword
      *
+     * @runInSeparateProcess
      */
     public function testReadPassword()
     {
@@ -584,6 +585,7 @@ class InputTest extends TestCase
      * Test readPassword
      * backspaces
      *
+     * @runInSeparateProcess
      */
     public function testReadPasswordBackspaces()
     {
@@ -626,6 +628,7 @@ class InputTest extends TestCase
      * validations
      *
      * @dataProvider passwordProviderSuccess
+     * @runInSeparateProcess
      */
     public function testReadPasswordWithValidations($password, $expected)
     {

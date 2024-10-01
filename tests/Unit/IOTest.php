@@ -16,6 +16,7 @@ class IOTest extends TestCase
      * Test getColWidth()
      *
      * @dataProvider sttySizeProvider
+     * @runInSeparateProcess
      */
     public function testGetColWidth($height, $width, $expectedHeight, $expectedWidth)
     {

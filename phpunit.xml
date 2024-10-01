@@ -7,7 +7,7 @@
          requireCoverageMetadata="true"
          beStrictAboutCoverageMetadata="false"
          beStrictAboutOutputDuringTests="true"
-         processIsolation="true"
+         processIsolation="false"
          failOnRisky="true"
          failOnWarning="true">
     <testsuites>

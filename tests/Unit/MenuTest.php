@@ -24,6 +24,7 @@ class MenuTest extends TestCase
      * Test interactive()
      * down arrow
      *
+     * @runInSeparateProcess
      */
     public function testInteractiveDownArrow()
     {
@@ -68,6 +69,7 @@ class MenuTest extends TestCase
      * Test interactive()
      * tab
      *
+     * @runInSeparateProcess
      */
     public function testInteractiveTab()
     {
@@ -112,6 +114,7 @@ class MenuTest extends TestCase
      * Test interactive()
      * up arrow
      *
+     * @runInSeparateProcess
      */
     public function testInteractiveUpArrow()
     {
@@ -157,6 +160,7 @@ class MenuTest extends TestCase
      * Test interactive()
      * leader keys
      *
+     * @runInSeparateProcess
      */
     public function testInteractiveLeaderKeys()
     {
@@ -202,6 +206,7 @@ class MenuTest extends TestCase
      * Test interactive()
      * option right
      *
+     * @runInSeparateProcess
      */
     public function testInteractiveOptionRight()
     {
@@ -240,6 +245,7 @@ class MenuTest extends TestCase
      * Test interactive()
      * option centre
      *
+     * @runInSeparateProcess
      */
     public function testInteractiveOptionCentre()
     {
@@ -278,6 +284,7 @@ class MenuTest extends TestCase
      * Test interactive()
      * option center
      *
+     * @runInSeparateProcess
      */
     public function testInteractiveOptionCenter()
     {
@@ -316,6 +323,7 @@ class MenuTest extends TestCase
      * Test interactive()
      * option left
      *
+     * @runInSeparateProcess
      */
     public function testInteractiveOptionLeft()
     {
@@ -354,6 +362,7 @@ class MenuTest extends TestCase
      * Test interactive()
      * menu left
      *
+     * @runInSeparateProcess
      */
     public function testInteractiveMenuLeft()
     {
@@ -392,6 +401,7 @@ class MenuTest extends TestCase
      * Test interactive()
      * menu left
      *
+     * @runInSeparateProcess
      */
     public function testInteractiveMenuRight()
     {
