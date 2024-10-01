@@ -349,4 +349,80 @@ class MenuTest extends TestCase
         $this->expectOutputRegex('/ head/');
         $result = $input->optionCentre()->optionLeft()->interactive($options, $header);
     }
+
+    /**
+     * Test interactive()
+     * menu left
+     *
+     */
+    public function testInteractiveMenuLeft()
+    {
+        /**
+         * data
+         */
+        $keystrokes = [
+            chr(66), // down arrow
+            chr(10), // return
+        ];
+
+        $header = 'head';
+
+        $options = [
+            'one',
+            'two',
+            'headxxx',
+        ];
+
+        /**
+         * Override stream_get_contents() to return $keystrokes
+         */
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$keystrokes);
+
+        /**
+         * test
+         */
+        $input = new \Gbhorwood\Macrame\MacrameMenu(new \Gbhorwood\Macrame\MacrameText());
+        $this->expectOutputRegex('/ head/');
+        $result = $input->optionCentre()->menuLeft()->interactive($options, $header);
+    }
+
+    /**
+     * Test interactive()
+     * menu left
+     *
+     */
+    public function testInteractiveMenuRight()
+    {
+        /**
+         * data
+         */
+        $keystrokes = [
+            chr(66), // down arrow
+            chr(10), // return
+        ];
+
+        $header = 'head';
+
+        $options = [
+            'one',
+            'two',
+            'headxxx',
+        ];
+
+        /**
+         * Override stream_get_contents() to return $keystrokes
+         */
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$keystrokes);
+
+        /**
+         * test
+         */
+        $input = new \Gbhorwood\Macrame\MacrameMenu(new \Gbhorwood\Macrame\MacrameText());
+        $this->expectOutputRegex('/ head/');
+        $result = $input->optionCentre()->menuRight()->interactive($options, $header);
+    }
 }
