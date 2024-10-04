@@ -316,7 +316,18 @@ class MacrameMenu
 
         $index = 0;
         $leaderString = '';
-        $dateObj = new \DateTime($date);
+
+        /**
+         * Validate date
+         */
+        try {
+            $dateObj = new \DateTime($date);
+        }
+        catch(\Exception $e) {
+            $error = new MacrameText("Provided string '$date' is not a valid date");
+            $error->error();
+            return $date;
+        }
 
         /**
          * Function to output date as horizontal menu
@@ -398,18 +409,10 @@ class MacrameMenu
                 case 2;
                     $leaderString = strlen($leaderString) > 2 ? substr($leaderString, -1) : $leaderString;
                     $d = substr(str_pad($leaderString, 2, '0', STR_PAD_LEFT), -2);
-                    try {
-                        return [
-                            new \DateTime($parts[0].$parts[1].$d),
-                            $leaderString,
-                        ];
-                    }
-                    catch(\Exception $e) {
-                        return [
-                            $dateObj,
-                            '',
-                        ];
-                    }
+                    return [
+                        new \DateTime($parts[0].$parts[1].$d),
+                        $leaderString,
+                    ];
             }
         };
 
