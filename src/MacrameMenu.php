@@ -304,11 +304,11 @@ class MacrameMenu
     }
 
     /**
-     * Execute a date picker menu and return the selected option
+     * Execute a date picker menu and return the selected date
      *
      * @param  String  $date The starting date in any valid date format
      * @param  ?String $header  The optional header to show
-     * @return String  The selected option string
+     * @return String  The selected date in format Y-m-d
      */
     public function datePicker(String $date, ?String $header = null):String
     {
@@ -347,11 +347,11 @@ class MacrameMenu
         };
 
         /**
-         * Function to handle leader keys. ie. if the user presses 'm' and then 'a' when the index
-         * is on the month field, set date object month to 'may'.
+         * Function to handle leader keys. ie. if the user presses 'n' and then 'o' when the index
+         * is on the month field, set date object month to 'nov'.
          * 
-         * @param  DateTime $dateObj   The DateTime object
-         * @param  Int      $index     The field in the menu that maps to the date part. ie. 0 for year, 1 for month and 2 for day.
+         * @param  DateTime $dateObj   	  The DateTime object
+         * @param  Int      $index        The field in the menu that maps to the date part. ie. 0 for year, 1 for month and 2 for day.
          * @param  String   $leaderString The string of leader keys pressed by the user
          * @return Array    First element is $dateObj, second element is updated $leaderString
          */
@@ -426,14 +426,14 @@ class MacrameMenu
                 case KEY_RIGHT_ARROW:
                 case KEY_TAB:
                     $leaderString = '';
-                    $index = $index >= 2 ? 0 : $index + 1; // rollover to top
+                    $index = $index >= 2 ? 0 : $index + 1; // rollover to start
                     $display($dateObj, $index);
                     break;
 
                 // left menu
                 case KEY_LEFT_ARROW:
                     $leaderString = '';
-                    $index = $index <= 0 ? 2 : $index - 1; // rollover to bottom
+                    $index = $index <= 0 ? 2 : $index - 1; // rollover to end
                     $display($dateObj, $index);
                     break;
 
@@ -582,7 +582,6 @@ class MacrameMenu
                 return join(array_fill(0, $padAmount, " "));
             }
             $padAmount = (int)floor(($width - $this->text->mb_strwidth_ansi($text)));
-            print "width $width text $text padAmount $padAmount".PHP_EOL.PHP_EOL;
             return join(array_fill(0, $padAmount, " "));
         };
 
@@ -600,7 +599,7 @@ class MacrameMenu
                 return join(array_fill(0, $padAmount, " "));
             }
             if($this->optionAlignment == CENTRE) {
-                $padAmount = (int)floor(($width - $this->text->mb_strwidth_ansi($text)) /2);
+                $padAmount = (int)floor(($width - $this->text->mb_strwidth_ansi($text)) / 2);
                 return join(array_fill(0, $padAmount, " "));
             }
 
