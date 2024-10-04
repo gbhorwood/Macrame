@@ -587,12 +587,12 @@ class MenuTest extends TestCase
             '2',
             chr(9),  // tab
             'n',
+            chr(8),  // backsapce
+            'o',
             chr(9),  // tab
             '3',
             chr(10), // return
         ];
-
-        // aug
 
         $header = 'head';
 
@@ -617,5 +617,34 @@ class MenuTest extends TestCase
          */
         $this->assertEquals('2000-11-03', $result);
         ob_end_clean();
+    }
+
+
+    /**
+     * Test datePicker()
+     * invalid date string
+     *
+     * @runInSeparateProcess
+     */
+    public function testDatePickerInvalidDateString()
+    {
+
+        $header = 'head';
+
+        $date = "notadate";
+
+        /**
+         * test
+         */
+        $input = new \Gbhorwood\Macrame\MacrameMenu(new \Gbhorwood\Macrame\MacrameText());
+
+        $this->expectOutputRegex("/Provided string 'notadate' is not a valid date/");
+
+        $result = $input->datePicker($date, $header);
+
+        /**
+         * assertions
+         */
+        $this->assertEquals($date, $result);
     }
 }
