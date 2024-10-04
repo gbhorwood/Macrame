@@ -67,6 +67,51 @@ class MenuTest extends TestCase
 
     /**
      * Test interactive()
+     * down arrow. styling.
+     *
+     * @runInSeparateProcess
+     */
+    public function testInteractiveDownArrowStyling()
+    {
+        /**
+         * data
+         */
+        $keystrokes = [
+            chr(66), // down arrow
+            chr(10), // return
+        ];
+
+        $header = 'head';
+
+        $options = [
+            'one',
+            'two',
+            'three',
+        ];
+
+        /**
+         * Override stream_get_contents() to return $keystrokes
+         */
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$keystrokes);
+
+        /**
+         * test
+         */
+        $input = new \Gbhorwood\Macrame\MacrameMenu(new \Gbhorwood\Macrame\MacrameText());
+        ob_start();
+        $result = $input->colorOption('green')->colorSelected('red')->styleOption('italic')->styleSelected('bold')->interactive($options, $header);
+
+        /**
+         * assertions
+         */
+        $this->assertEquals('two', $result);
+        ob_end_clean();
+    }
+
+    /**
+     * Test interactive()
      * tab
      *
      * @runInSeparateProcess
@@ -399,7 +444,7 @@ class MenuTest extends TestCase
 
     /**
      * Test interactive()
-     * menu left
+     * menu right
      *
      * @runInSeparateProcess
      */
@@ -434,5 +479,143 @@ class MenuTest extends TestCase
         $input = new \Gbhorwood\Macrame\MacrameMenu(new \Gbhorwood\Macrame\MacrameText());
         $this->expectOutputRegex('/ head/');
         $result = $input->optionCentre()->menuRight()->interactive($options, $header);
+    }
+
+    /**
+     * Test interactive()
+     * menu center
+     *
+     * @runInSeparateProcess
+     */
+    public function testInteractiveMenuCenter()
+    {
+        /**
+         * data
+         */
+        $keystrokes = [
+            chr(66), // down arrow
+            chr(10), // return
+        ];
+
+        $header = 'head';
+
+        $options = [
+            'one',
+            'two',
+            'headxxx',
+        ];
+
+        /**
+         * Override stream_get_contents() to return $keystrokes
+         */
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$keystrokes);
+
+        /**
+         * test
+         */
+        $input = new \Gbhorwood\Macrame\MacrameMenu(new \Gbhorwood\Macrame\MacrameText());
+        $this->expectOutputRegex('/ head/');
+        $result = $input->optionCentre()->menuCenter()->interactive($options, $header);
+    }
+
+    /**
+     * Test datePicker()
+     * arrow keys
+     *
+     * @runInSeparateProcess
+     */
+    public function testDatePickerArrowKeys()
+    {
+        /**
+         * data
+         */
+        $keystrokes = [
+            chr(67), // right arrow
+            chr(68), // left arrow
+            chr(66), // down arrow
+            chr(9),  // tab
+            chr(65), // up arrow
+            chr(65), // up arrow
+            chr(9),  // tab
+            chr(66), // down arrow
+            chr(66), // down arrow
+            chr(66), // down arrow
+            chr(10), // return
+        ];
+
+        // aug
+
+        $header = 'head';
+
+        $date = "1990-10-04";
+
+        /**
+         * Override stream_get_contents() to return $keystrokes
+         */
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$keystrokes);
+
+        /**
+         * test
+         */
+        $input = new \Gbhorwood\Macrame\MacrameMenu(new \Gbhorwood\Macrame\MacrameText());
+        ob_start();
+        $result = $input->datePicker($date, $header);
+
+        /**
+         * assertions
+         */
+        $this->assertEquals('1991-08-07', $result);
+        ob_end_clean();
+    }
+
+    /**
+     * Test datePicker()
+     * leader keys
+     *
+     * @runInSeparateProcess
+     */
+    public function testDatePickerLeaderKeys()
+    {
+        /**
+         * data
+         */
+        $keystrokes = [
+            '2',
+            chr(9),  // tab
+            'n',
+            chr(9),  // tab
+            '3',
+            chr(10), // return
+        ];
+
+        // aug
+
+        $header = 'head';
+
+        $date = "1990-10-04";
+
+        /**
+         * Override stream_get_contents() to return $keystrokes
+         */
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$keystrokes);
+
+        /**
+         * test
+         */
+        $input = new \Gbhorwood\Macrame\MacrameMenu(new \Gbhorwood\Macrame\MacrameText());
+        ob_start();
+        $result = $input->datePicker($date, $header);
+
+        /**
+         * assertions
+         */
+        $this->assertEquals('2000-11-03', $result);
+        ob_end_clean();
     }
 }
