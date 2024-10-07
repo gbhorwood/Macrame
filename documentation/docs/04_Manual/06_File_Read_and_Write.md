@@ -1,4 +1,4 @@
-File handling in command line applications has different challenges than for web applications. In the web environment, the developer knows the filesystem structure and permissions and read and write files with confidence. Command line applications, however, run on someone else's compture where no such assurances can be made.
+File handling in command line applications has different challenges than for web applications. In the web environment, the developer knows the filesystem structure and permissions and can read and write files with confidence. Command line applications, however, run on someone else's comptuer where no such assurances can be made.
 
 Macrame provides a number of file access methods to help ensure more-safe interaction with the file system
 
@@ -230,7 +230,7 @@ if($macrame->file('/path/to/file')->readable()) {
 The `readable()` method returns `true` if the file exists and has permissions that grant read access, `false` otherwise.
 
 # Reading very large files 
-If a file is larger than the amount of memory available to PHP, reading its contents into a variable can cause errors. Reading large files can be done by iterating over them line-by-line using the `byLine()` method.
+If a file is larger than the amount of memory available to PHP, reading its contents into a variable can cause errors. In Macrame, reading large files can be done by iterating over them line-by-line using the `byLine()` method.
 
 ```PHP
 $macrame = new Macrame();
@@ -241,6 +241,8 @@ foreach($macrame->file('/large/file')->byLine() as $line) {
 ```
 
 If the file read with `byLine()` does not exist or the user does not have read permission, a warning will be displayed and null will be returned.
+
+The `byLine()` method returns a generator.
 
 
 # Cleaning up files on exit

@@ -19,11 +19,17 @@ $macrame = new Macrame();
 
 $macrame->args('foo')->exists();    // bool. True if --foo or --foo=<val> was passed
 $macrame->args('foo')->count();     // int. Number of times --foo was passed
+$macrame->args('f')->count();       // int. Number of times -f was passed, either as -ff or -f -f
 $macrame->args('foo')->first();     // string. The value of the first --foo=<val> argument 
+$macrame->args('foo')->last();      // string. The value of the last --foo=<val> argument 
 $macrame->args('foo')->all();       // array. All of the values of --foo=<val>
-```
 
-Positional arguments are accessed by passing the name 'positional' to `args()`.
+// positional arguments are not keyed, but identified by position starting at left
+$macrame->args('positional')->all();    // array. All of the values of positional arguments
+$macrame->args('positional')->count();  // int.
+$macrame->args('positional')->first();  // string.
+$macrame->args('positional')->last();   // string.
+```
 
 # Types of arguments
 Macrame handles four different types of user arguments:
@@ -238,7 +244,8 @@ All the values of foo areArray
 
 There are 2 positional arguments
 The first positional argument passed was 'first positional'
-All the positional arguments areArray
+All the positional arguments are
+Array
 (
     [0] => first positional
     [1] => second positional
