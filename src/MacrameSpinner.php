@@ -2,6 +2,7 @@
 namespace Gbhorwood\Macrame;
 
 use \Gbhorwood\Macrame\MacrameIO as IO;
+use \Gbhorwood\Macrame\MacrameText as Text;
 
 /**
  * Spinner rotation rates
@@ -228,6 +229,35 @@ class MacrameSpinner {
             }, $this->animation);
         }
         IO::showCursor();
+    }
+
+    /**
+     * Run a user-provided function while displaying the spinner.
+     *
+     * @param  Callable $function Callable to run while spinner displayed
+     * @param  Array    $args     Arguments for the callable as array
+     * @return mixed
+     */
+    public function run(Callable $function, Array $args = [])
+    {
+        $pid = pcntl_fork();
+
+        if($pid == -1) {
+            $text = new Text("Could not fork child process");
+            $text->error();
+            return null;
+        }
+
+        if($pid) {
+            $result = call_user_func_array($function, $args);
+        }
+        else {
+            $this->show();
+        }
+
+        posix_kill($pid, SIGKILL);
+
+        return $result;
     }
 
     /**
