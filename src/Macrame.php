@@ -131,6 +131,17 @@ class Macrame
     }
 
     /**
+     * Creates and returns a MacrameSpinner object for creating spinners
+     * 
+     * @param  String  $animation
+     * @return MacrameSpinner
+     */
+    public function spinner(String $animation = null):MacrameSpinner
+    {
+        return new MacrameSpinner($animation);
+    }
+
+    /**
      * Does cleanup and exits the script with 0
      *
      * @return Int
