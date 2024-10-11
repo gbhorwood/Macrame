@@ -80,5 +80,6 @@ IO::getColWidth()
 
 // int. Return the height of the terminal in characters
 IO::getRowHeight()
+
 ```
 
