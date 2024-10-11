@@ -633,12 +633,27 @@ class MacrameText {
     }
 
     /**
+     * Remove all ansi and macrame tag formatting from a string
+     *
+     * @param  String $text The line of potentially formatted text
+     * @return Int
+     */
+    public function stripFormatting(String $text):String
+    {
+        $text = preg_replace('/<![A-Za-z]+!>/', '', $text);
+        $text = preg_replace('/[\x09|\t]/', '    ', $text);
+        $text = preg_replace('/\x1b(\[|\(|\))[;?0-9]*[0-9A-Za-z]/', "", $text);
+        $text = preg_replace('/[\x03|\x1a|\x7f]/', "", $text);
+        return $text;
+    }
+
+    /**
      * String width that handles invisible ANSI characters, backspaces and tabs.
      *
      * @param  String $text The line of text to count
      * @return Int
      */
-    public function mb_strwidth_ansi(String $text):int
+    public function mb_strwidth_ansi(String $text):Int
     {
         // replace tabs with spaces
         $text = preg_replace('/[\x09|\t]/', '    ', $text);
