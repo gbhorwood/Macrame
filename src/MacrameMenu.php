@@ -69,14 +69,46 @@ class MacrameMenu
      * @var Int
      * @access private
      */
-    private int $optionAlignment = LEFT;
+    private Int $optionAlignment = LEFT;
 
     /**
      * Alignment of menu. One of LEFT, RIGHT, CENTRE.
      * @var Int
      * @access private
      */
-    private int $menuAlignment = LEFT;
+    private Int $menuAlignment = LEFT;
+
+    /**
+     * Erase menu when done
+     * @var Bool
+     * @access private
+     */
+    private bool $erase = false;
+
+    /**
+     * Memoization
+     */
+
+    /**
+     * Displayable header. For performance.
+     * @var ?MacrameText
+     * @access private
+     */
+    private ?MacrameText $headerPadded = null;
+
+    /**
+     * Count of header and option rows. For performance.
+     * @var ?Int
+     * @access private
+     */
+    private ?Int $rowCount = null;
+
+    /**
+     * Displayable options. For performance.
+     * @var Array<Array<MacrameText>>
+     * @access private
+     */
+    private Array $options = [];
 
     /**
      * Constructor
@@ -245,6 +277,17 @@ class MacrameMenu
     }
 
     /**
+     * Set whether to erase menu output after menu completed. Toggle
+     *
+     * @return MacrameMenu
+     */
+    public function erase():MacrameMenu
+    {
+        $this->erase = !$this->erase;
+        return $this;
+    }
+
+    /**
      * Execute an interactive menu and return the selected option
      *
      * @param  Array<String> $options The array of options in the menu
@@ -256,13 +299,13 @@ class MacrameMenu
         IO::hideCursor();
 
         // strip all macrame formatting tags from the string
-        $optionsTagless = array_map(fn($t) => preg_replace('/<![A-Za-z]+!>/', '', $t), $options);
+        $optionsSanitized = array_map(fn($t) => $this->text->stripFormatting($t), $options);
 
         // initial selected element is the first
         $selectedIndex = 0;
 
         // output menu
-        $this->printInteractiveMenu($optionsTagless, $selectedIndex, $header);
+        $this->printInteractiveMenu($optionsSanitized, $selectedIndex, $header, true);
 
         // poll for user input
         while(true) {
@@ -274,30 +317,33 @@ class MacrameMenu
                 // down menu
                 case KEY_DOWN_ARROW:
                 case KEY_TAB:
-                    $selectedIndex = $selectedIndex >= count($optionsTagless) - 1 ? 0 : $selectedIndex + 1; // rollover to top
-                    $this->printInteractiveMenu($optionsTagless, $selectedIndex, $header);
+                    $selectedIndex = $selectedIndex >= count($optionsSanitized) - 1 ? 0 : $selectedIndex + 1; // rollover to top
+                    $this->printInteractiveMenu($optionsSanitized, $selectedIndex, $header);
                     break;
 
                 // up menu
                 case KEY_UP_ARROW:
-                    $selectedIndex = $selectedIndex <= 0 ? count($optionsTagless) - 1 : $selectedIndex - 1; // rollover to bottom
-                    $this->printInteractiveMenu($optionsTagless, $selectedIndex, $header);
+                    $selectedIndex = $selectedIndex <= 0 ? count($optionsSanitized) - 1 : $selectedIndex - 1; // rollover to bottom
+                    $this->printInteractiveMenu($optionsSanitized, $selectedIndex, $header);
                     break;
 
                 // select item
                 case KEY_RETURN:
                     IO::showCursor();
-                    return $options[$selectedIndex];
+                    if($this->erase) {
+                        IO::eraseLines($this->rowCount);
+                    }
+                    return $optionsSanitized[$selectedIndex];
 
-                // all other keys
+                // all other keys leader functionality
                 default:
-                    for($i=0; $i<count($optionsTagless);$i++) {
-                        if(str_starts_with(strtolower($optionsTagless[$i]), strtolower($key))) {
+                    for($i=0; $i<count($optionsSanitized);$i++) {
+                        if(str_starts_with(strtolower($optionsSanitized[$i]), strtolower($key))) {
                             $selectedIndex = $i;
                             break;
                         }
                     }
-                    $this->printInteractiveMenu($optionsTagless, $selectedIndex, $header);
+                    $this->printInteractiveMenu($optionsSanitized, $selectedIndex, $header);
                     break;
             }
         }
@@ -480,22 +526,74 @@ class MacrameMenu
         }
     }
 
+    public function horizontal(Array $options, ?String $header = null)
+    {
+        IO::hideCursor();
+
+        // strip all macrame formatting tags from the string
+        $optionsSanitized = array_map(fn($t) => $this->text->stripFormatting($t), $options);
+
+        // initial selected element is the first
+        $selectedIndex = 0;
+
+        // output menu
+        $this->printHorizontalMenu($optionsSanitized, $selectedIndex, $header, true);
+
+        // poll for user input
+        while(true) {
+            $key = IO::keyStroke();
+
+            // handle user input
+            switch(ord($key)) {
+
+                // next menu item
+                case KEY_DOWN_ARROW:
+                case KEY_RIGHT_ARROW:
+                case KEY_TAB:
+                    $selectedIndex = $selectedIndex >= count($optionsSanitized) - 1 ? 0 : $selectedIndex + 1; // rollover to top
+                    $this->printHorizontalMenu($optionsSanitized, $selectedIndex, $header);
+                    break;
+
+                // previous menu item
+                case KEY_UP_ARROW:
+                case KEY_LEFT_ARROW:
+                    $selectedIndex = $selectedIndex <= 0 ? count($optionsSanitized) - 1 : $selectedIndex - 1; // rollover to bottom
+                    $this->printHorizontalMenu($optionsSanitized, $selectedIndex, $header);
+                    break;
+
+                // select item
+                case KEY_RETURN:
+                    IO::showCursor();
+                    return $options[$selectedIndex];
+
+                // all other keys
+                default:
+                    for($i=0; $i<count($optionsSanitized);$i++) {
+                        if(str_starts_with(strtolower($optionsSanitized[$i]), strtolower($key))) {
+                            $selectedIndex = $i;
+                            break;
+                        }
+                    }
+                    $this->printHorizontalMenu($optionsSanitized, $selectedIndex, $header);
+                    break;
+            }
+        }
+    }
+
     /**
      * Prints a horizontal interactive menu
      *
      * @param  Array<String>  $options
      * @param  Int $selected The index of the option to show as currentlys selected
      * @param  ?String $header The optional header
+     * @param  Bool $initial True if first draw of menu. Suppresses erasing.
      * @return void
      */
-    private function printHorizontalMenu(Array $options, Int $selected, ?String $header = null):void
+    private function printHorizontalMenu(Array $options, Int $selected, ?String $header = null, Bool $initial = false):void
     {
         // erase menu and write header, if any
-        IO::eraseLines(1);
-        if($header) {
-            $headerText = new MacrameText($header);
-            IO::eraseLines($headerText->rowCount());
-            $headerText->write(true);
+        if(!$initial) {
+            IO::eraseLines(1);
         }
 
         // build menu options with styling as array
@@ -526,12 +624,36 @@ class MacrameMenu
         }
 
         /**
-         * Build date picker line with optional alignment
+         * Build horizontal menu line with optional alignment
          */
         $menuLine = join(' ', $displayOptions);
         if($this->menuAlignment != LEFT) {
-            $padAmount = (int)floor((IO::getColWidth() - mb_strwidth($menuLine))/$this->menuAlignment);
+            // strip escape codes before calculating width
+            $padAmount = (int)floor((IO::getColWidth() - $this->text->mb_strwidth_ansi($menuLine))/$this->menuAlignment);
             $menuLine = join(array_fill(0, $padAmount, " ")).$menuLine;
+
+        }
+
+        /**
+         * Output header with optional alignment
+         */
+        if($header) {
+            $headerText = new MacrameText($header);
+
+            if(!$initial) {
+                IO::eraseLines($headerText->rowCount());
+            }
+
+            // handle centre and right padding
+            if($this->menuAlignment != LEFT) {
+                $headerLines = array_map(function($headerLine) {
+                    $padAmount = (int)floor((IO::getColWidth() - $this->text->mb_strwidth_ansi($headerLine))/$this->menuAlignment);
+                    $headerPadded = join(array_fill(0, $padAmount, " ")).$headerLine;
+                    return $headerPadded;
+                }, explode(PHP_EOL, $headerText->wrap()->get()));
+                $headerText = new MacrameText(join(PHP_EOL, $headerLines));
+            }
+            $headerText->write(true);
         }
 
         $output = new MacrameText($menuLine);
@@ -544,12 +666,11 @@ class MacrameMenu
      * @param  Array<String>  $options
      * @param  Int $selected The index of the option to show as currentlys selected
      * @param  ?String $header The optional header
+     * @param  Bool $initial True if first draw of menu. Suppresses erasing.
      * @return void
      */
-    private function printInteractiveMenu(Array $options, Int $selected, ?String $header = null):void
+    private function printInteractiveMenu(Array $options, Int $selected, ?String $header = null, $initial = false):void
     {
-        $headerText = new MacrameText($header);
-
         /**
          * Function to get the width of the longest line in the options for padding.
          * Handles multi-line options and options that require wrapping to console.
@@ -585,7 +706,7 @@ class MacrameMenu
                 return join(array_fill(0, $padAmount, " "));
             }
             $padAmount = (int)floor(($width - $this->text->mb_strwidth_ansi($text)));
-            return join(array_fill(0, $padAmount, " "));
+            return $padAmount > 0 ? join(array_fill(0, $padAmount, " ")) : "";
         };
 
         /**
@@ -612,91 +733,140 @@ class MacrameMenu
         $maxWidth = $getMaxWidth($options);
 
         /**
-         * get array of options suitable for display, ie. with multi-line handled and padding added
+         * Get header Text object, padded for alignment
+         *
+         * @param  String $header
+         * @return MacrameText
          */
-        $displayOptions = array_map(function($t) use($getRightPad, $getLeftPad, $maxWidth){
-            $ttext = new MacrameText($t);
-            $optionWrapped = explode(PHP_EOL, $ttext->wrap()->get());
-            return join(PHP_EOL, array_map(fn($t) => $getLeftPad($t, $maxWidth, 1).$t.$getRightPad($t, $maxWidth),$optionWrapped));
-        }, $options);
+        $getPaddedHeader = function(String $header) use($getRightPad, $getLeftPad, $maxWidth){
+            // memoization for performance
+            if($this->headerPadded) {
+                return $this->headerPadded;
+            }
+
+            $headerText = new MacrameText($header);
+            $headerLines = array_map(function($h) use($getRightPad, $getLeftPad, $maxWidth) {
+                $headerPadded = new MacrameText($getLeftPad($h, $maxWidth).$h.$getRightPad($h, $maxWidth));
+                switch($this->menuAlignment) {
+                    case LEFT:
+                        $headerPadded->left();
+                        break;
+                    case RIGHT:
+                        $headerPadded->right();
+                        break;
+                    case CENTRE:
+                        $headerPadded->centre();
+                        break;
+                }
+                return $headerPadded->get();
+            }, explode(PHP_EOL, $headerText->wrap()->get()));
+
+            $headerPadded = new MacrameText(join(PHP_EOL, $headerLines));
+            $this->headerPadded = $headerPadded;
+
+            return $headerPadded;
+        };
 
         /**
-         * determine how many rows the menu is then erase them so we can redraw
+         * Get count of rows of header and all options. Used for erasing menu.
+         *
+         * @param  String $header
+         * @param  Array<String> $options
+         * @return Int
          */
-        $rowCount = array_sum(array_map(function($t) {
-            $ttext = new MacrameText($t);
-            return count(explode(PHP_EOL, $ttext->wrap()->get()));
-        }, $options)) + $headerText->rowCount();
-        IO::eraseLines($rowCount);
+        $getRowCount = function(String $header, Array $options) use($getPaddedHeader){
+            if($this->rowCount) {
+                return $this->rowCount;
+            }
+            $rowCount = array_sum(array_map(function($t) {
+                $ttext = new MacrameText($t);
+                return count(explode(PHP_EOL, $ttext->wrap()->get()));
+            }, $options)) + $getPaddedHeader($header)->rowCount();
+            $this->rowCount = $rowCount;
+            return $rowCount;
+        };
 
         /**
-         * write the menu header, padded for alignement
+         * Get array of options with padding and styling.
+         *
+         * @param  Array $options
+         * @param  Int $selected
+         * @return Array
          */
-        array_map(function($h) use($getRightPad, $getLeftPad, $maxWidth) {
-            $headerPadded = new MacrameText($getLeftPad($h, $maxWidth).$h.$getRightPad($h, $maxWidth));
-            switch($this->menuAlignment) {
-                case LEFT:
-                    $headerPadded->left();
-                    break;
-                case RIGHT:
-                    $headerPadded->right();
-                    break;
-                case CENTRE:
-                    $headerPadded->centre();
-                    break;
-            }
-            $headerPadded->write(true);
-        }, explode(PHP_EOL, $headerText->wrap()->get()));
-
-        /**
-         * write each menu option with padding for alignement and 
-         * current selected option highlighted
-         */
-        foreach($displayOptions as $i => $t) {
-            // handle the selected option styling
-            if($i == $selected) {
-                $text = new MacrameText($t);
-
-                if(isset($this->colourSelected)) {
-                    $text->colour($this->colourSelected);
-                }
-
-                foreach($this->styleSelected as $style) {
-                    $text->style($style);
-                }
-
-                // if no styles are colours are applied to selected, use reverse
-                if(count($this->styleSelected) == 0 && !isset($this->colourSelected)) {
-                    $text->reverse();
-                }
-            }
-            // handle non-selected option styling
-            else {
-                $text = new MacrameText($t);
-
-                if(isset($this->colourOption)) {
-                    $text->colour($this->colourOption);
-                }
-
-                foreach($this->styleOption as $style) {
-                    $text->style($style);
-                }
+        $getOptionTexts = function(Array $options, Int $selected)  use($getRightPad, $getLeftPad, $maxWidth){
+            if(isset($this->options[$selected])) {
+                return $this->options[$selected];
             }
 
-            // align the menu option
-            switch($this->menuAlignment) {
-                case LEFT:
-                    $text->left();
-                    break;
-                case RIGHT:
-                    $text->right();
-                    break;
-                case CENTRE:
-                    $text->centre();
-                    break;
+            // get array of options suitable for display, ie. with multi-line handled and padding added
+            $displayOptions = array_map(function($t) use($getRightPad, $getLeftPad, $maxWidth){
+                $ttext = new MacrameText($t);
+                $optionWrapped = explode(PHP_EOL, $ttext->wrap()->get());
+                return join(PHP_EOL, array_map(fn($t) => $getLeftPad($t, $maxWidth, 1).$t.$getRightPad($t, $maxWidth),$optionWrapped));
+            }, $options);
+
+            // write each menu option with padding for alignement and current selected option highlighted
+            $optionTexts = [];
+            foreach($displayOptions as $i => $t) {
+                // handle the selected option styling
+                if($i == $selected) {
+                    $text = new MacrameText($t);
+
+                    if(isset($this->colourSelected)) {
+                        $text->colour($this->colourSelected);
+                    }
+
+                    foreach($this->styleSelected as $style) {
+                        $text->style($style);
+                    }
+
+                    // if no styles are colours are applied to selected, use reverse
+                    if(count($this->styleSelected) == 0 && !isset($this->colourSelected)) {
+                        $text->reverse();
+                    }
+                }
+                // handle non-selected option styling
+                else {
+                    $text = new MacrameText($t);
+
+                    if(isset($this->colourOption)) {
+                        $text->colour($this->colourOption);
+                    }
+
+                    foreach($this->styleOption as $style) {
+                        $text->style($style);
+                    }
+                }
+
+                // align the menu option
+                switch($this->menuAlignment) {
+                    case LEFT:
+                        $text->left();
+                        break;
+                    case RIGHT:
+                        $text->right();
+                        break;
+                    case CENTRE:
+                        $text->centre();
+                        break;
+                }
+
+                $optionTexts[] = $text;
             }
 
-            $text->write(true);
+            $this->options[$selected] = $optionTexts;
+            return $optionTexts;
+        };
+
+        $rowCount = $getRowCount($header, $options);
+        $header = $getPaddedHeader($header);
+        $optionTexts = $getOptionTexts($options, $selected);
+
+        if(!$initial) {
+            IO::eraseLines($rowCount);
         }
+
+        $header->write(true);
+        array_map(fn($o) => $o->write(true), $optionTexts);
     }
 }
