@@ -12,6 +12,7 @@ tags.lock
 upload
 vendor
 .php_cs.cache
+.php-cs-fixer.cache
 .phpunit.result.cache
 .phpunit.cache
 swagger/node_modules
