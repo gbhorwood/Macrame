@@ -626,7 +626,7 @@ class MacrameMenu
     private function printInteractiveMenu(Int $selected, Bool $initial = false)
     {
         if (!$initial) {
-            IO::eraseLines(count($this->interactiveMenuDisplays[$selected]) + 1);
+            IO::eraseLines(count($this->interactiveMenuDisplays[$selected]));
         }
         array_map(fn ($l) => IO::writeStdout($l.PHP_EOL), $this->interactiveMenuDisplays[$selected]);
     }
@@ -825,9 +825,9 @@ class InteractiveMenu
      */
     public static function innerAlignOptions(array $options, Int $maxWidth, Int $menuAlignment, Int $optionsAlignment = LEFT): array
     {
-        // only indent options list on left-aligned menu
+        // only indent options list on left-aligned menu that is left-aligned in the terminal
         $indent = 0;
-        if ($menuAlignment == LEFT) {
+        if ($menuAlignment == LEFT && $optionsAlignment == LEFT) {
             $indent = 1;
         }
 

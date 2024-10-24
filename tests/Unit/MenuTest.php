@@ -13,8 +13,12 @@ if(!defined('STDIN')) define('STDIN', fopen("php://stdin","r"));
 #[CoversClass(\Gbhorwood\Macrame\Macrame::class)]
 #[CoversClass(\Gbhorwood\Macrame\MacrameMenu::class)]
 #[CoversClass(\Gbhorwood\Macrame\MacrameIO::class)]
+#[CoversClass(\Gbhorwood\Macrame\InteractiveMenu::class)]
+#[CoversClass(\Gbhorwood\Macrame\HorizontalMenu::class)]
 #[UsesClass(\Gbhorwood\Macrame\Macrame::class)]
 #[UsesClass(\Gbhorwood\Macrame\MacrameMenu::class)]
+#[UsesClass(\Gbhorwood\Macrame\InteractiveMenu::class)]
+#[UsesClass(\Gbhorwood\Macrame\HorizontalMenu::class)]
 class MenuTest extends TestCase
 {
 
@@ -321,7 +325,7 @@ class MenuTest extends TestCase
          * test
          */
         $input = new \Gbhorwood\Macrame\MacrameMenu(new \Gbhorwood\Macrame\MacrameText());
-        $this->expectOutputRegex('/ head     /');
+        $this->expectOutputRegex('/  head  /');
         $result = $input->optionCentre()->interactive($options, $header);
     }
 
@@ -360,7 +364,7 @@ class MenuTest extends TestCase
          * test
          */
         $input = new \Gbhorwood\Macrame\MacrameMenu(new \Gbhorwood\Macrame\MacrameText());
-        $this->expectOutputRegex('/ head     /');
+        $this->expectOutputRegex('/  head  /');
         $result = $input->optionCenter()->interactive($options, $header);
     }
 
