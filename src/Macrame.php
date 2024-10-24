@@ -1,35 +1,36 @@
 <?php
+
 namespace Gbhorwood\Macrame;
 
-use \Gbhorwood\Macrame\MacrameIO as IO;
+use Gbhorwood\Macrame\MacrameIO as IO;
 
 /**
  * Create command line applications in php
  *
  */
-class Macrame 
+class Macrame
 {
     /**
      * Constructor
      *
      * @param  String $name The name of the process to display in ps(1)
      */
-    public function __construct(String $name=null)
+    public function __construct(String $name = null)
     {
         pcntl_async_signals(true);
 
-        if($name) {
+        if ($name) {
             cli_set_process_title($name);
         }
 
-        register_shutdown_function(function() {
+        register_shutdown_function(function () {
             self::shutdown();
         });
 
-        pcntl_signal(SIGINT,  fn() => self::shutdown());
-        pcntl_signal(SIGTERM, fn() => self::shutdown());
-        pcntl_signal(SIGHUP,  fn() => self::shutdown());
-        pcntl_signal(SIGUSR1, fn() => self::shutdown());
+        pcntl_signal(SIGINT, fn () => self::shutdown());
+        pcntl_signal(SIGTERM, fn () => self::shutdown());
+        pcntl_signal(SIGHUP, fn () => self::shutdown());
+        pcntl_signal(SIGUSR1, fn () => self::shutdown());
     }
 
     /**
@@ -38,18 +39,18 @@ class Macrame
      *
      * @return void
      */
-    public function preflight():void
+    public function preflight(): void
     {
         $phpversion_array = explode('.', phpversion());
         if ((int)$phpversion_array[0].$phpversion_array[1] < 74) {
             die('minimum php required is 7.4. exiting');
         }
 
-        if(!extension_loaded('posix')) {
+        if (!extension_loaded('posix')) {
             die('posix required. exiting');
         }
 
-        if(!extension_loaded('mbstring')) {
+        if (!extension_loaded('mbstring')) {
             die('mbstring required. exiting');
         }
     }
@@ -60,7 +61,7 @@ class Macrame
      * @return bool
      * @todo   Handle weirdness with cron
      */
-    public function running():bool
+    public function running(): bool
     {
         return PHP_SAPI == 'cli';
     }
@@ -71,7 +72,7 @@ class Macrame
      * @param  String $argname The name of the argument
      * @return MacrameArgs
      */
-    public function args(String $argname):MacrameArgs
+    public function args(String $argname): MacrameArgs
     {
         return new MacrameArgs($argname);
     }
@@ -82,7 +83,7 @@ class Macrame
      * @param  ?String $text
      * @return MacrameText
      */
-    public function text(String $text = null):MacrameText
+    public function text(String $text = null): MacrameText
     {
         return new MacrameText($text);
     }
@@ -92,7 +93,7 @@ class Macrame
      *
      * @return MacrameInput
      */
-    public function input():MacrameInput
+    public function input(): MacrameInput
     {
         return new MacrameInput(new MacrameText());
     }
@@ -103,7 +104,7 @@ class Macrame
      * @param  String $path
      * @return MacrameFile
      */
-    public function file(String $path):MacrameFile
+    public function file(String $path): MacrameFile
     {
         return new MacrameFile($path);
     }
@@ -115,7 +116,7 @@ class Macrame
      * @param  Array<String> $data
      * @return MacrameTable
      */
-    public function table(Array $headers, Array $data):MacrameTable
+    public function table(array $headers, array $data): MacrameTable
     {
         return new MacrameTable($headers, $data, new MacrameText());
     }
@@ -125,18 +126,18 @@ class Macrame
      *
      * @return MacrameMenu
      */
-    public function menu():MacrameMenu
+    public function menu(): MacrameMenu
     {
-        return new MacrameMenu(new MacrameText());
+        return new MacrameMenu();
     }
 
     /**
      * Creates and returns a MacrameSpinner object for creating spinners
-     * 
+     *
      * @param  String  $animation
      * @return MacrameSpinner
      */
-    public function spinner(String $animation = null):MacrameSpinner
+    public function spinner(String $animation = null): MacrameSpinner
     {
         return new MacrameSpinner($animation);
     }
@@ -158,7 +159,7 @@ class Macrame
      *
      * @return void
      */
-    public function exit():void
+    public function exit(): void
     {
         self::shutdown();
     }
@@ -169,8 +170,8 @@ class Macrame
      *
      * @return void
      */
-    public static function unlinkFiles():void
+    public static function unlinkFiles(): void
     {
-        array_map(fn($f) => @unlink($f), MacrameFile::$toDelete);
+        array_map(fn ($f) => @unlink($f), MacrameFile::$toDelete);
     }
 }
