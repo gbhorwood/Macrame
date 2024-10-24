@@ -70,7 +70,7 @@ IO::eraseToEndOfLine()
 IO::clearScreen()
 
 // string. Read exactly one keystroke and return
-IO::keyStroke
+IO::keyStroke()
 
 // void. Output a newline
 IO::newline()

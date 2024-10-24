@@ -17,20 +17,11 @@ class MacrameInput
     private Array $validators = [];
 
     /**
-     * MacrameText object
-     * @var MacrameText
-     * @access private
-     */
-    private MacrameText $text;
-
-    /**
      * Constructor
      *
-     * @param  MacrameText   $text
      */
-    public function __construct(MacrameText $text)
+    public function __construct()
     {
-        $this->text = $text;
     }
 
     /**

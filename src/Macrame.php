@@ -95,7 +95,7 @@ class Macrame
      */
     public function input(): MacrameInput
     {
-        return new MacrameInput(new MacrameText());
+        return new MacrameInput();
     }
 
     /**

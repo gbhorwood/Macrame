@@ -1,8 +1,9 @@
 <?php
+
 namespace Gbhorwood\Macrame;
 
-use \Gbhorwood\Macrame\MacrameIO as IO;
-use \Gbhorwood\Macrame\MacrameText as Text;
+use Gbhorwood\Macrame\MacrameIO as IO;
+use Gbhorwood\Macrame\MacrameText as Text;
 
 /**
  * Spinner rotation rates
@@ -15,70 +16,73 @@ define('DELAY_VERY_FAST', 50000);
 /**
  * ANSI: Convenience defines
  */
-if(!defined('BACKSPACE')) define('BACKSPACE', chr(8));
+if (!defined('BACKSPACE')) {
+    define('BACKSPACE', chr(8));
+}
 
 /**
  * Handle creation and display of animated text spinners
  *
+ * @note phpstan does not do well with forked processes. line ignores are abundant here.
  */
-class MacrameSpinner {
-
+class MacrameSpinner
+{
     /**
      * Array of animation character arrays keyed by animation name
-     * @var Array
+     * @var Array<Array<String>>
      * @access private
      */
-    private Array $animations = [
+    private array $animations = [
         'standard' => ['|', '/', '-', '\\', '|', '/', '-'],
-		"dots 1" => [ "⠄", "⠆", "⠇", "⠋", "⠙", "⠸", "⠰", "⠠", "⠰", "⠸", "⠙", "⠋", "⠇", "⠆" ],
-		"dots 2" => [ "⠁", "⠉", "⠙", "⠚", "⠒", "⠂", "⠂", "⠒", "⠲", "⠴", "⠤", "⠄", "⠄", "⠤", "⠴", "⠲", "⠒", "⠂", "⠂", "⠒", "⠚", "⠙", "⠉", "⠁" ],
-		"dots 3" => [ "⠋", "⠙", "⠚", "⠒", "⠂", "⠂", "⠒", "⠲", "⠴", "⠦", "⠖", "⠒", "⠐", "⠐", "⠒", "⠓", "⠋" ],
-		"dots 4" => [ "⠈", "⠉", "⠋", "⠓", "⠒", "⠐", "⠐", "⠒", "⠖", "⠦", "⠤", "⠠", "⠠", "⠤", "⠦", "⠖", "⠒", "⠐", "⠐", "⠒", "⠓", "⠋", "⠉", "⠈" ],
-		"dots 5" => [ "⠁", "⠁", "⠉", "⠙", "⠚", "⠒", "⠂", "⠂", "⠒", "⠲", "⠴", "⠤", "⠄", "⠄", "⠤", "⠠", "⠠", "⠤", "⠦", "⠖", "⠒", "⠐", "⠐", "⠒", "⠓", "⠋", "⠉", "⠈", "⠈" ],
-		"cycle 1" => [ "⠁", "⠂", "⠄", "⡀", "⢀", "⠠", "⠐", "⠈" ],
-		"cycle 2" => [ "⣼", "⣹", "⢻", "⠿", "⡟", "⣏", "⣧", "⣶" ],
-		"cycle 3" => [ "⢄", "⢂", "⢁", "⡁", "⡈", "⡐", "⡠" ],
-		"cycle 4" => [ "⢹", "⢺", "⢼", "⣸", "⣇", "⡧", "⡗", "⡏" ],
-		"cycle 5" => [ "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" ],
+        "dots 1" => [ "⠄", "⠆", "⠇", "⠋", "⠙", "⠸", "⠰", "⠠", "⠰", "⠸", "⠙", "⠋", "⠇", "⠆" ],
+        "dots 2" => [ "⠁", "⠉", "⠙", "⠚", "⠒", "⠂", "⠂", "⠒", "⠲", "⠴", "⠤", "⠄", "⠄", "⠤", "⠴", "⠲", "⠒", "⠂", "⠂", "⠒", "⠚", "⠙", "⠉", "⠁" ],
+        "dots 3" => [ "⠋", "⠙", "⠚", "⠒", "⠂", "⠂", "⠒", "⠲", "⠴", "⠦", "⠖", "⠒", "⠐", "⠐", "⠒", "⠓", "⠋" ],
+        "dots 4" => [ "⠈", "⠉", "⠋", "⠓", "⠒", "⠐", "⠐", "⠒", "⠖", "⠦", "⠤", "⠠", "⠠", "⠤", "⠦", "⠖", "⠒", "⠐", "⠐", "⠒", "⠓", "⠋", "⠉", "⠈" ],
+        "dots 5" => [ "⠁", "⠁", "⠉", "⠙", "⠚", "⠒", "⠂", "⠂", "⠒", "⠲", "⠴", "⠤", "⠄", "⠄", "⠤", "⠠", "⠠", "⠤", "⠦", "⠖", "⠒", "⠐", "⠐", "⠒", "⠓", "⠋", "⠉", "⠈", "⠈" ],
+        "cycle 1" => [ "⠁", "⠂", "⠄", "⡀", "⢀", "⠠", "⠐", "⠈" ],
+        "cycle 2" => [ "⣼", "⣹", "⢻", "⠿", "⡟", "⣏", "⣧", "⣶" ],
+        "cycle 3" => [ "⢄", "⢂", "⢁", "⡁", "⡈", "⡐", "⡠" ],
+        "cycle 4" => [ "⢹", "⢺", "⢼", "⣸", "⣇", "⡧", "⡗", "⡏" ],
+        "cycle 5" => [ "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" ],
         "cycle 6" => [ "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" ],
-		"star" => [ "✶", "✸", "✹", "✺", "✹", "✷" ],
-		"grow" => [ "▁", "▃", "▄", "▅", "▆", "▇", "▆", "▅", "▄", "▃" ],
-		"stretch" => [ "▏", "▎", "▍", "▌", "▋", "▊", "▉", "▊", "▋", "▌", "▍", "▎" ],
-		"corners 1" => [ "▌", "▀", "▐", "▄" ],
-		"corners 2" => [ "◢", "◣", "◤", "◥" ],
-		"pipe" => [ "┤", "┘", "┴", "└", "├", "┌", "┬", "┐" ],
-		"balloon" => [ " ", ".", "o", "O", "@", "*", " " ],
-		"bounce 1" => [ "⠁", "⠂", "⠄", "⠂" ],
-		"bounce 2" => [ ".", "o", "O", "°", "O", "o", "." ],
-		"bounce 3" => [ "☱", "☲", "☴" ],
-		"rolling square" => [ "◰", "◳", "◲", "◱" ],
-		"rolling circle 1" => [ "◴", "◷", "◶", "◵" ],
-		"rolling circle 2" => [ "◐", "◓", "◑", "◒" ],
-		"pulse 1" => [ "⊶", "⊷" ],
-		"pulse 2" => [ "▫", "▪" ],
-		"pulse 3" => [ "□", "■" ],
-		"pulse 4" => [ "▮", "▯" ],
-		"pulse 5" => [ "◍", "◌" ],
-		"pulse 6" => [ "◉", "◎" ],
-		"pulse 7" => [ "⧇", "⧆" ],
-		"pulse 8" => [ "☗", "☖" ],
-		"pulse 9" => [ "ဝ", "၀" ],
-		"pulse 10" => [ "◡", "⊙", "◠" ],
-		"pulse 11" => [ "▓", "▒", "░" ],
-		"arrow" => [ "←", "↖", "↑", "↗", "→", "↘", "↓", "↙" ],
-		"arrow emoji" => [ "⬆️ ", "↗️ ", "➡️ ", "↘️ ", "⬇️ ", "↙️ ", "⬅️ ", "↖️ " ],
-		"heart emoji" => [ "💛 ", "💙 ", "💜 ", "💚 ", "❤️ " ],
-		"clock emoji" => [ "🕛 ", "🕐 ", "🕑 ", "🕒 ", "🕓 ", "🕔 ", "🕕 ", "🕖 ", "🕗 ", "🕘 ", "🕙 ", "🕚 " ],
-		"earth emoji" => [ "🌍 ", "🌎 ", "🌏 " ],
-		"moon emoji" => [ "🌑 ", "🌒 ", "🌓 ", "🌔 ", "🌕 ", "🌖 ", "🌗 ", "🌘 " ],
+        "star" => [ "✶", "✸", "✹", "✺", "✹", "✷" ],
+        "grow" => [ "▁", "▃", "▄", "▅", "▆", "▇", "▆", "▅", "▄", "▃" ],
+        "stretch" => [ "▏", "▎", "▍", "▌", "▋", "▊", "▉", "▊", "▋", "▌", "▍", "▎" ],
+        "corners 1" => [ "▌", "▀", "▐", "▄" ],
+        "corners 2" => [ "◢", "◣", "◤", "◥" ],
+        "pipe" => [ "┤", "┘", "┴", "└", "├", "┌", "┬", "┐" ],
+        "balloon" => [ " ", ".", "o", "O", "@", "*", " " ],
+        "bounce 1" => [ "⠁", "⠂", "⠄", "⠂" ],
+        "bounce 2" => [ ".", "o", "O", "°", "O", "o", "." ],
+        "bounce 3" => [ "☱", "☲", "☴" ],
+        "rolling square" => [ "◰", "◳", "◲", "◱" ],
+        "rolling circle 1" => [ "◴", "◷", "◶", "◵" ],
+        "rolling circle 2" => [ "◐", "◓", "◑", "◒" ],
+        "pulse 1" => [ "⊶", "⊷" ],
+        "pulse 2" => [ "▫", "▪" ],
+        "pulse 3" => [ "□", "■" ],
+        "pulse 4" => [ "▮", "▯" ],
+        "pulse 5" => [ "◍", "◌" ],
+        "pulse 6" => [ "◉", "◎" ],
+        "pulse 7" => [ "⧇", "⧆" ],
+        "pulse 8" => [ "☗", "☖" ],
+        "pulse 9" => [ "ဝ", "၀" ],
+        "pulse 10" => [ "◡", "⊙", "◠" ],
+        "pulse 11" => [ "▓", "▒", "░" ],
+        "arrow" => [ "←", "↖", "↑", "↗", "→", "↘", "↓", "↙" ],
+        "arrow emoji" => [ "⬆️ ", "↗️ ", "➡️ ", "↘️ ", "⬇️ ", "↙️ ", "⬅️ ", "↖️ " ],
+        "heart emoji" => [ "💛 ", "💙 ", "💜 ", "💚 ", "❤️ " ],
+        "clock emoji" => [ "🕛 ", "🕐 ", "🕑 ", "🕒 ", "🕓 ", "🕔 ", "🕕 ", "🕖 ", "🕗 ", "🕘 ", "🕙 ", "🕚 " ],
+        "earth emoji" => [ "🌍 ", "🌎 ", "🌏 " ],
+        "moon emoji" => [ "🌑 ", "🌒 ", "🌓 ", "🌔 ", "🌕 ", "🌖 ", "🌗 ", "🌘 " ],
     ];
 
     /**
      * Integers used for usleep() to adjust animation speed
-     * @var Array
+     * @var Array<Int>
      * @access private
      */
-    private Array $speeds = [
+    private array $speeds = [
         'slow' => 300000,
         'medium' => 150000,
         'fast' => 50000,
@@ -87,10 +91,10 @@ class MacrameSpinner {
 
     /**
      * Array containting animation chars for selected animation
-     * @var Array
+     * @var Array<String>
      * @access private
      */
-    private Array $animation = [];
+    private array $animation = [];
 
     /**
      * The usleep() value for animation speed
@@ -119,10 +123,10 @@ class MacrameSpinner {
      * @param  ?String $animation Name of the animation. Default 'standard'
      * @return void
      */
-    public function __construct(?String $animation=null) 
+    public function __construct(?String $animation = null)
     {
         $this->animation = $this->animations['standard'];
-        if(isset($this->animations[$animation])) {
+        if (isset($this->animations[$animation])) {
             $this->animation = $this->animations[$animation];
         }
 
@@ -135,9 +139,9 @@ class MacrameSpinner {
      * @param  String $speed Text identifying speed; must be a key of $speeds[], ie. 'fast'
      * @return MacrameSpinner
      */
-    public function speed(String $speed):MacrameSpinner
+    public function speed(String $speed): MacrameSpinner
     {
-        if(isset($this->speeds[$speed])) {
+        if (isset($this->speeds[$speed])) {
             $this->speed = $this->speeds[$speed];
         }
         return $this;
@@ -149,7 +153,7 @@ class MacrameSpinner {
      * @param  String $prompt
      * @return MacrameSpinner
      */
-    public function prompt(String $prompt):MacrameSpinner
+    public function prompt(String $prompt): MacrameSpinner
     {
         $this->prompt = $prompt;
         return $this;
@@ -158,10 +162,10 @@ class MacrameSpinner {
     /**
      * Set the colour of prompt (if any) and the spinner, as with MacrameText
      *
-     * @param  String $prompt
+     * @param  String $colour
      * @return MacrameSpinner
      */
-    public function colour(String $colour):MacrameSpinner
+    public function colour(String $colour): MacrameSpinner
     {
         $this->output->colour($colour);
         return $this;
@@ -170,10 +174,10 @@ class MacrameSpinner {
     /**
      * Synonym for colour()
      *
-     * @param  String $prompt
+     * @param  String $colour
      * @return MacrameSpinner
      */
-    public function color(String $colour):MacrameSpinner
+    public function color(String $colour): MacrameSpinner
     {
         return $this->colour($colour);
     }
@@ -181,10 +185,10 @@ class MacrameSpinner {
     /**
      * Set the background colour of prompt (if any) and the spinner, as with MacrameText
      *
-     * @param  String $prompt
+     * @param  String $colour
      * @return MacrameSpinner
      */
-    public function backgroundColour(String $colour):MacrameSpinner
+    public function backgroundColour(String $colour): MacrameSpinner
     {
         $this->output->backgroundColour($colour);
         return $this;
@@ -193,10 +197,10 @@ class MacrameSpinner {
     /**
      * Synonym for backgroundColour()
      *
-     * @param  String $prompt
+     * @param  String $colour
      * @return MacrameSpinner
      */
-    public function backgroundColor(String $colour):MacrameSpinner
+    public function backgroundColor(String $colour): MacrameSpinner
     {
         return $this->backgroundColour($colour);
     }
@@ -204,10 +208,10 @@ class MacrameSpinner {
     /**
      * Set the style of prompt (if any) and the spinner, as with MacrameText
      *
-     * @param  String $prompt
+     * @param  String $style
      * @return MacrameSpinner
      */
-    public function style(String $style):MacrameSpinner
+    public function style(String $style): MacrameSpinner
     {
         $this->output->style($style);
         return $this;
@@ -219,54 +223,53 @@ class MacrameSpinner {
      * @return void
      * @note   This runs an infinite loop. Be warned.
      */
-    public function show():void
+    public function show(): void
     {
         IO::hideCursor();
-        while(true) {
-            array_map(function($a) {
+        while (true) { // @phpstan-ignore-line
+            array_map(function ($a) {
                 IO::writeStdout($this->buildSpinnerText($a).$this->buildEraseSpinnerText());
                 usleep($this->speed);
             }, $this->animation);
         }
-        IO::showCursor();
+        IO::showCursor(); // @phpstan-ignore-line
     }
 
     /**
      * Run a user-provided function while displaying the spinner.
      *
      * @param  Callable $function Callable to run while spinner displayed
-     * @param  Array    $args     Arguments for the callable as array
+     * @param  Array<Mixed>    $args     Arguments for the callable as array
      * @return mixed
      */
-    public function run(Callable $function, Array $args = [])
+    public function run(callable $function, array $args = [])
     {
         $pid = pcntl_fork();
 
-        if($pid == -1) {
+        if ($pid == -1) {
             $text = new Text("Could not fork child process");
             $text->error();
             return null;
         }
 
-        if($pid) {
+        if ($pid) {
             $result = call_user_func_array($function, $args);
-        }
-        else {
+        } else {
             $this->show();
         }
 
         posix_kill($pid, SIGKILL);
 
-        return $result;
+        return $result; // @phpstan-ignore-line
     }
 
     /**
      * Compose and return the output consisting of the prompt and the
      * character of the spinner. Uses MacrameText to apply styling.
      *
-     * @param String
+     * @param String $spinnerPart
      */
-    private function buildSpinnerText(String $spinnerPart):String
+    private function buildSpinnerText(String $spinnerPart): String
     {
         return $this->output->text($this->prompt.$spinnerPart)->get();
     }
@@ -277,8 +280,8 @@ class MacrameSpinner {
      *
      * @return String
      */
-    private function buildEraseSpinnerText():String
+    private function buildEraseSpinnerText(): String
     {
-        return join(array_fill(0,strlen($this->animation[0]), BACKSPACE)).join(array_fill(0,strlen($this->prompt), BACKSPACE));
+        return join(array_fill(0, strlen($this->animation[0]), BACKSPACE)).join(array_fill(0, strlen($this->prompt), BACKSPACE));
     }
 }
