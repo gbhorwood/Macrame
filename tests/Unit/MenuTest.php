@@ -15,6 +15,7 @@ if(!defined('STDIN')) define('STDIN', fopen("php://stdin","r"));
 #[CoversClass(\Gbhorwood\Macrame\MacrameIO::class)]
 #[CoversClass(\Gbhorwood\Macrame\InteractiveMenu::class)]
 #[CoversClass(\Gbhorwood\Macrame\HorizontalMenu::class)]
+#[CoversClass(\Gbhorwood\Macrame\MenuBuilder::class)]
 #[UsesClass(\Gbhorwood\Macrame\Macrame::class)]
 #[UsesClass(\Gbhorwood\Macrame\MacrameMenu::class)]
 #[UsesClass(\Gbhorwood\Macrame\InteractiveMenu::class)]
@@ -650,5 +651,232 @@ class MenuTest extends TestCase
          * assertions
          */
         $this->assertEquals($date, $result);
+    }
+
+    /**
+     * Test horizontal()
+     * down arrow
+     *
+     * @runInSeparateProcess
+     */
+    public function testHorizontalDownArrow()
+    {
+        /**
+         * data
+         */
+        $keystrokes = [
+            chr(66), // down arrow
+            chr(10), // return
+        ];
+
+        $header = 'head';
+
+        $options = [
+            'one',
+            'two',
+            'three',
+        ];
+
+        /**
+         * Override stream_get_contents() to return $keystrokes
+         */
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$keystrokes);
+
+        /**
+         * test
+         */
+        $input = new \Gbhorwood\Macrame\MacrameMenu(new \Gbhorwood\Macrame\MacrameText());
+        ob_start();
+        $result = $input->horizontal($options, $header);
+
+        /**
+         * assertions
+         */
+        $this->assertEquals('two', $result);
+        ob_end_clean();
+    }
+
+    /**
+     * Test horizontal()
+     * down arrow. styling.
+     *
+     * @runInSeparateProcess
+     */
+    public function testHorizontalDownArrowStyling()
+    {
+        /**
+         * data
+         */
+        $keystrokes = [
+            chr(66), // down arrow
+            chr(10), // return
+        ];
+
+        $header = 'head';
+
+        $options = [
+            'one',
+            'two',
+            'three',
+        ];
+
+        /**
+         * Override stream_get_contents() to return $keystrokes
+         */
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$keystrokes);
+
+        /**
+         * test
+         */
+        $input = new \Gbhorwood\Macrame\MacrameMenu(new \Gbhorwood\Macrame\MacrameText());
+        ob_start();
+        $result = $input->colorOption('green')->colorSelected('red')->styleOption('italic')->styleSelected('bold')->horizontal($options, $header);
+
+        /**
+         * assertions
+         */
+        $this->assertEquals('two', $result);
+        ob_end_clean();
+    }
+
+    /**
+     * Test horizontal()
+     * tab
+     *
+     * @runInSeparateProcess
+     */
+    public function testHorizontalTab()
+    {
+        /**
+         * data
+         */
+        $keystrokes = [
+            chr(9),  // tab
+            chr(10), // return
+        ];
+
+        $header = 'head';
+
+        $options = [
+            'one',
+            'two',
+            'three',
+        ];
+
+        /**
+         * Override stream_get_contents() to return $keystrokes
+         */
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$keystrokes);
+
+        /**
+         * test
+         */
+        $input = new \Gbhorwood\Macrame\MacrameMenu(new \Gbhorwood\Macrame\MacrameText());
+        ob_start();
+        $result = $input->horizontal($options, $header);
+
+        /**
+         * assertions
+         */
+        $this->assertEquals('two', $result);
+        ob_end_clean();
+    }
+
+    /**
+     * Test horizontal()
+     * up arrow
+     *
+     * @runInSeparateProcess
+     */
+    public function testHorizontalUpArrow()
+    {
+        /**
+         * data
+         */
+        $keystrokes = [
+            chr(65), // up arrow
+            chr(65), // up arrow
+            chr(10), // return
+        ];
+
+        $header = 'head';
+
+        $options = [
+            'one',
+            'two',
+            'three',
+        ];
+
+        /**
+         * Override stream_get_contents() to return $keystrokes
+         */
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$keystrokes);
+
+        /**
+         * test
+         */
+        $input = new \Gbhorwood\Macrame\MacrameMenu(new \Gbhorwood\Macrame\MacrameText());
+        ob_start();
+        $result = $input->horizontal($options, $header);
+
+        /**
+         * assertions
+         */
+        $this->assertEquals('two', $result);
+        ob_end_clean();
+    }
+
+    /**
+     * Test horizontal()
+     * leader keys
+     *
+     * @runInSeparateProcess
+     */
+    public function testHorizontalLeaderKeys()
+    {
+        /**
+         * data
+         */
+        $keystrokes = [
+            't',     // leader key
+            'w',     // leader key
+            chr(10), // return
+        ];
+
+        $header = 'head';
+
+        $options = [
+            'one',
+            'two',
+            'three',
+        ];
+
+        /**
+         * Override stream_get_contents() to return $keystrokes
+         */
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents->expects($this->any())
+                 ->willReturnOnConsecutiveCalls(...$keystrokes);
+
+        /**
+         * test
+         */
+        $input = new \Gbhorwood\Macrame\MacrameMenu(new \Gbhorwood\Macrame\MacrameText());
+        ob_start();
+        $result = $input->horizontal($options, $header);
+
+        /**
+         * assertions
+         */
+        $this->assertEquals('two', $result);
+        ob_end_clean();
     }
 }
