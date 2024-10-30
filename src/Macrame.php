@@ -143,6 +143,17 @@ class Macrame
     }
 
     /**
+     * Creates and returns a MacrameFiglet object for creating headlines
+     *
+     * @param  String  $text
+     * @return MacrameFiglet
+     */
+    public function figlet(String $text): MacrameFiglet
+    {
+        return new MacrameFiglet($text);
+    }
+
+    /**
      * Does cleanup and exits the script with 0
      *
      * @return Int
