@@ -671,7 +671,7 @@ class MacrameText
      * @param  String $text The line of potentially formatted text
      * @return String
      */
-    public function stripFormatting(String $text): String
+    public static function stripFormatting(String $text): String
     {
         $text = preg_replace('/<![A-Za-z]+!>/', '', $text);
         $text = preg_replace('/[\x09|\t]/', '    ', $text);

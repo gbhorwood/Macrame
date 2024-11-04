@@ -663,8 +663,7 @@ class MenuBuilder
      */
     public static function stripOptionsFormatting(array $options): array
     {
-        $text = new MacrameText();
-        return array_map(fn ($t) => $text->stripFormatting($t), $options);
+        return array_map(fn ($t) => MacrameText::stripFormatting($t), $options);
     }
 
     /**

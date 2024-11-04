@@ -48,25 +48,106 @@ class MacrameFiglet
      * @access private
      */
     private array $validFonts = [
-        "1row", "3d_diagonal", "3-d", "3x5", "4max", "5lineoblique", "acrobatic", "alligator2", "alligator3", "alligator", "alphabet", "alpha", "amc3line",
-        "amc3liv1", "amcaaa01", "amcneko", "amcrazo2", "amcrazor", "amcslash", "amcslder", "amcthin", "amctubes", "amcun1", "ansi_shadow", "arrows", "ascii_new_roman",
-        "avatar", "B1FF", "banner3-D", "banner3", "banner4", "banner", "barbwire", "basic", "bear", "bell", "benjamin", "bigchief", "bigfig", "big", "binary", "block",
-        "blocks", "bolger", "braced", "bright", "broadway", "broadway_kb", "bubble", "bulbhead", "calgphy2", "caligraphy", "cards", "catwalk", "chiseled", "chunky",
-        "coinstak", "cola", "colossal", "computer", "contessa", "contrast", "cosmic", "cosmike", "crawford", "crazy", "cricket", "cyberlarge", "cybermedium", "cybersmall",
-        "cygnet", "DANC4", "dancingfont", "decimal", "defleppard", "diamond", "dietcola", "digital", "doh", "doom", "dosrebel", "dotmatrix", "double", "doubleshorts",
-        "drpepper", "dwhistled", "eftichess", "eftifont", "eftipiti", "eftirobot", "eftitalic", "eftiwall", "eftiwater", "epic", "fender", "files.txt", "filter",
-        "fire_font-k", "fire_font-s", "flipped", "flowerpower", "fourtops", "fraktur", "funface", "funfaces", "fuzzy", "georgi16", "Georgia11", "ghost", "ghoulish",
-        "glenyn", "goofy", "gothic", "graceful", "gradient", "graffiti", "greek", "heart_left", "heart_right", "henry3d", "hex", "hieroglyphs", "hollywood", "horizontalleft",
-        "horizontalright", "ICL-1900", "impossible", "invita", "isometric1", "isometric2", "isometric3", "isometric4", "italic", "ivrit", "jacky", "jazmine", "jerusalem",
-        "katakana", "kban", "keyboard", "knob", "konto", "kontoslant", "larry3d", "lcd", "lean", "letters", "lildevil", "lineblocks", "linux", "lockergnome", "madrid",
-        "marquee", "maxfour", "merlin1", "merlin2", "mike", "mini", "mirror", "mnemonic", "modular", "morse2", "morse", "moscow", "mshebrew210", "muzzle", "nancyj-fancy",
-        "nancyj", "nancyj-improved", "nancyj-underlined", "nipples", "nscript", "ntgreek", "nvscript", "o8", "octal", "ogre", "oldbanner", "os2", "pawp", "peaks", "peaksslant",
-        "pebbles", "pepper", "poison", "puffy", "puzzle", "pyramid", "rammstein", "rectangles", "red_phoenix", "relief2", "relief", "reverse", "roman", "rot13", "rotated",
-        "rounded", "rowancap", "rozzo", "runic", "runyc", "santaclara", "sblood", "script", "serifcap", "shadow", "shimrod", "short", "slant", "slide", "slscript", "smallcaps",
-        "small", "smisome1", "smkeyboard", "smpoison", "smscript", "smshadow", "smslant", "smtengwar", "soft", "speed", "spliff", "s-relief", "stacey", "stampate", "stampatello",
-        "standard", "starstrips", "starwars", "stellar", "stforek", "stop", "straight", "sub-zero", "swampland", "swan", "sweet", "tanja", "tengwar", "term", "test1", "thick",
-        "thin", "threepoint", "ticks", "ticksslant", "tiles", "tinker-toy", "tombstone", "train", "trek", "tsalagi", "tubular", "twisted", "twopoint", "univers", "usaflag",
-        "varsity", "wavy", "weird", "wetletter", "whimsy", "wow"
+        "3-d",
+        "3d_diagonal",
+        "5lineoblique",
+        "alligator",
+        "alligator2",
+        "alpha",
+        "amc3line",
+        "amcaaa01",
+        "amcneko",
+        "amcrazor",
+        "ansi_shadow",
+        "ascii_new_roman",
+        "avatar",
+        "banner3-D",
+        "banner4",
+        "bell",
+        "big",
+        "block",
+        "blocks",
+        "braced",
+        "bright",
+        "broadway",
+        "bubble",
+        "bulbhead",
+        "chiseled",
+        "chunky",
+        "colossal",
+        "crawford",
+        "cricket",
+        "cyberlarge",
+        "cybermedium",
+        "cybersmall",
+        "cygnet",
+        "digital",
+        "doh",
+        "doom",
+        "double",
+        "epic",
+        "fender",
+        "filter",
+        "flowerpower",
+        "fuzzy",
+        "georgi16",
+        "Georgia11",
+        "ghoulish",
+        "goofy",
+        "graceful",
+        "graffiti",
+        "impossible",
+        "isometric1",
+        "isometric2",
+        "isometric3",
+        "isometric4",
+        "italic",
+        "ivrit",
+        "jacky",
+        "keyboard",
+        "larry3d",
+        "lineblocks",
+        "merlin1",
+        "nvscript",
+        "ogre",
+        "os2",
+        "puffy",
+        "rammstein",
+        "rectangles",
+        "red_phoenix",
+        "roman",
+        "rounded",
+        "rowancap",
+        "rozzo",
+        "script",
+        "serifcap",
+        "shadow",
+        "shimrod",
+        "slant",
+        "small",
+        "smallcaps",
+        "smisome1",
+        "smkeyboard",
+        "smshadow",
+        "smslant",
+        "soft",
+        "spliff",
+        "s-relief",
+        "standard",
+        "starstrips",
+        "starwars",
+        "stop",
+        "straight",
+        "sub-zero",
+        "swampland",
+        "sweet",
+        "thin",
+        "tombstone",
+        "twisted",
+        "twopoint",
+        "univers",
+        "usaflag",
+        "varsity",
     ];
 
     /**
@@ -77,16 +158,17 @@ class MacrameFiglet
      */
     public function __construct(String $headline)
     {
-        $text = new MacrameText($headline);
-        $headline = $text->stripFormatting($headline);
+        // remove macrame formatting and line breaks so we can wrap and style
+        $headline = MacrameText::stripFormatting($headline);
         $headline = str_replace(PHP_EOL, ' ', $headline);
-        $this->headline = $headline;
 
+        $this->headline = $headline;
         $this->figlet = new Figlet();
     }
 
     /**
-     * Set headline font
+     * Set headline font.
+     * If font name is invalid, throw warning and use default.
      *
      * @param  String $name
      * @return MacrameFiglet
@@ -143,7 +225,7 @@ class MacrameFiglet
      */
     public function write(): void
     {
-        IO::writeStdout($this->get());
+        IO::writeStdout($this->get().PHP_EOL);
     }
 
     /**
@@ -158,7 +240,12 @@ class MacrameFiglet
         $wrappedLines = $this->wrap();
 
         $renderedLines = array_map(function ($l) {
+            // render and remove residual delimiters
             $renderedLine = str_replace('#', ' ', $this->figlet->render($l));
+
+            // remove blank lines. dependency figlet renderer includes many.
+            $renderedLine = join(PHP_EOL, array_filter(explode(PHP_EOL, $renderedLine), fn ($l) => strlen(trim($l)) > 0));
+
             // apply styling
             $renderedLineText = new MacrameText($renderedLine);
 
@@ -173,7 +260,8 @@ class MacrameFiglet
             return $renderedLineText->get();
         }, $wrappedLines);
 
-        return join(PHP_EOL, $renderedLines);
+
+        return join(PHP_EOL, array_filter($renderedLines));
     }
 
     /**
@@ -190,11 +278,11 @@ class MacrameFiglet
         $headlineWords = array_map(fn ($l) => $l.' ', explode(' ', $this->headline));
 
         /**
-         * Function to get width of longest line in the figlet render of a word.
+         * Function to get width of longest line in the figlet render of one word. Figlet words have more than one line.
          */
         $maxWidth = fn ($word) => max(array_map(fn ($w) => $text->mb_strwidth_ansi($w), explode(PHP_EOL, $this->figlet->render($word))));
 
-        // Build array of lines wrapped to width
+        // Build array of lines wrapped to terminal width
         $wrappedLines = [];
         $terminalWidth = IO::getColWidth();
         $line = '';
