@@ -270,7 +270,7 @@ class MacrameFiglet
      *
      * @return Array<String>
      */
-    private function wrap(): array
+    public function wrap(): array
     {
         $text = new MacrameText();
 
@@ -284,7 +284,7 @@ class MacrameFiglet
 
         // Build array of lines wrapped to terminal width
         $wrappedLines = [];
-        $terminalWidth = IO::getColWidth();
+        $terminalWidth = $this->getTerminalWidth();
         $line = '';
         $acc = 0;
         foreach ($headlineWords as $word) {
@@ -300,6 +300,11 @@ class MacrameFiglet
         }
         $wrappedLines[] = rtrim($line);
 
-        return $wrappedLines;
+        return array_filter($wrappedLines);
+    }
+
+    public function getTerminalWidth(): Int
+    {
+        return IO::getColWidth();
     }
 }
