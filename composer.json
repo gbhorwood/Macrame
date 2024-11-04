@@ -16,7 +16,8 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
-        "mikey179/vfsstream": "^1.6"
+        "mikey179/vfsstream": "^1.6",
+        "povils/figlet": "dev-master"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.10",
