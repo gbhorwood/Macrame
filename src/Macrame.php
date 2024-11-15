@@ -154,6 +154,17 @@ class Macrame
     }
 
     /**
+     * Creates and returns a MacrameDownload object for downloading files
+     *
+     * @param  String  $url
+     * @return MacrameDownload
+     */
+    public function download(String $url): MacrameDownload
+    {
+        return new MacrameDownload($url);
+    }
+
+    /**
      * Does cleanup and exits the script with 0
      *
      * @return Int
