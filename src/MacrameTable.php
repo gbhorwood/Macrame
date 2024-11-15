@@ -1,39 +1,46 @@
 <?php
+
 namespace Gbhorwood\Macrame;
 
 /**
  * Alignment definitions
  */
-if(!defined('LEFT')) define('LEFT', 0);
-if(!defined('CENTRE')) define('CENTRE', 1);
-if(!defined('RIGHT')) define('RIGHT', 2);
+if (!defined('LEFT')) {
+    define('LEFT', 0);
+}
+if (!defined('CENTRE')) {
+    define('CENTRE', 1);
+}
+if (!defined('RIGHT')) {
+    define('RIGHT', 2);
+}
 
 /**
  * Handle creation and output of nice tables
  *
  */
-class MacrameTable {
-
+class MacrameTable
+{
     /**
      * Array of table headers
      * @var Array<String>
      * @access private
      */
-    private Array $headers;
+    private array $headers;
 
     /**
      * Array of arrays for each line of table data
      * @var Array<String>
      * @access private
      */
-    private Array $data;
+    private array $data;
 
     /**
      * Array keyed by column position containing alignment for the column
      * @var Array<Int, Int>
      * @access private
      */
-    private Array $alignments = [];
+    private array $alignments = [];
 
     /**
      * MacrameText object
@@ -47,7 +54,7 @@ class MacrameTable {
      * @var Array<Array<String,Array<String,String>>>
      * @access private
      */
-    private Array $tableStyles = [
+    private array $tableStyles = [
         'standard' => [
             'default' => [
                 'bar' => '|',
@@ -129,7 +136,7 @@ class MacrameTable {
      * @param  Array<String> $data
      * @param  MacrameText   $text
      */
-    public function __construct(Array $headers, Array $data, MacrameText $text)
+    public function __construct(array $headers, array $data, MacrameText $text)
     {
         $this->headers = $headers;
         $this->data = $data;
@@ -141,7 +148,7 @@ class MacrameTable {
      *
      * @return void
      */
-    public function write():void
+    public function write(): void
     {
         $this->create()->write();
     }
@@ -151,7 +158,7 @@ class MacrameTable {
      *
      * @return ?String
      */
-    public function get():?String
+    public function get(): ?String
     {
         return $this->create()->get();
     }
@@ -162,7 +169,7 @@ class MacrameTable {
      * @param  Int $key The key of the table column, starting at zero
      * @return MacrameTable
      */
-    public function centre(Int $key):MacrameTable
+    public function centre(Int $key): MacrameTable
     {
         $this->alignments[$key] = CENTRE;
         return $this;
@@ -174,7 +181,7 @@ class MacrameTable {
      * @param  Int $key The key of the table column, starting at zero
      * @return MacrameTable
      */
-    public function right(Int $key):MacrameTable
+    public function right(Int $key): MacrameTable
     {
         $this->alignments[$key] = RIGHT;
         return $this;
@@ -186,7 +193,7 @@ class MacrameTable {
      * @param  Int $key The key of the table column, starting at zero
      * @return MacrameTable
      */
-    public function left(Int $key):MacrameTable
+    public function left(Int $key): MacrameTable
     {
         $this->alignments[$key] = LEFT;
         return $this;
@@ -197,12 +204,12 @@ class MacrameTable {
      *
      * @return MacrameText
      */
-    public function create():MacrameText
+    public function create(): MacrameText
     {
         /**
          * Validate column count of header and data rows are the same
          */
-        if(!$this->validateColCount()) {
+        if (!$this->validateColCount()) {
             $e = new \Exception();
             $t = $e->getTrace();
             $file = $t[1]['file'];
@@ -216,18 +223,18 @@ class MacrameTable {
          * Used for padding.
          */
         $pads = [];
-        for($i=0;$i<count($this->headers);$i++) {
-            $pads[$i] = max(array_map(fn($data) => max($this->text->mb_strwidth_ansi($data[$i]), $this->text->mb_strwidth_ansi($this->headers[$i])), $this->data));
+        for ($i = 0;$i < count($this->headers);$i++) {
+            $pads[$i] = max(array_map(fn ($data) => max($this->text->mb_strwidth_ansi($data[$i]), $this->text->mb_strwidth_ansi($this->headers[$i])), $this->data));
         }
 
         /**
          * Function to create one outputtable line, padded to fit.
          * Note: str_pad does not use ansi-safe string lengths.
          */
-        $makePaddedLine = function(Int $k, String $v) use($pads):String {
+        $makePaddedLine = function (Int $k, String $v) use ($pads): String {
             $contentLength = $this->text->mb_strwidth_ansi($v);
             $bar = $this->getStyle()['default']['bar'];
-            switch(@$this->alignments[$k]) {
+            switch (@$this->alignments[$k]) {
                 case CENTRE:
                     return join(array_fill(0, (int)floor(($pads[$k] - $contentLength) / 2), ' ')) .
                     $v .
@@ -249,7 +256,7 @@ class MacrameTable {
         /**
          * Create all the data lines
          */
-        $dataLines = join(PHP_EOL, array_map(function(Array $d) use($makePaddedLine){ // @phpstan-ignore-line
+        $dataLines = join(PHP_EOL, array_map(function (array $d) use ($makePaddedLine) { // @phpstan-ignore-line
             return trim($this->getStyle()['default']['bar'].' ' . join('', array_map($makePaddedLine, array_keys($d), $d)));
         }, $this->data)).PHP_EOL;
 
@@ -258,21 +265,23 @@ class MacrameTable {
          *
          * @param  String $position One of 'tob', 'bottom' or 'inner'
          */
-        $getLine = function(String $position) use($pads){
+        $getLine = function (String $position) use ($pads) {
             $left = $this->getStyle()[$position]['left'];
             $separator = $this->getStyle()['default']['separator'];
             $right = $this->getStyle()[$position]['right'];
             $join = $this->getStyle()[$position]['join'];
             return mb_substr($left .
-                    join('',
+                    join(
+                        '',
                         array_map(
-                            function($k, $v) use($pads, $join, $separator) {
-                                return join(array_fill(0, $pads[$k]+1, $separator)) .
+                            function ($k, $v) use ($pads, $join, $separator) {
+                                return join(array_fill(0, $pads[$k] + 1, $separator)) .
                                     $separator .
                                     $join;
                             },
                             array_keys($this->headers),
-                            $this->headers)
+                            $this->headers
+                        )
                     ), 0, -1).$right.PHP_EOL;
         };
 
@@ -292,7 +301,7 @@ class MacrameTable {
     /**
      * Set border style to 'solid'
      */
-    public function solid():MacrameTable
+    public function solid(): MacrameTable
     {
         $this->style = 'solid';
         return $this;
@@ -301,7 +310,7 @@ class MacrameTable {
     /**
      * Set border style to 'double'
      */
-    public function double():MacrameTable
+    public function double(): MacrameTable
     {
         $this->style = 'double';
         return $this;
@@ -310,7 +319,7 @@ class MacrameTable {
     /**
      * Set border style to 'standard'
      */
-    public function standard():MacrameTable
+    public function standard(): MacrameTable
     {
         $this->style = 'standard';
         return $this;
@@ -322,9 +331,9 @@ class MacrameTable {
      *
      * @return bool
      */
-    private function validateColCount():bool
+    private function validateColCount(): bool
     {
-        return count(array_unique(array_map(fn($d) => count($d), array_merge($this->data, [$this->headers])))) == 1;
+        return count(array_unique(array_map(fn ($d) => count($d), array_merge($this->data, [$this->headers])))) == 1;
     }
 
     /**
@@ -332,7 +341,7 @@ class MacrameTable {
      *
      * @return Array<String,Array<String,String>>
      */
-    private function getStyle():Array
+    private function getStyle(): array
     {
         return $this->tableStyles[$this->style];
     }

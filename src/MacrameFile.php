@@ -1,4 +1,5 @@
 <?php
+
 namespace Gbhorwood\Macrame;
 
 /**
@@ -19,7 +20,7 @@ class MacrameFile
      *
      * @var Array<String>
      */
-    public static Array $toDelete = [];
+    public static array $toDelete = [];
 
     /**
      * Constructor
@@ -40,13 +41,13 @@ class MacrameFile
      *
      * @return MacrameFile
      */
-    public function create():MacrameFile
+    public function create(): MacrameFile
     {
         $path = $this->handleTilde($this->path);
-        if(!file_exists($path)) {
+        if (!file_exists($path)) {
             $mkdirWorked = file_exists(dirname($path)) ? true : @mkdir(dirname($path), 0755, true);
             $touchWorked = @touch($path);
-            if(!$mkdirWorked || !$touchWorked) {
+            if (!$mkdirWorked || !$touchWorked) {
                 $this->warn("Could not create file at $path");
             }
         }
@@ -58,9 +59,9 @@ class MacrameFile
      *
      * @return ?String
      */
-    public function read():?String
+    public function read(): ?String
     {
-        if(!$this->readable()) {
+        if (!$this->readable()) {
             $this->warn('Cannot read file at '.$this->path);
             return null;
         }
@@ -73,17 +74,16 @@ class MacrameFile
      * Displays warning on permissions errors.
      *
      * @return \Iterator
-     */ 
-    public function byLine():\Iterator
+     */
+    public function byLine(): \Iterator
     {
-        if(!$this->readable()) {
+        if (!$this->readable()) {
             $this->warn('Cannot read file at '.$this->path);
             yield;
-        }
-        else {
+        } else {
             $fp = fopen($this->handleTilde($this->path), 'r');
 
-            while(!feof($fp)) {
+            while (!feof($fp)) {
                 yield fgets($fp);
             }
 
@@ -99,19 +99,19 @@ class MacrameFile
      * @param  String $text  The text to write to file
      * @return bool
      */
-    public function write(String $text):bool
+    public function write(String $text): bool
     {
         // ensure file exists
         $this->create();
 
         // test permissions
-        if(!$this->writable()) {
+        if (!$this->writable()) {
             $this->warn('Cannot write to file at '.$this->path);
             return false;
         }
 
         // test disk space
-        if(!$this->enoughSpace($text)) {
+        if (!$this->enoughSpace($text)) {
             $this->warn('Note enough space on device to write to '.$this->path);
             return false;
         }
@@ -132,16 +132,16 @@ class MacrameFile
      * @param  String $text  The text to append to file
      * @return bool
      */
-    public function append(String $text):bool
+    public function append(String $text): bool
     {
         // test permissions
-        if(!$this->writable()) {
+        if (!$this->writable()) {
             $this->warn('Cannot write to file at '.$this->path);
             return false;
         }
 
         // test disk space
-        if(!$this->enoughSpace($text)) {
+        if (!$this->enoughSpace($text)) {
             $this->warn('Note enough space on device to write to '.$this->path);
             return false;
         }
@@ -159,7 +159,7 @@ class MacrameFile
      *
      * @return bool
      */
-    public function readable():bool
+    public function readable(): bool
     {
         return file_exists($this->handleTilde($this->path)) && is_readable($this->handleTilde($this->path));
     }
@@ -169,10 +169,10 @@ class MacrameFile
      *
      * @return bool
      */
-    public function writable():bool
+    public function writable(): bool
     {
         // file exists
-        if(file_exists($this->handleTilde($this->path))) {
+        if (file_exists($this->handleTilde($this->path))) {
             return is_writable($this->handleTilde($this->path));
         }
 
@@ -186,7 +186,7 @@ class MacrameFile
      *
      * @return bool
      */
-    public function clobbers():bool
+    public function clobbers(): bool
     {
         return file_exists($this->handleTilde($this->path));
     }
@@ -196,7 +196,7 @@ class MacrameFile
      *
      * @return bool
      */
-    public function exists():bool
+    public function exists(): bool
     {
         return $this->clobbers();
     }
@@ -207,7 +207,7 @@ class MacrameFile
      * @return MacrameFile
      * @see    Macrame::exit()
      */
-    public function deleteOnQuit():MacrameFile
+    public function deleteOnQuit(): MacrameFile
     {
         self::$toDelete[] = $this->path;
         return $this;
@@ -219,7 +219,7 @@ class MacrameFile
      * @return MacrameFile
      * @see    Macrame::exit()
      */
-    public function deleteOnExit():MacrameFile
+    public function deleteOnExit(): MacrameFile
     {
         return $this->deleteOnQuit();
     }
@@ -231,24 +231,29 @@ class MacrameFile
      * @param  String $text The text to get the bytes of
      * @return Int The number of bytes
      */
-    public function byteCount(String $text):Int
+    public function byteCount(String $text): Int
     {
         return mb_strlen($text, '8bit');
     }
 
     /**
      * Tests if there is enough space on the disk partition of the target
-     * file for the string $text or the number of bytes passed as an integer. 
+     * file for the string $text or the number of bytes passed as an integer.
      *
      * @param  Int|String $text The text to write to file or the count of bytes
      * @return bool If there is enough space
      */
-    public function enoughSpace(Int|String $text):bool
+    public function enoughSpace(Int|String $text): bool
     {
         $bytes = is_int($text) ? $text : $this->byteCount($text);
         return disk_free_space(dirname($this->handleTilde($this->path))) > $bytes;
     }
 
+    /**
+     * Get full path of file
+     *
+     * @return String
+     */
     public function path(): String
     {
         return $this->handleTilde($this->path);
@@ -258,13 +263,13 @@ class MacrameFile
      * Handles substition of the path to the user's home directory for ~
      * as would happen in bash or any other modern shell.
      *
-     * @param  String $path The user-supplied path 
+     * @param  String $path The user-supplied path
      * @return String
      * @note   Requires posix
      */
-    private function handleTilde(String $path):String
+    private function handleTilde(String $path): String
     {
-        return substr(trim($path), 0, 1) == '~' ? posix_getpwuid(posix_getuid())['dir'].substr(trim($path),1) : trim($path);
+        return substr(trim($path), 0, 1) == '~' ? posix_getpwuid(posix_getuid())['dir'].substr(trim($path), 1) : trim($path);
     }
 
     /**
@@ -273,7 +278,7 @@ class MacrameFile
      * @param  String $warning
      * @return void
      */
-    private function warn(String $warning):void
+    private function warn(String $warning): void
     {
         $warning = new MacrameText($warning);
         $warning->warning();

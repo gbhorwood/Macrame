@@ -1,4 +1,5 @@
 <?php
+
 namespace Gbhorwood\Macrame;
 
 /**
@@ -12,7 +13,7 @@ class MacrameArgs
      * @var Array<Arg>
      * @access private
      */
-    private Array $args;
+    private array $args;
 
     /**
      * The value(s) of the arguments at $argname
@@ -26,37 +27,38 @@ class MacrameArgs
      *
      * @param  String $argname
      */
-    public function __construct(String $argname) {
+    public function __construct(String $argname)
+    {
         // build empty location for positional arguments
         $this->args['positional'] = new Arg();
 
         // all command line arguments minus sript name
         $args = array_slice($GLOBALS['argv'], 1);
 
-        for ($i=0;$i<count($args);$i++) {
+        for ($i = 0;$i < count($args);$i++) {
             switch (substr_count($args[$i], "-", 0, 2)) {
                 // switches
                 case 1:
                     foreach (str_split(ltrim($args[$i], "-")) as $a) {
-                        if(!isset($this->args[$a])) {
+                        if (!isset($this->args[$a])) {
                             $this->args[$a] = new Arg();
                         }
                         $this->args[$a]->count++;
                     }
                     break;
 
-                // assignment args
+                    // assignment args
                 case 2:
                     $assignmentArgName = ltrim(preg_replace("/=.*/", '', $args[$i]), '-');
                     $assignmentArgVal = strpos($args[$i], '=') !== false ? substr($args[$i], strpos($args[$i], '=') + 1) : null;
-                    if(!isset($this->args[$assignmentArgName])) {
+                    if (!isset($this->args[$assignmentArgName])) {
                         $this->args[$assignmentArgName] = new Arg();
                     }
                     $this->args[$assignmentArgName]->values[] = $assignmentArgVal;
                     $this->args[$assignmentArgName]->count = count($this->args[$assignmentArgName]->values);
                     break;
 
-                // positional args
+                    // positional args
                 default:
                     $this->args['positional']->values[] = $args[$i];
                     $this->args['positional']->count = count($this->args['positional']->values);
@@ -71,7 +73,8 @@ class MacrameArgs
      *
      * @return bool
      */
-    public function exists():bool {
+    public function exists(): bool
+    {
         return $this->argval->count > 0;
     }
 
@@ -82,7 +85,8 @@ class MacrameArgs
      *
      * @return Int
      */
-    public function count():Int {
+    public function count(): Int
+    {
         return $this->argval->count;
     }
 
@@ -92,8 +96,9 @@ class MacrameArgs
      *
      * @return ?String
      */
-    public function first():?String {
-        return array_values(array_filter($this->argval->values, fn($v) => strlen($v)>0))[0] ?? null;
+    public function first(): ?String
+    {
+        return array_values(array_filter($this->argval->values, fn ($v) => strlen($v) > 0))[0] ?? null;
     }
 
     /**
@@ -102,8 +107,9 @@ class MacrameArgs
      *
      * @return ?String
      */
-    public function last():?String {
-        $vals = array_values(array_filter($this->argval->values, fn($v) => strlen($v)>0));
+    public function last(): ?String
+    {
+        $vals = array_values(array_filter($this->argval->values, fn ($v) => strlen($v) > 0));
         return $vals[array_key_last($vals)] ?? null;
     }
 
@@ -113,7 +119,8 @@ class MacrameArgs
      *
      * @return Array<String>
      */
-    public function all():Array {
+    public function all(): array
+    {
         return array_values(array_filter($this->argval->values));
     }
 }
@@ -130,7 +137,7 @@ class Arg
      *
      * @var Array<String>
      */
-    public Array $values = [];
+    public array $values = [];
 
     /**
      * The count of ocurrences of the argument

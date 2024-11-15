@@ -220,7 +220,7 @@ class MacrameDownload
      */
     private function showProgress(): bool
     {
-        if($this->getRemoteSize() == 0) {
+        if ($this->getRemoteSize() == 0) {
             return false;
         }
 
@@ -295,7 +295,7 @@ class MacrameDownload
      */
     private function download(): bool
     {
-        if($this->getRemoteSize() == 0) {
+        if ($this->getRemoteSize() == 0) {
             return false;
         }
 

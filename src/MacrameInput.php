@@ -1,7 +1,8 @@
 <?php
+
 namespace Gbhorwood\Macrame;
 
-use \Gbhorwood\Macrame\MacrameIO as IO;
+use Gbhorwood\Macrame\MacrameIO as IO;
 
 /**
  * Handle user input
@@ -14,7 +15,7 @@ class MacrameInput
      * @var Array<callable>
      * @access private
      */
-    private Array $validators = [];
+    private array $validators = [];
 
     /**
      * Constructor
@@ -32,7 +33,7 @@ class MacrameInput
      * @param  String $errorMessage The optional message to display if validation fails
      * @return MacrameInput
      */
-    public function isLengthMin(Int $min, String $errorMessage = null):MacrameInput
+    public function isLengthMin(Int $min, String $errorMessage = null): MacrameInput
     {
         $this->validators[] = $this->validator()->functionIsLengthMin($min, $errorMessage);
         return $this;
@@ -46,7 +47,7 @@ class MacrameInput
      * @param  String $errorMessage The optional message to display if validation fails
      * @return MacrameInput
      */
-    public function isLengthMax(Int $max, String $errorMessage = null):MacrameInput
+    public function isLengthMax(Int $max, String $errorMessage = null): MacrameInput
     {
         $this->validators[] = $this->validator()->functionIsLengthMax($max, $errorMessage);
         return $this;
@@ -60,7 +61,7 @@ class MacrameInput
      * @param  String $errorMessage The optional message to display if validation fails
      * @return MacrameInput
      */
-    public function isPregMatch(String $expression, String $errorMessage = null):MacrameInput
+    public function isPregMatch(String $expression, String $errorMessage = null): MacrameInput
     {
         $this->validators[] = $this->validator()->functionIsPregMatch($expression, $errorMessage);
         return $this;
@@ -73,7 +74,7 @@ class MacrameInput
      * @param  String $errorMessage The optional message to display if validation fails
      * @return MacrameInput
      */
-    public function isEqualTo(String $validValue, String $errorMessage = null):MacrameInput
+    public function isEqualTo(String $validValue, String $errorMessage = null): MacrameInput
     {
         $this->validators[] = $this->validator()->functionIsEqualTo($validValue, $errorMessage);
         return $this;
@@ -87,7 +88,7 @@ class MacrameInput
      * @param  String        $errorMessage The optional message to display if validation fails
      * @return MacrameInput
      */
-    public function isOneOf(Array $validList, String $errorMessage = null):MacrameInput
+    public function isOneOf(array $validList, String $errorMessage = null): MacrameInput
     {
         $this->validators[] = $this->validator()->functionIsOneOf($validList, $errorMessage);
         return $this;
@@ -97,11 +98,11 @@ class MacrameInput
      * Add a validator function to test if value is of a minimum entropy
      * to list of validators to run against the input
      *
-     * @param  Float  $entropyMin   The minimum entropy       
+     * @param  Float  $entropyMin   The minimum entropy
      * @param  String $errorMessage The optional message to display if validation fails
      * @return MacrameInput
      */
-    public function isEntropyMin(Float $entropyMin, String $errorMessage = null):MacrameInput
+    public function isEntropyMin(Float $entropyMin, String $errorMessage = null): MacrameInput
     {
         $this->validators[] = $this->validator()->functionIsEntropyMin($entropyMin, $errorMessage);
         return $this;
@@ -115,7 +116,7 @@ class MacrameInput
      * @param  String $errorMessage The optional message to display if validation fails
      * @return MacrameInput
      */
-    public function doesContain(String $substring, String $errorMessage = null):MacrameInput
+    public function doesContain(String $substring, String $errorMessage = null): MacrameInput
     {
         $this->validators[] = $this->validator()->functionDoesContain($substring, $errorMessage);
         return $this;
@@ -129,7 +130,7 @@ class MacrameInput
      * @param  String $errorMessage The optional message to display if validation fails
      * @return MacrameInput
      */
-    public function doesNotContain(String $substring, String $errorMessage = null):MacrameInput
+    public function doesNotContain(String $substring, String $errorMessage = null): MacrameInput
     {
         $this->validators[] = $this->validator()->functionDoesNotContain($substring, $errorMessage);
         return $this;
@@ -142,7 +143,7 @@ class MacrameInput
      * @param  String $errorMessage The optional message to display if validation fails
      * @return MacrameInput
      */
-    public function isInt(String $errorMessage = null):MacrameInput
+    public function isInt(String $errorMessage = null): MacrameInput
     {
         $this->validators[] = $this->validator()->functionIsInt($errorMessage);
         return $this;
@@ -155,7 +156,7 @@ class MacrameInput
      * @param  String $errorMessage The optional message to display if validation fails
      * @return MacrameInput
      */
-    public function isNumber(String $errorMessage = null):MacrameInput
+    public function isNumber(String $errorMessage = null): MacrameInput
     {
         $this->validators[] = $this->validator()->functionIsNumber($errorMessage);
         return $this;
@@ -168,7 +169,7 @@ class MacrameInput
      * @param  String $errorMessage The optional message to display if validation fails
      * @return MacrameInput
      */
-    public function isEmail(String $errorMessage = null):MacrameInput
+    public function isEmail(String $errorMessage = null): MacrameInput
     {
         $this->validators[] = $this->validator()->functionIsEmail($errorMessage);
         return $this;
@@ -181,7 +182,7 @@ class MacrameInput
      * @param  String $errorMessage The optional message to display if validation fails
      * @return MacrameInput
      */
-    public function isUrl(String $errorMessage = null):MacrameInput
+    public function isUrl(String $errorMessage = null): MacrameInput
     {
         $this->validators[] = $this->validator()->functionIsUrl($errorMessage);
         return $this;
@@ -194,7 +195,7 @@ class MacrameInput
      * @param  String $errorMessage The optional message to display if validation fails
      * @return MacrameInput
      */
-    public function isIpAddress(String $errorMessage = null):MacrameInput
+    public function isIpAddress(String $errorMessage = null): MacrameInput
     {
         $this->validators[] = $this->validator()->functionIsIpAddress($errorMessage);
         return $this;
@@ -207,7 +208,7 @@ class MacrameInput
      * @param  String $errorMessage The optional message to display if validation fails
      * @return MacrameInput
      */
-    public function isDate(String $errorMessage = null):MacrameInput
+    public function isDate(String $errorMessage = null): MacrameInput
     {
         $this->validators[] = $this->validator()->functionIsDate($errorMessage);
         return $this;
@@ -219,10 +220,10 @@ class MacrameInput
      * @param  callable $validator The validator function
      * @return MacrameInput
      */
-    public function addValidator(callable $validator, String $errorMessage = null):MacrameInput
+    public function addValidator(callable $validator, String $errorMessage = null): MacrameInput
     {
-        $this->validators[] = function(String $value) use($validator, $errorMessage) {
-            if(!$validator($value)) {
+        $this->validators[] = function (String $value) use ($validator, $errorMessage) {
+            if (!$validator($value)) {
                 MacrameValidator::displayError($errorMessage);
                 return false;
             }
@@ -239,15 +240,14 @@ class MacrameInput
      * @param  Array<String> $tabCompletions An optional array of words that can be completed by tabbing
      * @return String The user input
      */
-    public function readline(String $prompt = null, Array $tabCompletions = []):String
+    public function readline(String $prompt = null, array $tabCompletions = []): String
     {
-        readline_completion_function(fn($line, $index) => $tabCompletions);
+        readline_completion_function(fn ($line, $index) => $tabCompletions);
 
         do {
             $input = trim(readline($prompt));
             readline_add_history($input);
-        }
-        while(!$this->isValid($input));
+        } while (!$this->isValid($input));
 
         return $input;
     }
@@ -258,14 +258,14 @@ class MacrameInput
      * @param  String $prompt The prompt to display. Default 'password: '
      * @return String The user input
      */
-    public function readPassword(String $prompt = 'password: '):String
+    public function readPassword(String $prompt = 'password: '): String
     {
         /**
          * Function to poll for user password input
          */
-        $pollForPassword = function(String $prompt) {
+        $pollForPassword = function (String $prompt) {
             // suppress echo
-            readline_callback_handler_install("", function(){});
+            readline_callback_handler_install("", function () {});
 
             // array of characters of the password
             $passwordCharArray = [];
@@ -273,7 +273,7 @@ class MacrameInput
             IO::writeStdout($prompt);
 
             // accept and handle each user keystroke until <RETURN>
-            while(true) {
+            while (true) {
                 $keystroke = IO::keyStroke();
 
                 // handle <return>
@@ -305,8 +305,7 @@ class MacrameInput
          */
         do {
             $input = $pollForPassword($prompt);
-        }
-        while(!$this->isValid($input));
+        } while (!$this->isValid($input));
 
         return $input;
     }
@@ -316,7 +315,7 @@ class MacrameInput
      *
      * @return ?String The content from STDIN, if any
      */
-    public function readPipe():?String
+    public function readPipe(): ?String
     {
         return IO::getPipedContent();
     }
@@ -326,7 +325,7 @@ class MacrameInput
      *
      * @return \Iterator
      */
-    public function readPipeByLine():\Iterator
+    public function readPipeByLine(): \Iterator
     {
         return IO::getPipedContentGenerator();
     }
@@ -337,16 +336,15 @@ class MacrameInput
      * @param  ?String $prompt  The optional prompt to display
      * @return String
      */
-    public function readKey(?String $prompt = null):String
+    public function readKey(?String $prompt = null): String
     {
         do {
-            if($prompt) {
+            if ($prompt) {
                 IO::writeStdout($prompt);
             }
             $input = IO::keyStroke();
             IO::newline();
-        }
-        while(!$this->isValid($input));
+        } while (!$this->isValid($input));
         return $input;
     }
 
@@ -355,12 +353,12 @@ class MacrameInput
      *
      * @param  Array<String> $options  The list of valid option characters
      * @param  ?String $default  The option returned if <RETURN> is hit
-     * @param  ?String $prompt   The optional prompt to display 
+     * @param  ?String $prompt   The optional prompt to display
      * @param  ?String $error    The optional message to display if validation fails
      */
-    public function readOption(Array $options, ?String $default = null, ?String $prompt = null, ?String $error = null):String
+    public function readOption(array $options, ?String $default = null, ?String $prompt = null, ?String $error = null): String
     {
-        $validOptions = array_unique(array_filter(array_merge(array_map(fn($o) => $o[0], $options), [@$default[0]])));
+        $validOptions = array_unique(array_filter(array_merge(array_map(fn ($o) => $o[0], $options), [@$default[0]])));
         $this->isOneOf($default ? array_merge($validOptions, [chr(10)]) : $validOptions, $error);
         $key =  $this->readKey($prompt);
         return $key == chr(10) ? @$default[0] : $key;
@@ -372,9 +370,9 @@ class MacrameInput
      * @param  String $text The text to validate
      * @return bool False if one or more validators fails
      */
-    private function isValid(String $text):bool
+    private function isValid(String $text): bool
     {
-        return count($this->validators) > 0 ? !in_array(false, array_map(fn($v) => $v($text), $this->validators)) : true;
+        return count($this->validators) > 0 ? !in_array(false, array_map(fn ($v) => $v($text), $this->validators)) : true;
     }
 
     /**
@@ -382,7 +380,7 @@ class MacrameInput
      *
      * @return MacrameValidator
      */
-    private function validator():MacrameValidator
+    private function validator(): MacrameValidator
     {
         return new MacrameValidator();
     }

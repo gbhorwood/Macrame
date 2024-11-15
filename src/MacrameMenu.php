@@ -608,7 +608,7 @@ class MacrameMenu
                 case KEY_RETURN:
                     IO::showCursor();
                     if ($this->erase) {
-                        IO::eraseLines(array_sum(array_map(fn($l) => count(explode(PHP_EOL, $l)), $this->interactiveMenuDisplays[$selected])));
+                        IO::eraseLines(array_sum(array_map(fn ($l) => count(explode(PHP_EOL, $l)), $this->interactiveMenuDisplays[$selected])));
                     }
                     return (string)$dateObj->format('Y-m-d');
             }
@@ -627,7 +627,7 @@ class MacrameMenu
     {
         // get count of all lines of all menu elements and erase that many lines if not initial menu display
         if (!$initial) {
-            IO::eraseLines(array_sum(array_map(fn($l) => count(explode(PHP_EOL, $l)), $this->interactiveMenuDisplays[$selected])));
+            IO::eraseLines(array_sum(array_map(fn ($l) => count(explode(PHP_EOL, $l)), $this->interactiveMenuDisplays[$selected])));
         }
         array_map(fn ($l) => IO::writeStdout($l.PHP_EOL), $this->interactiveMenuDisplays[$selected]);
     }
