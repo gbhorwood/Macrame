@@ -14,6 +14,7 @@ if(!defined('LINE_ERASE')) define('LINE_ERASE', ESC."[2K");
 if(!defined('LINE_ERASE_TO_END')) define('LINE_ERASE_TO_END', ESC."[0K");
 if(!defined('CLEAR_SCREEN')) define('CLEAR_SCREEN', ESC."[2J");
 if(!defined('HOME_CURSOR')) define('HOME_CURSOR', ESC."[0;0f");
+if(!defined('LINE_START_CURSOR')) define('LINE_START_CURSOR', ESC."[1;2H");
 if(!defined('BACKSPACE')) define('BACKSPACE', chr(8));
 if(!defined('HIDE_CURSOR')) define('HIDE_CURSOR', ESC."[?25l");
 if(!defined('SHOW_CURSOR')) define('SHOW_CURSOR', ESC."[?25h");
