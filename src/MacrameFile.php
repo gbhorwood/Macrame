@@ -238,14 +238,20 @@ class MacrameFile
 
     /**
      * Tests if there is enough space on the disk partition of the target
-     * file for the string $text. 
+     * file for the string $text or the number of bytes passed as an integer. 
      *
-     * @param  String $text The text to write to file
+     * @param  Int|String $text The text to write to file or the count of bytes
      * @return bool If there is enough space
      */
-    public function enoughSpace(String $text):bool
+    public function enoughSpace(Int|String $text):bool
     {
-        return disk_free_space(dirname($this->handleTilde($this->path))) > $this->byteCount($text);
+        $bytes = is_int($text) ? $text : $this->byteCount($text);
+        return disk_free_space(dirname($this->handleTilde($this->path))) > $bytes;
+    }
+
+    public function path(): String
+    {
+        return $this->handleTilde($this->path);
     }
 
     /**
