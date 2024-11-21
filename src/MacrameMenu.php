@@ -608,7 +608,7 @@ class MacrameMenu
                 case KEY_RETURN:
                     IO::showCursor();
                     if ($this->erase) {
-                        IO::eraseLines(array_sum(array_map(fn ($l) => count(explode(PHP_EOL, $l)), $this->interactiveMenuDisplays[$selected])));
+                        IO::eraseLines(count($this->dateMenuDisplays));
                     }
                     return (string)$dateObj->format('Y-m-d');
             }
