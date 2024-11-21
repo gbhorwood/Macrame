@@ -62,7 +62,6 @@ Test to make sure php on the host system is capable of using Macrame. The requir
 $macrame->text("hello world")->write();
 ```
 The custom code of the script.
-
             
 ## Exiting cleanly
 ```PHP
