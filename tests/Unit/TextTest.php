@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
@@ -8,7 +9,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * Tell phpunit when using processIsolation what STDIN is
  */
-if(!defined('STDIN')) define('STDIN', fopen("php://stdin","r"));
+if (!defined('STDIN')) {
+    define('STDIN', fopen("php://stdin", "r"));
+}
 
 #[CoversClass(\Gbhorwood\Macrame\Macrame::class)]
 #[CoversClass(\Gbhorwood\Macrame\MacrameText::class)]
@@ -20,7 +23,7 @@ class TextTest extends TestCase
     use \phpmock\phpunit\PHPMock;
 
     /**
-     * Test text()->write() 
+     * Test text()->write()
      *
      * @runInSeparateProcess
      */
@@ -32,7 +35,7 @@ class TextTest extends TestCase
         $testText = 'some text'.PHP_EOL.'new line';
 
         $cli = new \Gbhorwood\Macrame\MacrameText($testText);
-        
+
         /**
          * Tests and assertions
          */
@@ -45,7 +48,7 @@ class TextTest extends TestCase
     }
 
     /**
-     * Test text()->get() 
+     * Test text()->get()
      *
      * @runInSeparateProcess
      */
@@ -57,7 +60,7 @@ class TextTest extends TestCase
         $testText = 'some text'.PHP_EOL.'new line';
 
         $cli = new \Gbhorwood\Macrame\MacrameText($testText);
-        
+
         /**
          * Tests and assertions
          */
@@ -65,7 +68,7 @@ class TextTest extends TestCase
     }
 
     /**
-     * Test text()->text() 
+     * Test text()->text()
      *
      * @runInSeparateProcess
      */
@@ -86,7 +89,7 @@ class TextTest extends TestCase
     }
 
     /**
-     * Test text()->append() 
+     * Test text()->append()
      *
      * @runInSeparateProcess
      */
@@ -107,7 +110,7 @@ class TextTest extends TestCase
     }
 
     /**
-     * Test text()->writeError() 
+     * Test text()->writeError()
      *
      * @runInSeparateProcess
      */
@@ -119,7 +122,7 @@ class TextTest extends TestCase
         $testText = 'some text'.PHP_EOL.'new line';
 
         $cli = new \Gbhorwood\Macrame\MacrameText($testText);
-        
+
         /**
          * Tests and assertions
          */
@@ -147,7 +150,7 @@ class TextTest extends TestCase
     }
 
     /**
-     * Test text()->colour()->write() 
+     * Test text()->colour()->write()
      *
      * @runInSeparateProcess
      */
@@ -217,7 +220,7 @@ class TextTest extends TestCase
     }
 
     /**
-     * Test text()->colour()->colour()->write() 
+     * Test text()->colour()->colour()->write()
      *
      * @runInSeparateProcess
      */
@@ -229,7 +232,7 @@ class TextTest extends TestCase
         $testText = 'some text';
 
         $cli = new \Gbhorwood\Macrame\MacrameText($testText);
-        
+
         $whiteThenRedText = "\033[37m\033[31m".$testText."\033[0m";
 
         /**
@@ -241,7 +244,7 @@ class TextTest extends TestCase
 
 
     /**
-     * Test text()->backgroundColour()->write() 
+     * Test text()->backgroundColour()->write()
      *
      * @runInSeparateProcess
      */
@@ -260,7 +263,7 @@ class TextTest extends TestCase
         $magentaText = "\033[45m".$testText."\033[0m";
         $cyanText = "\033[46m".$testText."\033[0m";
         $whiteText = "\033[47m".$testText."\033[0m";
-        
+
         /**
          * Tests and assertions
          */
@@ -310,7 +313,7 @@ class TextTest extends TestCase
     }
 
     /**
-     * Test text()->style()->write() 
+     * Test text()->style()->write()
      *
      * @runInSeparateProcess
      */
@@ -361,7 +364,7 @@ class TextTest extends TestCase
     }
 
     /**
-     * Test text()->right()->write() 
+     * Test text()->right()->write()
      *
      * @runInSeparateProcess
      */
@@ -382,7 +385,7 @@ class TextTest extends TestCase
     }
 
     /**
-     * Test text()->centre()->write() 
+     * Test text()->centre()->write()
      *
      * @runInSeparateProcess
      */
@@ -407,7 +410,7 @@ class TextTest extends TestCase
     }
 
     /**
-     * Test text()->left()->write() 
+     * Test text()->left()->write()
      *
      * @runInSeparateProcess
      */
@@ -508,7 +511,7 @@ class TextTest extends TestCase
         /**
          * Data
          */
-        $testText =<<<TXT
+        $testText = <<<TXT
         this is the test text for testing wrapping that is ANSI safe. we are testing this on thirty cols. this line ends on on.
 
         New paragraph.
@@ -517,7 +520,7 @@ class TextTest extends TestCase
         New paragraph after two PHP_EOL.
         TXT;
 
-        $expectsText =<<<TXT
+        $expectsText = <<<TXT
         this is the test text for
         testing wrapping that is ANSI
         safe. we are testing this on
@@ -554,7 +557,7 @@ class TextTest extends TestCase
         /**
          * Data
          */
-        $testText =<<<TXT
+        $testText = <<<TXT
         this is the \033[31m\033[1m\033[3mtest\033[0m text for testing wrapping that is ANSI safe. we are testing this on thirty cols. this line ends on on.
 
         New paragraph.
@@ -563,7 +566,7 @@ class TextTest extends TestCase
         New paragraph after two PHP_EOL.
         TXT;
 
-        $expectsText =<<<TXT
+        $expectsText = <<<TXT
         this is the \033[31m\033[1m\033[3mtest\033[0m text for
         testing wrapping that is ANSI
         safe. we are testing this on
@@ -600,7 +603,7 @@ class TextTest extends TestCase
          * data
          */
         $testText = '';
-        for($i=0;$i<100;$i++) {
+        for ($i = 0;$i < 100;$i++) {
             $testText .= "line ".$i.PHP_EOL;
         }
         $keydowns = array_fill(0, 200, chr(10));
@@ -608,7 +611,7 @@ class TextTest extends TestCase
         /**
          * Mocks
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keydowns);
 
@@ -632,7 +635,7 @@ class TextTest extends TestCase
          * Data
          */
         $testText = '';
-        for($i=0;$i<100;$i++) {
+        for ($i = 0;$i < 100;$i++) {
             $testText .= "line ".$i.PHP_EOL;
         }
         $keydowns = array_fill(0, 200, ' ');
@@ -641,7 +644,7 @@ class TextTest extends TestCase
         /**
          * Mocks
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keydowns);
 
@@ -665,14 +668,14 @@ class TextTest extends TestCase
          * Data
          */
         $testText = '';
-        for($i=0;$i<100;$i++) {
+        for ($i = 0;$i < 100;$i++) {
             $testText .= "line ".$i.PHP_EOL;
         }
 
         /**
          * Mocks
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls('q');
 
@@ -686,7 +689,7 @@ class TextTest extends TestCase
 
     /**
      * Test rowCount()
-     * 
+     *
      * @runInSeparateProcess
      */
     public function testRowCount()
@@ -694,7 +697,7 @@ class TextTest extends TestCase
         /**
          * Data
          */
-        $testText =<<<TXT
+        $testText = <<<TXT
         one
         two
         three
@@ -710,7 +713,7 @@ class TextTest extends TestCase
 
     /**
      * Test reverse()
-     * 
+     *
      * @runInSeparateProcess
      */
     public function testReverse()
@@ -730,7 +733,7 @@ class TextTest extends TestCase
     }
 
     /**
-     * mb_strwidth_ansi() 
+     * mb_strwidth_ansi()
      *
      * @dataProvider strlenProvider
      * @runInSeparateProcess
@@ -743,7 +746,7 @@ class TextTest extends TestCase
 
     /**
      * Test tags
-     * 
+     *
      * @runInSeparateProcess
      */
     public function testTags()
@@ -763,11 +766,11 @@ class TextTest extends TestCase
     }
 
     /**
-     * Provides strings and lengths to test mb_strwidth_ansi() 
+     * Provides strings and lengths to test mb_strwidth_ansi()
      *
      * @return Array
      */
-    public static function strlenProvider():Array
+    public static function strlenProvider(): array
     {
 
         $italic = "\033[3m";
@@ -782,7 +785,7 @@ class TextTest extends TestCase
             ["🌈string", 8],        // emoji
             ["str\x7fing!", 7],     // delete ignored
             ["str\x08iing!", 7],    // backspace not ignored
-            ["str🌈🌈\x08\x08ng", 7],   
+            ["str🌈🌈\x08\x08ng", 7],
 
             [$red.$italic."string!".$close, 7],
             [$red.$italic."striñg!".$close, 7],

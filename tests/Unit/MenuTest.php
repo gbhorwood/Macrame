@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
@@ -8,7 +9,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * Tell phpunit when using processIsolation what STDIN is
  */
-if(!defined('STDIN')) define('STDIN', fopen("php://stdin","r"));
+if (!defined('STDIN')) {
+    define('STDIN', fopen("php://stdin", "r"));
+}
 
 #[CoversClass(\Gbhorwood\Macrame\Macrame::class)]
 #[CoversClass(\Gbhorwood\Macrame\MacrameMenu::class)]
@@ -22,7 +25,6 @@ if(!defined('STDIN')) define('STDIN', fopen("php://stdin","r"));
 #[UsesClass(\Gbhorwood\Macrame\HorizontalMenu::class)]
 class MenuTest extends TestCase
 {
-
     use \phpmock\phpunit\PHPMock;
 
     /**
@@ -52,7 +54,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -97,7 +99,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -142,7 +144,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -188,7 +190,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -234,7 +236,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -279,7 +281,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -318,7 +320,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -357,7 +359,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -396,7 +398,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -435,7 +437,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -474,7 +476,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -513,7 +515,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -559,7 +561,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -606,7 +608,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -680,7 +682,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -725,7 +727,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -770,7 +772,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -816,7 +818,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 
@@ -862,7 +864,7 @@ class MenuTest extends TestCase
         /**
          * Override stream_get_contents() to return $keystrokes
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$keystrokes);
 

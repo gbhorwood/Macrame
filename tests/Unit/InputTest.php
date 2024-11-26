@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
@@ -8,7 +9,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * Tell phpunit when using processIsolation what STDIN is
  */
-if(!defined('STDIN')) define('STDIN', fopen("php://stdin","r"));
+if (!defined('STDIN')) {
+    define('STDIN', fopen("php://stdin", "r"));
+}
 
 #[CoversClass(\Gbhorwood\Macrame\Macrame::class)]
 #[CoversClass(\Gbhorwood\Macrame\MacrameInput::class)]
@@ -556,14 +559,14 @@ class InputTest extends TestCase
          * Override stream_get_contents() to return $validPassword one char
          * at a time
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$passwordChars);
 
         /**
          * Override fwrite() to suppress dots echo to STDOUT
          */
-        $fwrite = $this->getFunctionMock('Gbhorwood\Macrame' , "fwrite");
+        $fwrite = $this->getFunctionMock('Gbhorwood\Macrame', "fwrite");
         $fwrite->expects($this->any())
                  ->willReturnOnConsecutiveCalls(null);
 
@@ -598,14 +601,14 @@ class InputTest extends TestCase
          * Override stream_get_contents() to return $validPassword one char
          * at a time
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$passwordChars);
 
         /**
          * Override fwrite() to suppress dots echo to STDOUT
          */
-        $fwrite = $this->getFunctionMock('Gbhorwood\Macrame' , "fwrite");
+        $fwrite = $this->getFunctionMock('Gbhorwood\Macrame', "fwrite");
         $fwrite->expects($this->any())
                  ->willReturnOnConsecutiveCalls(null);
 
@@ -639,14 +642,14 @@ class InputTest extends TestCase
          * Override stream_get_contents() to return $validPassword one char
          * at a time
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$passwordChars);
 
         /**
          * Override fwrite() to suppress dots echo to STDOUT
          */
-        $fwrite = $this->getFunctionMock('Gbhorwood\Macrame' , "fwrite");
+        $fwrite = $this->getFunctionMock('Gbhorwood\Macrame', "fwrite");
         $fwrite->expects($this->any())
                  ->willReturnOnConsecutiveCalls(null);
 
@@ -670,11 +673,11 @@ class InputTest extends TestCase
      */
     public function testReadPipe()
     {
-        $validPipedContent =<<<TXT
+        $validPipedContent = <<<TXT
         line one
         line two
         TXT;
-        $validPipedContentArray = array_map(fn($line) => $line.PHP_EOL, explode(PHP_EOL, $validPipedContent));
+        $validPipedContentArray = array_map(fn ($line) => $line.PHP_EOL, explode(PHP_EOL, $validPipedContent));
 
         /**
          * Override stream_select to return true
@@ -723,11 +726,11 @@ class InputTest extends TestCase
      */
     public function testReadPipeByLine()
     {
-        $validPipedContent =<<<TXT
+        $validPipedContent = <<<TXT
         line one
         line two
         TXT;
-        $validPipedContentArray = array_map(fn($line) => $line.PHP_EOL, explode(PHP_EOL, $validPipedContent));
+        $validPipedContentArray = array_map(fn ($line) => $line.PHP_EOL, explode(PHP_EOL, $validPipedContent));
 
         /**
          * Override stream_select to return true
@@ -746,7 +749,7 @@ class InputTest extends TestCase
         $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
 
         $i = 0;
-        foreach($input->readPipeByLine() as $line) {
+        foreach ($input->readPipeByLine() as $line) {
             $this->assertEquals(trim($line), trim($validPipedContentArray[$i]));
             $i++;
         }
@@ -770,7 +773,7 @@ class InputTest extends TestCase
         /**
          * Override stream_get_contents() to return $char
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->once())->willReturn($char);
 
         $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
@@ -801,7 +804,7 @@ class InputTest extends TestCase
         /**
          * Override stream_get_contents() to return $char
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->once())->willReturn($char);
 
         $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
@@ -832,7 +835,7 @@ class InputTest extends TestCase
         /**
          * Override stream_get_contents() to return $char
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->once())->willReturn($char);
 
         $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
@@ -864,7 +867,7 @@ class InputTest extends TestCase
         /**
          * Override stream_get_contents() to return $char
          */
-        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame' , "stream_get_contents");
+        $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$chars);
 
@@ -902,7 +905,7 @@ class InputTest extends TestCase
         /**
          * Test
          */
-        $isUpper = fn($text) => strtoupper($text) == $text;
+        $isUpper = fn ($text) => strtoupper($text) == $text;
         $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
         $this->expectOutputRegex("/$errorOutput/");
         $result = $input->addValidator($isUpper, $errorOutput)->readline();
@@ -914,11 +917,11 @@ class InputTest extends TestCase
     }
 
     /**
-     * Provider for successful passwords 
+     * Provider for successful passwords
      *
      * @return Array
      */
-    public static function passwordProviderSuccess():Array
+    public static function passwordProviderSuccess(): array
     {
 
         return [

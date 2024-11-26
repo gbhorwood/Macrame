@@ -1,10 +1,10 @@
 <?php
+
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\Attributes\CoversClass;
-
 
 #[CoversClass(\Gbhorwood\Macrame\Macrame::class)]
 #[CoversClass(\Gbhorwood\Macrame\MacrameTable::class)]
@@ -23,26 +23,24 @@ class TableTest extends TestCase
 
         $table = new \Gbhorwood\Macrame\MacrameTable($headers, $data);
 
-        array_map(fn($col) => $table->left($col), $lefts);
-        array_map(fn($col) => $table->right($col), $rights);
-        array_map(fn($col) => $table->centre($col), $centres);
+        array_map(fn ($col) => $table->left($col), $lefts);
+        array_map(fn ($col) => $table->right($col), $rights);
+        array_map(fn ($col) => $table->centre($col), $centres);
 
-        if($style == 'standard') {
+        if ($style == 'standard') {
             $table->standard();
         }
-        if($style == 'solid') {
+        if ($style == 'solid') {
             $table->solid();
         }
-        if($style == 'double') {
+        if ($style == 'double') {
             $table->double();
         }
 
         $result = $table->get();
 
-        $resultLinesArray = array_map(fn($l) => trim($l), array_filter(explode(PHP_EOL, $result)));
-        $expectedLinesArray = array_map(fn($l) => trim($l), array_filter(explode(PHP_EOL, $expected)));
-
-        //print_r($resultLinesArray);
+        $resultLinesArray = array_map(fn ($l) => trim($l), array_filter(explode(PHP_EOL, $result)));
+        $expectedLinesArray = array_map(fn ($l) => trim($l), array_filter(explode(PHP_EOL, $expected)));
 
         $this->assertEquals($expectedLinesArray, $resultLinesArray);
     }
@@ -54,13 +52,19 @@ class TableTest extends TestCase
      */
     public function testTableGetCenter()
     {
+        /**
+         * Data
+         */
         $headers = ['header zero', 'header one', 'header two'];
         $data = [
             ['cola 0', 'cola 1', 'cola 2'],
             ['colb 0', 'colb 1', 'colb 2'],
         ];
 
-        $expected =<<<TXT
+        /**
+         * Test
+         */
+        $expected = <<<TXT
         +-------------+------------+------------+
         | header zero | header one | header two |
         +-------------+------------+------------+
@@ -69,20 +73,16 @@ class TableTest extends TestCase
         +-------------+------------+------------+
         TXT;
 
-
         $table = new \Gbhorwood\Macrame\MacrameTable($headers, $data);
         $table->center(0);
 
         $result = $table->get();
 
-        $resultLinesArray = array_map(fn($l) => trim($l), array_filter(explode(PHP_EOL, $result)));
-        $expectedLinesArray = array_map(fn($l) => trim($l), array_filter(explode(PHP_EOL, $expected)));
+        $resultLinesArray = array_map(fn ($l) => trim($l), array_filter(explode(PHP_EOL, $result)));
+        $expectedLinesArray = array_map(fn ($l) => trim($l), array_filter(explode(PHP_EOL, $expected)));
 
         $this->assertEquals($expectedLinesArray, $resultLinesArray);
     }
-
-
-
 
     /**
      * Test table()->write()
@@ -101,7 +101,7 @@ class TableTest extends TestCase
         /**
          * Test
          */
-        $tableOutput =<<<TXT
+        $tableOutput = <<<TXT
         +-------+-------+
         | one   | two   |
         +-------+-------+
@@ -136,7 +136,7 @@ class TableTest extends TestCase
         $table = $cli->table($headers, $data);
         $result = $table->get();
         ob_clean();
-        
+
         /**
          * Data
          */
@@ -156,7 +156,7 @@ class TableTest extends TestCase
      *
      * @return Array
      */
-    public static function tableProvider():Array
+    public static function tableProvider(): array
     {
         $italic = "\033[3m";
         $red = "\033[31m";
@@ -174,7 +174,7 @@ class TableTest extends TestCase
         $rights = [];
         $centres = [];
         $style = 'standard';
-        $expected =<<<TXT
+        $expected = <<<TXT
         +-------------+------------+------------+
         | header zero | header one | header two |
         +-------------+------------+------------+
@@ -194,7 +194,7 @@ class TableTest extends TestCase
         $rights = [];
         $centres = [];
         $style = 'solid';
-        $expected =<<<TXT
+        $expected = <<<TXT
         ┌─────────────┬────────────┬────────────┐
         │ header zero │ header one │ header two │
         ├─────────────┼────────────┼────────────┤
@@ -214,7 +214,7 @@ class TableTest extends TestCase
         $rights = [];
         $centres = [];
         $style = 'double';
-        $expected =<<<TXT
+        $expected = <<<TXT
         ╔═════════════╦════════════╦════════════╗
         ║ header zero ║ header one ║ header two ║
         ╠═════════════╬════════════╬════════════╣
@@ -234,7 +234,7 @@ class TableTest extends TestCase
         $rights = [0];
         $centres = [];
         $style = 'standard';
-        $expected =<<<TXT
+        $expected = <<<TXT
         +-------------+------------+------------+
         | header zero | header one | header two |
         +-------------+------------+------------+
@@ -254,7 +254,7 @@ class TableTest extends TestCase
         $rights = [0, 1];
         $centres = [];
         $style = 'standard';
-        $expected =<<<TXT
+        $expected = <<<TXT
         +-------------+------------+------------+
         | header zero | header one | header two |
         +-------------+------------+------------+
@@ -274,7 +274,7 @@ class TableTest extends TestCase
         $rights = [0, 1, 2];
         $centres = [];
         $style = 'standard';
-        $expected =<<<TXT
+        $expected = <<<TXT
         +-------------+------------+------------+
         | header zero | header one | header two |
         +-------------+------------+------------+
@@ -294,7 +294,7 @@ class TableTest extends TestCase
         $rights = [];
         $centres = [0];
         $style = 'standard';
-        $expected =<<<TXT
+        $expected = <<<TXT
         +-------------+------------+------------+
         | header zero | header one | header two |
         +-------------+------------+------------+
@@ -314,7 +314,7 @@ class TableTest extends TestCase
         $rights = [];
         $centres = [0, 1];
         $style = 'standard';
-        $expected =<<<TXT
+        $expected = <<<TXT
         +-------------+------------+------------+
         | header zero | header one | header two |
         +-------------+------------+------------+
@@ -334,7 +334,7 @@ class TableTest extends TestCase
         $rights = [];
         $centres = [0, 1, 2];
         $style = 'standard';
-        $expected =<<<TXT
+        $expected = <<<TXT
         +-------------+------------+------------+
         | header zero | header one | header two |
         +-------------+------------+------------+
@@ -354,7 +354,7 @@ class TableTest extends TestCase
         $rights = [2];
         $centres = [1];
         $style = 'standard';
-        $expected =<<<TXT
+        $expected = <<<TXT
         +-------------+------------------+---------------+
         | header zero |    header one    |    header two |
         +-------------+------------------+---------------+
@@ -363,7 +363,7 @@ class TableTest extends TestCase
         +-------------+------------------+---------------+
         TXT;
         $provided[] = [$headers, $data, $expected, $style, $lefts, $rights, $centres];
-        
+
         // data 10
         $headers = ['header zero', 'header one', 'header two'];
         $data = [
@@ -374,7 +374,7 @@ class TableTest extends TestCase
         $rights = [2];
         $centres = [1];
         $style = 'standard';
-        $expected =<<<TXT
+        $expected = <<<TXT
         +-------------+------------------+---------------+
         | header zero |    header one    |    header two |
         +-------------+------------------+---------------+
@@ -394,7 +394,7 @@ class TableTest extends TestCase
         $rights = [2];
         $centres = [1];
         $style = 'solid';
-        $expected =<<<TXT
+        $expected = <<<TXT
         ┌─────────────┬──────────────────┬───────────────┐
         │ header zero │    header one    │    header two │
         ├─────────────┼──────────────────┼───────────────┤
@@ -414,7 +414,7 @@ class TableTest extends TestCase
         $rights = [2];
         $centres = [1];
         $style = 'double';
-        $expected =<<<TXT
+        $expected = <<<TXT
         ╔═════════════╦══════════════════╦═══════════════╗
         ║ header zero ║    header one    ║    header two ║
         ╠═════════════╬══════════════════╬═══════════════╣
@@ -435,7 +435,7 @@ class TableTest extends TestCase
         $rights = [2];
         $centres = [1];
         $style = 'double';
-        $expected =<<<TXT
+        $expected = <<<TXT
         ╔═════════════╦══════════════════╦═══════════════╗
         ║ header zero ║    header one    ║    header two ║
         ╠═════════════╬══════════════════╬═══════════════╣
@@ -458,7 +458,7 @@ class TableTest extends TestCase
         $rights = [2];
         $centres = [1];
         $style = 'double';
-        $expected =<<<TXT
+        $expected = <<<TXT
         ╔════════════════════╦═════════════════════╦════════════════════╗
         ║ header zero        ║     header one      ║         header two ║
         ╠════════════════════╬═════════════════════╬════════════════════╣
@@ -484,7 +484,7 @@ class TableTest extends TestCase
         $rights = [2];
         $centres = [1];
         $style = 'double';
-        $expected =<<<TXT
+        $expected = <<<TXT
         ╔═════════════╦══════════════════╦═══════════════╗
         ║ header zero ║    header one    ║    header two ║
         ╠═════════════╬══════════════════╬═══════════════╣
@@ -506,7 +506,7 @@ class TableTest extends TestCase
         $rights = [];
         $centres = [];
         $style = 'standard';
-        $expected =<<<TXT
+        $expected = <<<TXT
         +-------------+------------+------------+
         | header zero | header one | header two |
         +-------------+------------+------------+

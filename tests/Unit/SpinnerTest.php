@@ -1,17 +1,19 @@
 <?php
+
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-
 define('BACKSPACE', '');
 
 /**
  * Tell phpunit when using processIsolation what STDIN is
  */
-if(!defined('STDIN')) define('STDIN', fopen("php://stdin","r"));
+if (!defined('STDIN')) {
+    define('STDIN', fopen("php://stdin", "r"));
+}
 
 #[CoversClass(\Gbhorwood\Macrame\Macrame::class)]
 #[CoversClass(\Gbhorwood\Macrame\MacrameSpinner::class)]
@@ -20,17 +22,16 @@ if(!defined('STDIN')) define('STDIN', fopen("php://stdin","r"));
 #[UsesClass(\Gbhorwood\Macrame\MacrameSpinner::class)]
 class SpinnerTest extends TestCase
 {
-
     use \phpmock\phpunit\PHPMock;
 
     /**
-     * Test basic 
+     * Test basic
      * spinner()
      */
     public function testSpinner()
     {
 
-        $func = function() {
+        $func = function () {
             usleep(300000);
             return "returned results";
         };
@@ -49,13 +50,13 @@ class SpinnerTest extends TestCase
     }
 
     /**
-     * Test animation 
+     * Test animation
      * spinner()
      */
     public function testSpinnerAnimation()
     {
 
-        $func = function() {
+        $func = function () {
             usleep(300000);
             return "returned results";
         };
@@ -74,13 +75,13 @@ class SpinnerTest extends TestCase
     }
 
     /**
-     * Test color 
+     * Test color
      * spinner()
      */
     public function testSpinnerColor()
     {
 
-        $func = function() {
+        $func = function () {
             usleep(300000);
             return "returned results";
         };
@@ -99,13 +100,13 @@ class SpinnerTest extends TestCase
     }
 
     /**
-     * Test backgroundcolor 
+     * Test backgroundcolor
      * spinner()
      */
     public function testSpinnerBackgroundColor()
     {
 
-        $func = function() {
+        $func = function () {
             usleep(300000);
             return "returned results";
         };
@@ -124,13 +125,13 @@ class SpinnerTest extends TestCase
     }
 
     /**
-     * Test prompt 
+     * Test prompt
      * spinner()
      */
     public function testSpinnerPrompt()
     {
 
-        $func = function() {
+        $func = function () {
             usleep(300000);
             return "returned results";
         };
@@ -149,13 +150,13 @@ class SpinnerTest extends TestCase
     }
 
     /**
-     * Test speed 
+     * Test speed
      * spinner()
      */
     public function testSpinnerSpeed()
     {
 
-        $func = function() {
+        $func = function () {
             usleep(300000);
             return "returned results";
         };
@@ -174,13 +175,13 @@ class SpinnerTest extends TestCase
     }
 
     /**
-     * Test style 
+     * Test style
      * spinner()
      */
     public function testSpinnerStyle()
     {
 
-        $func = function() {
+        $func = function () {
             usleep(300000);
             return "returned results";
         };

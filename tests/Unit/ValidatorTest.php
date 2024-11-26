@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
@@ -20,7 +21,7 @@ class ValidatorTest extends TestCase
         $error = 'error '.uniqid();
         $testFunction = $validator->functionIsNumber($error);
 
-        if(!$passes) {
+        if (!$passes) {
             $this->expectOutputRegex("/$error/");
         }
 
@@ -38,7 +39,7 @@ class ValidatorTest extends TestCase
         $error = 'error '.uniqid();
         $testFunction = $validator->functionIsInt($error);
 
-        if(!$passes) {
+        if (!$passes) {
             $this->expectOutputRegex("/$error/");
         }
 
@@ -56,7 +57,7 @@ class ValidatorTest extends TestCase
         $error = 'error '.uniqid();
         $testFunction = $validator->functionIsEmail($error);
 
-        if(!$passes) {
+        if (!$passes) {
             $this->expectOutputRegex("/$error/");
         }
 
@@ -74,7 +75,7 @@ class ValidatorTest extends TestCase
         $error = 'error '.uniqid();
         $testFunction = $validator->functionIsUrl($error);
 
-        if(!$passes) {
+        if (!$passes) {
             $this->expectOutputRegex("/$error/");
         }
 
@@ -92,7 +93,7 @@ class ValidatorTest extends TestCase
         $error = 'error '.uniqid();
         $testFunction = $validator->functionIsIpAddress($error);
 
-        if(!$passes) {
+        if (!$passes) {
             $this->expectOutputRegex("/$error/");
         }
 
@@ -110,7 +111,7 @@ class ValidatorTest extends TestCase
         $error = 'error '.uniqid();
         $testFunction = $validator->functionIsDate($error);
 
-        if(!$passes) {
+        if (!$passes) {
             $this->expectOutputRegex("/$error/");
         }
 
@@ -128,7 +129,7 @@ class ValidatorTest extends TestCase
         $error = 'error '.uniqid();
         $testFunction = $validator->functionIsLengthMin($test, $error);
 
-        if(!$passes) {
+        if (!$passes) {
             $this->expectOutputRegex("/$error/");
         }
 
@@ -146,7 +147,7 @@ class ValidatorTest extends TestCase
         $error = 'error '.uniqid();
         $testFunction = $validator->functionIsLengthMax($test, $error);
 
-        if(!$passes) {
+        if (!$passes) {
             $this->expectOutputRegex("/$error/");
         }
 
@@ -164,7 +165,7 @@ class ValidatorTest extends TestCase
         $error = 'error '.uniqid();
         $testFunction = $validator->functionIsEqualTo($test, $error);
 
-        if(!$passes) {
+        if (!$passes) {
             $this->expectOutputRegex("/$error/");
         }
 
@@ -182,7 +183,7 @@ class ValidatorTest extends TestCase
         $error = 'error '.uniqid();
         $testFunction = $validator->functionIsOneOf($testArray, $error);
 
-        if(!$passes) {
+        if (!$passes) {
             $this->expectOutputRegex("/$error/");
         }
 
@@ -200,7 +201,7 @@ class ValidatorTest extends TestCase
         $error = 'error '.uniqid();
         $testFunction = $validator->functionIsPregMatch($testExpression, $error);
 
-        if(!$passes) {
+        if (!$passes) {
             $this->expectOutputRegex("/$error/");
         }
 
@@ -218,7 +219,7 @@ class ValidatorTest extends TestCase
         $error = 'error '.uniqid();
         $testFunction = $validator->functionDoesContain($contains, $error);
 
-        if(!$passes) {
+        if (!$passes) {
             $this->expectOutputRegex("/$error/");
         }
 
@@ -236,7 +237,7 @@ class ValidatorTest extends TestCase
         $error = 'error '.uniqid();
         $testFunction = $validator->functionDoesNotContain($contains, $error);
 
-        if(!$passes) {
+        if (!$passes) {
             $this->expectOutputRegex("/$error/");
         }
 
@@ -254,7 +255,7 @@ class ValidatorTest extends TestCase
         $error = 'error '.uniqid();
         $testFunction = $validator->functionIsEntropyMin($minentropy, $error);
 
-        if(!$passes) {
+        if (!$passes) {
             $this->expectOutputRegex("/$error/");
         }
 
@@ -266,7 +267,7 @@ class ValidatorTest extends TestCase
      *
      * @return Array
      */
-    public static function isNumberProvider():Array
+    public static function isNumberProvider(): array
     {
         return [
             [ '1.0', true ],
@@ -289,7 +290,7 @@ class ValidatorTest extends TestCase
      *
      * @return Array
      */
-    public static function isIntProvider():Array
+    public static function isIntProvider(): array
     {
         return [
             [ '9', true ],
@@ -309,7 +310,7 @@ class ValidatorTest extends TestCase
      *
      * @return Array
      */
-    public static function isEmailProvider():Array
+    public static function isEmailProvider(): array
     {
         return [
             [ 'simple@example.ca', true ],
@@ -334,7 +335,7 @@ class ValidatorTest extends TestCase
      *
      * @return Array
      */
-    public static function isUrlProvider():Array
+    public static function isUrlProvider(): array
     {
         return [
             [ 'https://example.ca', true ],
@@ -355,7 +356,7 @@ class ValidatorTest extends TestCase
      *
      * @return Array
      */
-    public static function isIpAddressProvider():Array
+    public static function isIpAddressProvider(): array
     {
         return [
             [ '192.168.1.1', true ],
@@ -374,7 +375,7 @@ class ValidatorTest extends TestCase
      *
      * @return Array
      */
-    public static function isDateProvider():Array
+    public static function isDateProvider(): array
     {
         return [
             [ 'Dec 12th, 1992', true ],
@@ -394,7 +395,7 @@ class ValidatorTest extends TestCase
      *
      * @return Array
      */
-    public static function isLengthMinProvider():Array
+    public static function isLengthMinProvider(): array
     {
         return [
             ['12345', 4, true],
@@ -408,7 +409,7 @@ class ValidatorTest extends TestCase
      *
      * @return Array
      */
-    public static function isLengthMaxProvider():Array
+    public static function isLengthMaxProvider(): array
     {
         return [
             ['12345', 6, true],
@@ -422,7 +423,7 @@ class ValidatorTest extends TestCase
      *
      * @return Array
      */
-    public static function isEqualToProvider():Array
+    public static function isEqualToProvider(): array
     {
         return [
             ['a string', 'a string', true],
@@ -443,7 +444,7 @@ class ValidatorTest extends TestCase
      *
      * @return Array
      */
-    public static function isOneOfProvider():Array
+    public static function isOneOfProvider(): array
     {
         return [
             ['yes', ['yes', 'no'], true],
@@ -461,7 +462,7 @@ class ValidatorTest extends TestCase
      *
      * @return Array
      */
-    public static function isPregMatchProvider():Array
+    public static function isPregMatchProvider(): array
     {
         return [
             ['$19.78', "/\\\$?((\d{1,3}(,\d{3})*)|(\d+))(\.\d{2})?$/", true ],
@@ -475,7 +476,7 @@ class ValidatorTest extends TestCase
      *
      * @return Array
      */
-    public static function doesContainProvider():Array
+    public static function doesContainProvider(): array
     {
         return [
             ['foobar', 'foo', true],
@@ -490,7 +491,7 @@ class ValidatorTest extends TestCase
      *
      * @return Array
      */
-    public static function doesNotContainProvider():Array
+    public static function doesNotContainProvider(): array
     {
         return [
             ['foobar', 'foo', false],
@@ -505,7 +506,7 @@ class ValidatorTest extends TestCase
      *
      * @return Array
      */
-    public static function isEntropyMinProvider():Array
+    public static function isEntropyMinProvider(): array
     {
         return [
             ['foobar', 3.0, false],
