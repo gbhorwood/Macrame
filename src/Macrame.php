@@ -118,7 +118,7 @@ class Macrame
      */
     public function table(array $headers, array $data): MacrameTable
     {
-        return new MacrameTable($headers, $data, new MacrameText());
+        return new MacrameTable($headers, $data);
     }
 
     /**

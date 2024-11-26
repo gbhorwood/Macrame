@@ -2,6 +2,8 @@
 
 namespace Gbhorwood\Macrame;
 
+require __DIR__ . '/../vendor/autoload.php';
+
 /**
  * Alignment definitions
  */
@@ -11,9 +13,28 @@ if (!defined('LEFT')) {
 if (!defined('CENTRE')) {
     define('CENTRE', 1);
 }
+if (!defined('CENTER')) {
+    define('CENTER', 1);
+}
 if (!defined('RIGHT')) {
     define('RIGHT', 2);
 }
+
+/**
+ * Border definitions
+ */
+if (!defined('TABLE_BORDER_STANDARD')) {
+    define('TABLE_BORDER_STANDARD', 'standard');
+}
+if (!defined('TABLE_BORDER_SOLID')) {
+    define('TABLE_BORDER_SOLID', 'solid');
+}
+if (!defined('TABLE_BORDER_DOUBLE')) {
+    define('TABLE_BORDER_DOUBLE', 'double');
+}
+
+use Gbhorwood\Macrame\MacrameIO as IO;
+use Gbhorwood\Tabletown\Table as Table;
 
 /**
  * Handle creation and output of nice tables
@@ -43,124 +64,79 @@ class MacrameTable
     private array $alignments = [];
 
     /**
-     * MacrameText object
-     * @var MacrameText
-     * @access private
-     */
-    private MacrameText $text;
-
-    /**
-     * Array of arrays defining table styles
-     * @var Array<Array<String,Array<String,String>>>
-     * @access private
-     */
-    private array $tableStyles = [
-        'standard' => [
-            'default' => [
-                'bar' => '|',
-                'separator' => '-',
-            ],
-            'top' => [
-                'left' => '+',
-                'right' => '+',
-                'join' => '+',
-            ],
-            'bottom' => [
-                'left' => '+',
-                'right' => '+',
-                'join' => '+',
-            ],
-            'inner' => [
-                'left' => '+',
-                'right' => '+',
-                'join' => '+',
-            ],
-        ],
-
-        'solid' => [
-            'default' => [
-                'bar' => '│',
-                'separator' => '─',
-            ],
-            'top' => [
-                'left' => '┌',
-                'right' => '┐',
-                'join' => '┬',
-            ],
-            'bottom' => [
-                'left' => '└',
-                'right' => '┘',
-                'join' => '┴',
-            ],
-            'inner' => [
-                'left' => '├',
-                'right' => '┤',
-                'join' => '┼',
-            ],
-        ],
-
-        'double' => [
-            'default' => [
-                'bar' => '║',
-                'separator' => '═',
-            ],
-            'top' => [
-                'left' => '╔',
-                'right' => '╗',
-                'join' => '╦',
-            ],
-            'bottom' => [
-                'left' => '╚',
-                'right' => '╝',
-                'join' => '╩',
-            ],
-            'inner' => [
-                'left' => '╠',
-                'right' => '╣',
-                'join' => '╬',
-            ],
-        ],
-    ];
-
-    /**
      * Style of table
      * @var String
      * @access private
      */
-    private String $style = 'standard';
+    private String $style = TABLE_BORDER_STANDARD;
 
     /**
      * Constructor
      *
      * @param  Array<String> $headers
      * @param  Array<String> $data
-     * @param  MacrameText   $text
      */
-    public function __construct(array $headers, array $data, MacrameText $text)
+    public function __construct(array $headers, array $data)
     {
         $this->headers = $headers;
         $this->data = $data;
-        $this->text = $text;
+
+        /**
+         * Validate column count of header and data rows are the same
+         */
+        if (!$this->validateColCount()) {
+            $e = new \Exception();
+            $t = $e->getTrace();
+            $file = $t[1]['file'];
+            $line = $t[1]['line'];
+            $text = new MacrameText('Table column mismatch at '.$file.' line '.$line.'. No table created.');
+            $text->warning();
+        }
+
+        $this->alignments = array_fill(0, count($headers), LEFT);
     }
 
     /**
-     * Write table with formatting to standard output
-     *
-     * @return void
-     */
-    public function write(): void
-    {
-        $this->create()->write();
-    }
-
-    /**
-     * Return table as text with formatting
+     * Return the table as string
      *
      * @return ?String
      */
     public function get(): ?String
     {
         return $this->create()->get();
+    }
+
+    /**
+     * Output table to STDOUT
+     *
+     * @return void
+     */
+    public function write()
+    {
+        $this->create()->write();
+    }
+
+    /**
+     * Create the table and return as a MacrameText object
+     *
+     * @return MacrameText
+     */
+    public function create(): MacrameText
+    {
+        /**
+         * Validate column count of header and data rows are the same
+         */
+        if (!$this->validateColCount()) {
+            $e = new \Exception();
+            $t = $e->getTrace();
+            $file = $t[1]['file'];
+            $line = $t[1]['line'];
+            $text = new MacrameText('Table column mismatch at '.$file.' line '.$line.'. No table created.');
+            $text->warning();
+            return new MacrameText();
+        }
+
+        return new MacrameText(Table::get($this->headers, $this->data, $this->style, $this->alignments).PHP_EOL);
     }
 
     /**
@@ -173,6 +149,17 @@ class MacrameTable
     {
         $this->alignments[$key] = CENTRE;
         return $this;
+    }
+
+    /**
+     * Alias of centre()
+     *
+     * @param  Int $key The key of the table column, starting at zero
+     * @return MacrameTable
+     */
+    public function center(Int $key): MacrameTable
+    {
+        return $this->centre($key);
     }
 
     /**
@@ -200,110 +187,11 @@ class MacrameTable
     }
 
     /**
-     * Create the table and return as a MacrameText object
-     *
-     * @return MacrameText
-     */
-    public function create(): MacrameText
-    {
-        /**
-         * Validate column count of header and data rows are the same
-         */
-        if (!$this->validateColCount()) {
-            $e = new \Exception();
-            $t = $e->getTrace();
-            $file = $t[1]['file'];
-            $line = $t[1]['line'];
-            $this->text->text('Table column mismatch at '.$file.' line '.$line.'. No table created.')->warning();
-            return new MacrameText();
-        }
-
-        /**
-         * Create an array keyed by column position of the length longest lines in each column.
-         * Used for padding.
-         */
-        $pads = [];
-        for ($i = 0;$i < count($this->headers);$i++) {
-            $pads[$i] = max(array_map(fn ($data) => max($this->text->mb_strwidth_ansi($data[$i]), $this->text->mb_strwidth_ansi($this->headers[$i])), $this->data));
-        }
-
-        /**
-         * Function to create one outputtable line, padded to fit.
-         * Note: str_pad does not use ansi-safe string lengths.
-         */
-        $makePaddedLine = function (Int $k, String $v) use ($pads): String {
-            $contentLength = $this->text->mb_strwidth_ansi($v);
-            $bar = $this->getStyle()['default']['bar'];
-            switch (@$this->alignments[$k]) {
-                case CENTRE:
-                    return join(array_fill(0, (int)floor(($pads[$k] - $contentLength) / 2), ' ')) .
-                    $v .
-                    join(array_fill(0, (int)ceil(($pads[$k] - $contentLength) / 2), ' ')) ." $bar ";
-
-                case RIGHT:
-                    return join(array_fill(0, $pads[$k] - $contentLength, ' ')).$v." $bar ";
-
-                default:
-                    return $v.join(array_fill(0, $pads[$k] - $contentLength, ' '))." $bar ";
-            }
-        };
-
-        /**
-         * Create the header line
-         */
-        $headLine = trim($this->getStyle()['default']['bar'].' ' . join('', array_map($makePaddedLine, array_keys($this->headers), $this->headers))).PHP_EOL;
-
-        /**
-         * Create all the data lines
-         */
-        $dataLines = join(PHP_EOL, array_map(function (array $d) use ($makePaddedLine) { // @phpstan-ignore-line
-            return trim($this->getStyle()['default']['bar'].' ' . join('', array_map($makePaddedLine, array_keys($d), $d)));
-        }, $this->data)).PHP_EOL;
-
-        /**
-         * Function to return a string that acts as a table barrier line.
-         *
-         * @param  String $position One of 'tob', 'bottom' or 'inner'
-         */
-        $getLine = function (String $position) use ($pads) {
-            $left = $this->getStyle()[$position]['left'];
-            $separator = $this->getStyle()['default']['separator'];
-            $right = $this->getStyle()[$position]['right'];
-            $join = $this->getStyle()[$position]['join'];
-            return mb_substr($left .
-                    join(
-                        '',
-                        array_map(
-                            function ($k, $v) use ($pads, $join, $separator) {
-                                return join(array_fill(0, $pads[$k] + 1, $separator)) .
-                                    $separator .
-                                    $join;
-                            },
-                            array_keys($this->headers),
-                            $this->headers
-                        )
-                    ), 0, -1).$right.PHP_EOL;
-        };
-
-        /**
-         * Get the three classes of barrier lines
-         */
-        $topLine = $getLine('top');
-        $bottomLine = $getLine('bottom');
-        $innerLine = $getLine('inner');
-
-        /**
-         * Return the MacrameText object for the table string
-         */
-        return new MacrameText($topLine . $headLine . $innerLine . $dataLines . $bottomLine);
-    }
-
-    /**
      * Set border style to 'solid'
      */
     public function solid(): MacrameTable
     {
-        $this->style = 'solid';
+        $this->style = TABLE_BORDER_SOLID;
         return $this;
     }
 
@@ -312,7 +200,7 @@ class MacrameTable
      */
     public function double(): MacrameTable
     {
-        $this->style = 'double';
+        $this->style = TABLE_BORDER_DOUBLE;
         return $this;
     }
 
@@ -321,7 +209,7 @@ class MacrameTable
      */
     public function standard(): MacrameTable
     {
-        $this->style = 'standard';
+        $this->style = TABLE_BORDER_STANDARD;
         return $this;
     }
 
@@ -334,15 +222,5 @@ class MacrameTable
     private function validateColCount(): bool
     {
         return count(array_unique(array_map(fn ($d) => count($d), array_merge($this->data, [$this->headers])))) == 1;
-    }
-
-    /**
-     * Get the array defining the table style
-     *
-     * @return Array<String,Array<String,String>>
-     */
-    private function getStyle(): array
-    {
-        return $this->tableStyles[$this->style];
     }
 }
