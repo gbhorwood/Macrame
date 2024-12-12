@@ -19,7 +19,7 @@ Full documentation and a set of examples are found on the [documentation site](h
 ## Hello world
 The fastest way to get up and running is to use the 'hello world' example and replace the 'output text' line with your custom code.
 
-```PHP
+```php
 #!/usr/bin/env php 
 <?php
 require __DIR__ . '/vendor/autoload.php';
