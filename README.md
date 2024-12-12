@@ -11,10 +11,10 @@ composer require gbhorwood/macrame
 ## Documentation and Resources
 Full documentation and a set of examples are found on the [documentation site](https://macrame.fruitbat.studio), including:
 
-[Quick Start](https://macrame.fruitbat.studio/Quick_Start.html)
-[Crash Course](https://macrame.fruitbat.studio/Crash_Course.html)
-[Full Manual](https://macrame.fruitbat.studio/Manual/Getting_Started.html)
-[Examples](https://macrame.fruitbat.studio/Cookbook/Intro.html)
+* [Quick Start](https://macrame.fruitbat.studio/Quick_Start.html)
+* [Crash Course](https://macrame.fruitbat.studio/Crash_Course.html)
+* [Full Manual](https://macrame.fruitbat.studio/Manual/Getting_Started.html)
+* [Examples](https://macrame.fruitbat.studio/Cookbook/Intro.html)
 
 ## Hello world
 The fastest way to get up and running is to use the 'hello world' example and replace the 'output text' line with your custom code.
