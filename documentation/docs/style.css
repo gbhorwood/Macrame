@@ -7,7 +7,16 @@ body {
     font-family: sans-serif;
 }
 
+.larger {
+    font-size: 120%;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: sans-serif;
     font-weight: 500;
+    text-indent: 0mm;
+}
+
+.Permalink {
+    margin-left: -1.2em;
 }
