@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
@@ -9,13 +10,13 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[UsesClass(\Gbhorwood\Macrame\MacrameIO::class)]
 class IOTest extends TestCase
 {
-
     use \phpmock\phpunit\PHPMock;
 
     /**
      * Test getColWidth()
      *
      * @dataProvider sttySizeProvider
+     * @runInSeparateProcess
      */
     public function testGetColWidth($height, $width, $expectedHeight, $expectedWidth)
     {
@@ -41,11 +42,11 @@ class IOTest extends TestCase
     }
 
     /**
-     * Provides 
+     * Provides
      *
      * @return Array
      */
-    public static function sttySizeProvider():Array
+    public static function sttySizeProvider(): array
     {
 
         return [

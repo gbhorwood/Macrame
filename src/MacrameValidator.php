@@ -1,5 +1,8 @@
 <?php
+
 namespace Gbhorwood\Macrame;
+
+use Gbhorwood\Macrame\MacrameIO as IO;
 
 /**
  * Handle validation of user data
@@ -7,7 +10,6 @@ namespace Gbhorwood\Macrame;
  */
 class MacrameValidator
 {
-
     /**
      * Returns a function that accepts a value and tests if
      * its length is greater than or equal to $min.
@@ -17,10 +19,10 @@ class MacrameValidator
      * @param  String $error The optional error message to display if the validation fails
      * @return callable The validation function
      */
-    public function functionIsLengthMin(Int $min, String $error = null):callable
+    public function functionIsLengthMin(Int $min, String $error = null): callable
     {
-        return function(String $value) use($min, $error): bool {
-            if(mb_strlen($value) < $min) {
+        return function (String $value) use ($min, $error): bool {
+            if (mb_strlen($value) < $min) {
                 self::displayError($error);
                 return false;
             }
@@ -37,10 +39,10 @@ class MacrameValidator
      * @param  String $error The optional error message to display if the validation fails
      * @return callable The validation function
      */
-    public function functionIsLengthMax(Int $max, String $error = null):callable
+    public function functionIsLengthMax(Int $max, String $error = null): callable
     {
-        return function(String $value) use($max, $error): bool {
-            if(mb_strlen($value) > $max) {
+        return function (String $value) use ($max, $error): bool {
+            if (mb_strlen($value) > $max) {
                 self::displayError($error);
                 return false;
             }
@@ -57,10 +59,10 @@ class MacrameValidator
      * @param  String $error The optional error message to display if the validation fails
      * @return callable The validation function
      */
-    public function functionIsPregMatch(String $expression, String $error = null):callable
+    public function functionIsPregMatch(String $expression, String $error = null): callable
     {
-        return function(String $value) use($expression, $error): bool {
-            if(preg_match($expression, $value) === 0) {
+        return function (String $value) use ($expression, $error): bool {
+            if (preg_match($expression, $value) === 0) {
                 self::displayError($error);
                 return false;
             }
@@ -77,10 +79,10 @@ class MacrameValidator
      * @param  String $error The optional error message to display if the validation fails
      * @return callable The validation function
      */
-    public function functionIsEqualTo(String $validValue, String $error = null):callable
+    public function functionIsEqualTo(String $validValue, String $error = null): callable
     {
-        return function(String $value) use($validValue, $error): bool {
-            if(trim($validValue) !== trim($value)) {
+        return function (String $value) use ($validValue, $error): bool {
+            if (trim($validValue) !== trim($value)) {
                 self::displayError($error);
                 return false;
             }
@@ -97,10 +99,10 @@ class MacrameValidator
      * @param  String $error The optional error message to display if the validation fails
      * @return callable The validation function
      */
-    public function functionIsOneOf(Array $validList, String $error = null):callable
+    public function functionIsOneOf(array $validList, String $error = null): callable
     {
-        return function(String $value) use($validList, $error): bool {
-            if(!in_array(trim($value), $validList)) {
+        return function (String $value) use ($validList, $error): bool {
+            if (!in_array($value, $validList)) {
                 self::displayError($error);
                 return false;
             }
@@ -116,10 +118,10 @@ class MacrameValidator
      * @param  String $error The optional error message to display if the validation fails
      * @return callable The validation function
      */
-    public function functionIsInt(String $error = null):callable
+    public function functionIsInt(String $error = null): callable
     {
-        return function(String $value) use($error): bool {
-            if(!filter_var($value, FILTER_VALIDATE_INT) && $value != '0') {
+        return function (String $value) use ($error): bool {
+            if (!filter_var($value, FILTER_VALIDATE_INT) && $value != '0') {
                 self::displayError($error);
                 return false;
             }
@@ -135,10 +137,10 @@ class MacrameValidator
      * @param  String $error The optional error message to display if the validation fails
      * @return callable The validation function
      */
-    public function functionIsNumber(String $error = null):callable
+    public function functionIsNumber(String $error = null): callable
     {
-        return function(String $value) use($error): bool {
-            if(!filter_var($value, FILTER_VALIDATE_FLOAT) && $value != "0") {
+        return function (String $value) use ($error): bool {
+            if (!filter_var($value, FILTER_VALIDATE_FLOAT) && $value != "0") {
                 self::displayError($error);
                 return false;
             }
@@ -154,10 +156,10 @@ class MacrameValidator
      * @param  String $error The optional error message to display if the validation fails
      * @return callable The validation function
      */
-    public function functionIsEmail(String $error = null):callable
+    public function functionIsEmail(String $error = null): callable
     {
-        return function(String $value) use($error): bool {
-            if(!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+        return function (String $value) use ($error): bool {
+            if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
                 self::displayError($error);
                 return false;
             }
@@ -173,10 +175,10 @@ class MacrameValidator
      * @param  String $error The optional error message to display if the validation fails
      * @return callable The validation function
      */
-    public function functionIsUrl(String $error = null):callable
+    public function functionIsUrl(String $error = null): callable
     {
-        return function(String $value) use($error): bool {
-            if(!filter_var($value, FILTER_VALIDATE_URL)) {
+        return function (String $value) use ($error): bool {
+            if (!filter_var($value, FILTER_VALIDATE_URL)) {
                 self::displayError($error);
                 return false;
             }
@@ -192,10 +194,10 @@ class MacrameValidator
      * @param  String $error The optional error message to display if the validation fails
      * @return callable The validation function
      */
-    public function functionIsIpAddress(String $error = null):callable
+    public function functionIsIpAddress(String $error = null): callable
     {
-        return function(String $value) use($error): bool {
-            if(!filter_var($value, FILTER_VALIDATE_IP)) {
+        return function (String $value) use ($error): bool {
+            if (!filter_var($value, FILTER_VALIDATE_IP)) {
                 self::displayError($error);
                 return false;
             }
@@ -211,10 +213,10 @@ class MacrameValidator
      * @param  String $error The optional error message to display if the validation fails
      * @return callable The validation function
      */
-    public function functionIsDate(String $error = null):callable
+    public function functionIsDate(String $error = null): callable
     {
-        return function(String $value) use($error): bool {
-            if(strtotime($value) === false) {
+        return function (String $value) use ($error): bool {
+            if (strtotime($value) === false) {
                 self::displayError($error);
                 return false;
             }
@@ -230,11 +232,11 @@ class MacrameValidator
      * @param  Float $entropy The minimum entropy
      * @return callable The validation function
      */
-    public static function functionIsEntropyMin(Float $entropy, String $error = null):callable
+    public static function functionIsEntropyMin(Float $entropy, String $error = null): callable
     {
-        return function(String $value) use($entropy, $error): bool {
-            $calculated = array_reduce(count_chars($value, 1), fn($t, $c) => $t + abs(($c/mb_strlen($value)) * log(($c/mb_strlen($value))) / log(2)));
-            if($calculated < $entropy) {
+        return function (String $value) use ($entropy, $error): bool {
+            $calculated = array_reduce(count_chars($value, 1), fn ($t, $c) => $t + abs(($c / mb_strlen($value)) * log(($c / mb_strlen($value))) / log(2)));
+            if ($calculated < $entropy) {
                 self::displayError($error);
                 return false;
             }
@@ -250,10 +252,10 @@ class MacrameValidator
      * @param  String $substring The substring the value must contain
      * @return callable The validation function
      */
-    public static function functionDoesContain(String $substring, String $error = null):callable
+    public static function functionDoesContain(String $substring, String $error = null): callable
     {
-        return function(String $value) use($substring, $error): bool {
-            if(mb_strpos($value, $substring) === false) {
+        return function (String $value) use ($substring, $error): bool {
+            if (mb_strpos($value, $substring) === false) {
                 self::displayError($error);
                 return false;
             }
@@ -269,10 +271,10 @@ class MacrameValidator
      * @param  String $substring The substring the value must not contain
      * @return callable The validation function
      */
-    public static function functionDoesNotContain(String $substring, String $error = null):callable
+    public static function functionDoesNotContain(String $substring, String $error = null): callable
     {
-        return function(String $value) use($substring, $error): bool {
-            if(mb_strpos($value, $substring) !== false) {
+        return function (String $value) use ($substring, $error): bool {
+            if (mb_strpos($value, $substring) !== false) {
                 self::displayError($error);
                 return false;
             }
@@ -286,9 +288,9 @@ class MacrameValidator
      * @param  ?String $message The error message to print on STDERR
      * @return void
      */
-    public static function displayError(?String $message = null):void
+    public static function displayError(?String $message = null): void
     {
-        if(strlen(trim($message)) > 0) {
+        if (strlen(trim($message)) > 0) {
             $output = new \Gbhorwood\Macrame\MacrameText($message);
             $output->error();
         }

@@ -1,14 +1,21 @@
 <?php
+
 namespace Gbhorwood\Macrame;
 
-use \Gbhorwood\Macrame\MacrameIO as IO;
+use Gbhorwood\Macrame\MacrameIO as IO;
 
 /**
- * ANSI: Convenience defines of meta characters
+ * ANSI: Convenience defines
  */
-define('BACKSPACE', chr(8));
-define('ESC', "\033"); // for use with ANSI codes
-define('ERASE_TO_END_OF_LINE', "\033[0K");
+if (!defined('BACKSPACE')) {
+    define('BACKSPACE', chr(8));
+}
+if (!defined('ESC')) {
+    define('ESC', "\033");
+}
+if (!defined('ERASE_TO_END_OF_LINE')) {
+    define('ERASE_TO_END_OF_LINE', "\033[0K");
+}
 
 /**
  * ANSI: styles
@@ -18,6 +25,7 @@ define('BOLD_ANSI', ESC."[1m");
 define('ITALIC_ANSI', ESC."[3m");
 define('UNDERLINE_ANSI', ESC."[4m");
 define('STRIKETHROUGH_ANSI', ESC."[9m");
+define('REVERSE_ANSI', ESC."[7m");
 
 /**
  * ANSI: colours
@@ -46,27 +54,34 @@ define('BACKGROUND_WHITE_ANSI', ESC."[47m");
 /**
  * Alignment definitions
  */
-if(!defined('LEFT')) define('LEFT', 0);
-if(!defined('CENTRE')) define('CENTRE', 2);
-if(!defined('RIGHT')) define('RIGHT', 1);
+if (!defined('LEFT')) {
+    define('LEFT', 0);
+}
+if (!defined('CENTRE')) {
+    define('CENTRE', 2);
+}
+if (!defined('RIGHT')) {
+    define('RIGHT', 1);
+}
 
 /**
  * Handle creation and output of styled text.
  *
  */
-class MacrameText {
-
+class MacrameText
+{
     /**
      * ANSI: named styles mapped to ANSI codes
      * @var Array<String, String>
      * @access Private
      */
-    private Array $ansiStyles = [
+    private array $ansiStyles = [
         'bold' => BOLD_ANSI,
         'italic' => ITALIC_ANSI, // terminal support limited. ymmv.
         'underline' => UNDERLINE_ANSI,
         'strike' => STRIKETHROUGH_ANSI,
         'strikethrough' => STRIKETHROUGH_ANSI,
+        'reverse' => REVERSE_ANSI,
     ];
 
     /**
@@ -149,36 +164,38 @@ class MacrameText {
         '{\<\!underline\!\>}' => UNDERLINE_ANSI,
         '{\<\!STRIKE\!\>}' => STRIKETHROUGH_ANSI,
         '{\<\!strike\!\>}' => STRIKETHROUGH_ANSI,
+        '{\<\!REVERSE\!\>}' => REVERSE_ANSI,
+        '{\<\!reverse\!\>}' => REVERSE_ANSI,
     ];
 
     /**
      * Display tags for output levels, ie [OK]
-     * RFC 5424 6.2.1
+     * RFC 5424 6.2.1 (ish)
      * @var Array<String, Array<String>>
      * @access Private
      */
     private $levelOutputs = [
         'normal' => [
             'ok' => '['.GREEN_ANSI.BOLD_ANSI.'OK'.CLOSE_ANSI.']',  // non-standard
-            'debug' => '['.GREEN_ANSI.BOLD_ANSI.'DEBUG'.CLOSE_ANSI.']', 
-            'info' => '['.GREEN_ANSI.BOLD_ANSI.'INFO'.CLOSE_ANSI.']', 
-            'notice' => '['.GREEN_ANSI.BOLD_ANSI.'NOTICE'.CLOSE_ANSI.']', 
-            'warning' => '['.YELLOW_ANSI.BOLD_ANSI.'WARNING'.CLOSE_ANSI.']', 
-            'error' => '['.RED_ANSI.BOLD_ANSI.'ERROR'.CLOSE_ANSI.']', 
-            'critical' => '['.RED_ANSI.BOLD_ANSI.'CRITICAL'.CLOSE_ANSI.']', 
-            'alert' => '['.YELLOW_ANSI.BOLD_ANSI.'ALERT'.CLOSE_ANSI.']', 
-            'emergency' => '['.RED_ANSI.BOLD_ANSI.'EMERGENCY'.CLOSE_ANSI.']', 
+            'debug' => '['.GREEN_ANSI.BOLD_ANSI.'DEBUG'.CLOSE_ANSI.']',
+            'info' => '['.GREEN_ANSI.BOLD_ANSI.'INFO'.CLOSE_ANSI.']',
+            'notice' => '['.GREEN_ANSI.BOLD_ANSI.'NOTICE'.CLOSE_ANSI.']',
+            'warning' => '['.YELLOW_ANSI.BOLD_ANSI.'WARNING'.CLOSE_ANSI.']',
+            'error' => '['.RED_ANSI.BOLD_ANSI.'ERROR'.CLOSE_ANSI.']',
+            'critical' => '['.RED_ANSI.BOLD_ANSI.'CRITICAL'.CLOSE_ANSI.']',
+            'alert' => '['.YELLOW_ANSI.BOLD_ANSI.'ALERT'.CLOSE_ANSI.']',
+            'emergency' => '['.RED_ANSI.BOLD_ANSI.'EMERGENCY'.CLOSE_ANSI.']',
         ],
         'reverse' => [
             'ok' => BACKGROUND_GREEN_ANSI.WHITE_ANSI.BOLD_ANSI.'[OK]'.CLOSE_ANSI,  // non-standard
-            'debug' => BACKGROUND_GREEN_ANSI.WHITE_ANSI.BOLD_ANSI.'[DEBUG]'.CLOSE_ANSI, 
-            'info' => BACKGROUND_GREEN_ANSI.WHITE_ANSI.BOLD_ANSI.'[INFO]'.CLOSE_ANSI, 
-            'notice' => BACKGROUND_GREEN_ANSI.WHITE_ANSI.BOLD_ANSI.'[NOTICE]'.CLOSE_ANSI, 
-            'warning' => BACKGROUND_YELLOW_ANSI.WHITE_ANSI.BOLD_ANSI.'[WARNING]'.CLOSE_ANSI, 
-            'error' => BACKGROUND_RED_ANSI.WHITE_ANSI.BOLD_ANSI.'[ERROR]'.CLOSE_ANSI, 
-            'critical' => BACKGROUND_RED_ANSI.WHITE_ANSI.BOLD_ANSI.'[CRITICAL]'.CLOSE_ANSI, 
-            'alert' => BACKGROUND_YELLOW_ANSI.WHITE_ANSI.BOLD_ANSI.'[ALERT]'.CLOSE_ANSI, 
-            'emergency' => BACKGROUND_RED_ANSI.WHITE_ANSI.BOLD_ANSI.'[EMERGENCY]'.CLOSE_ANSI, 
+            'debug' => BACKGROUND_GREEN_ANSI.WHITE_ANSI.BOLD_ANSI.'[DEBUG]'.CLOSE_ANSI,
+            'info' => BACKGROUND_GREEN_ANSI.WHITE_ANSI.BOLD_ANSI.'[INFO]'.CLOSE_ANSI,
+            'notice' => BACKGROUND_GREEN_ANSI.WHITE_ANSI.BOLD_ANSI.'[NOTICE]'.CLOSE_ANSI,
+            'warning' => BACKGROUND_YELLOW_ANSI.WHITE_ANSI.BOLD_ANSI.'[WARNING]'.CLOSE_ANSI,
+            'error' => BACKGROUND_RED_ANSI.WHITE_ANSI.BOLD_ANSI.'[ERROR]'.CLOSE_ANSI,
+            'critical' => BACKGROUND_RED_ANSI.WHITE_ANSI.BOLD_ANSI.'[CRITICAL]'.CLOSE_ANSI,
+            'alert' => BACKGROUND_YELLOW_ANSI.WHITE_ANSI.BOLD_ANSI.'[ALERT]'.CLOSE_ANSI,
+            'emergency' => BACKGROUND_RED_ANSI.WHITE_ANSI.BOLD_ANSI.'[EMERGENCY]'.CLOSE_ANSI,
         ],
     ];
 
@@ -194,7 +211,7 @@ class MacrameText {
      * @var Array<String>
      * @access private
      */
-    private Array $formatting = [];
+    private array $formatting = [];
 
     /**
      * Alignment of text output. One of LEFT, RIGHT, CENTRE.
@@ -216,7 +233,7 @@ class MacrameText {
      * @param  ?String $text
      * @return void
      */
-    public function __construct(?String $text=null) 
+    public function __construct(?String $text = null)
     {
         $this->text = $text;
     }
@@ -227,7 +244,7 @@ class MacrameText {
      * @param  ?String $text
      * @return MacrameText
      */
-    public function text(?String $text=null):MacrameText
+    public function text(?String $text = null): MacrameText
     {
         $this->text = $text;
         return $this;
@@ -239,7 +256,7 @@ class MacrameText {
      * @param  String $text
      * @return MacrameText
      */
-    public function append(String $text):MacrameText 
+    public function append(String $text): MacrameText
     {
         $this->text .= $text;
         return $this;
@@ -251,7 +268,8 @@ class MacrameText {
      * @param  String $colour The string name of the colour, ie. 'red'
      * @return MacrameText
      */
-    public function colour(String $colour):MacrameText {
+    public function colour(String $colour): MacrameText
+    {
         $this->formatting[] = isset($this->ansiColours[$colour]) ? $this->ansiColours[$colour] : null;
         return $this;
     }
@@ -262,7 +280,8 @@ class MacrameText {
      * @param  String $colour The string name of the colour, ie. 'red'
      * @return MacrameText
      */
-    public function color(String $colour):MacrameText {
+    public function color(String $colour): MacrameText
+    {
         return $this->colour($colour);
     }
 
@@ -272,7 +291,8 @@ class MacrameText {
      * @param  String $colour The string name of the colour, ie. 'red'
      * @return MacrameText
      */
-    public function backgroundColour(String $colour):MacrameText {
+    public function backgroundColour(String $colour): MacrameText
+    {
         $this->formatting[] = isset($this->ansiBackgroundColours[$colour]) ? $this->ansiBackgroundColours[$colour] : null;
         return $this;
     }
@@ -283,7 +303,8 @@ class MacrameText {
      * @param  String $colour The string name of the colour, ie. 'red'
      * @return MacrameText
      */
-    public function backgroundColor(String $colour):MacrameText {
+    public function backgroundColor(String $colour): MacrameText
+    {
         return $this->backgroundColour($colour);
     }
 
@@ -293,8 +314,20 @@ class MacrameText {
      * @param  String[] ...$styles The strings of the styles to apply, ie 'bold', 'italic'
      * @return MacrameText
      */
-    public function style(String ...$styles):MacrameText {
-        array_map(fn($style) => $this->formatting[] = isset($this->ansiStyles[$style]) ? $this->ansiStyles[$style] : null, $styles);
+    public function style(String ...$styles): MacrameText
+    {
+        array_map(fn ($style) => $this->formatting[] = isset($this->ansiStyles[$style]) ? $this->ansiStyles[$style] : null, $styles);
+        return $this;
+    }
+
+    /**
+     * Appli ANSI style to reverse $text
+     *
+     * @return MacrameText
+     */
+    public function reverse(): MacrameText
+    {
+        array_unshift($this->formatting, $this->ansiStyles['reverse']);
         return $this;
     }
 
@@ -303,7 +336,8 @@ class MacrameText {
      *
      * @return MacrameText
      */
-    public function centre():MacrameText {
+    public function centre(): MacrameText
+    {
         $this->alignment = CENTRE;
         return $this;
     }
@@ -313,7 +347,8 @@ class MacrameText {
      *
      * @return MacrameText
      */
-    public function center():MacrameText {
+    public function center(): MacrameText
+    {
         return $this->centre();
     }
 
@@ -322,7 +357,8 @@ class MacrameText {
      *
      * @return MacrameText
      */
-    public function right():MacrameText {
+    public function right(): MacrameText
+    {
         $this->alignment = RIGHT;
         return $this;
     }
@@ -332,7 +368,7 @@ class MacrameText {
      *
      * @return MacrameText
      */
-    public function left():MacrameText
+    public function left(): MacrameText
     {
         $this->alignment = LEFT;
         return $this;
@@ -343,7 +379,7 @@ class MacrameText {
      *
      * @return MacrameText
      */
-    public function wrap():MacrameText
+    public function wrap(): MacrameText
     {
         $this->wrap = true;
         return $this;
@@ -354,9 +390,19 @@ class MacrameText {
      *
      * @return ?String
      */
-    public function get():?String
+    public function get(): ?String
     {
         return $this->text ? $this->format() : null;
+    }
+
+    /**
+     * Get the number of rows this object will occupy when printed
+     *
+     * @return Int
+     */
+    public function rowCount(): Int
+    {
+        return count(explode(PHP_EOL, $this->format()));
     }
 
     /**
@@ -365,7 +411,7 @@ class MacrameText {
      * @param  bool $newline If true, append newline.
      * @return void
      */
-    public function write(bool $newline = false):void
+    public function write(bool $newline = false): void
     {
         IO::writeStdout($newline ? $this->format() . PHP_EOL : $this->format());
     }
@@ -376,7 +422,7 @@ class MacrameText {
      * @param  bool $newline If true, append newline.
      * @return void
      */
-    public function writeError(bool $newline = false):void
+    public function writeError(bool $newline = false): void
     {
         IO::writeStderr($newline ? $this->format(). PHP_EOL : $this->format());
     }
@@ -387,7 +433,7 @@ class MacrameText {
      *
      * @return void
      */
-    public function page():void
+    public function page(): void
     {
         // calculated height of page, space left for nav output
         //$pageSize = $this->getRowHeight() - 2;
@@ -407,9 +453,9 @@ class MacrameText {
          * @param  Int   $count The number of lines to output
          * @return Array
          */
-        $output = function(Array $linesArray, Int $count):Array {
+        $output = function (array $linesArray, Int $count): array {
             $i = 0;
-            while(count($linesArray) > 0 && $i < $count) {
+            while (count($linesArray) > 0 && $i < $count) {
                 IO::writeStdout(array_shift($linesArray).PHP_EOL);
                 $i++;
             }
@@ -423,18 +469,18 @@ class MacrameText {
          * @param  Int $linesArrayCount
          * @return Int
          */
-        $pollForPage = function(Int $linesArrayCount) use($initialLinesArrayCount, $pageSize):Int {
+        $pollForPage = function (Int $linesArrayCount) use ($initialLinesArrayCount, $pageSize): Int {
             // display the 'more' line with percentage complete of total text
-            $percent = intval(100 - (($linesArrayCount/$initialLinesArrayCount) * 100));
+            $percent = intval(100 - (($linesArrayCount / $initialLinesArrayCount) * 100));
             IO::writeStdout("-- MORE ($percent%) --".PHP_EOL);
 
             // a function to erase the 'more' line
-            $eraseLine = fn() => IO::eraseLine();
+            $eraseLine = fn () => IO::eraseLine();
 
             // poll user for input until valid character detected
-            while(true) {
+            while (true) {
                 // poll input
-                readline_callback_handler_install('', function() {});
+                readline_callback_handler_install('', function () {});
                 $keystroke = IO::keyStroke();
 
                 // <SPACE> - a full page
@@ -461,109 +507,118 @@ class MacrameText {
         };
 
         // output pages until no more pages or user quits
-        while(count($linesArray) > 0) {
+        while (count($linesArray) > 0) {
             // output $pageSize lines, return new linesArray
             $linesArray = $output($linesArray, $pageSize);
 
             // if there are more lines, poll user for paging choice
-            if(count($linesArray)) {
+            if (count($linesArray)) {
                 $pageSize = $pollForPage(count($linesArray));
             }
 
             // pageSize from pollForPage of -1 means quit
-            if($pageSize == -1) {
+            if ($pageSize == -1) {
                 break;
             }
         }
     }
 
     /**
-     * Output 'OK' message  
+     * Output 'OK' message
      *
      * @param  bool $reverse Print leading tag in reverse colours
      * @return void
      */
-    public function ok(bool $reverse = false):void {
+    public function ok(bool $reverse = false): void
+    {
         $this->writeLevel('ok', $reverse, 'out');
     }
 
     /**
-     * Output 'DEBUG' message  
+     * Output 'DEBUG' message
      *
      * @param  bool $reverse Print leading tag in reverse colours
      * @return void
      */
-    public function debug(bool $reverse = false):void {
+    public function debug(bool $reverse = false): void
+    {
         $this->writeLevel('debug', $reverse, 'out');
     }
 
     /**
-     * Output 'INFO' message  
+     * Output 'INFO' message
      *
      * @param  bool $reverse Print leading tag in reverse colours
      * @return void
      */
-    public function info(bool $reverse = false):void {
+    public function info(bool $reverse = false): void
+    {
         $this->writeLevel('info', $reverse, 'out');
     }
 
     /**
-     * Output 'NOTICE' message  
+     * Output 'NOTICE' message
      *
      * @param  bool $reverse Print leading tag in reverse colours
      * @return void
      */
-    public function notice(bool $reverse = false):void {
+    public function notice(bool $reverse = false): void
+    {
         $this->writeLevel('notice', $reverse, 'out');
     }
 
     /**
-     * Output 'WARNING' message  
+     * Output 'WARNING' message
      *
      * @param  bool $reverse Print leading tag in reverse colours
      * @return void
      */
-    public function warning(bool $reverse = false):void {
+    public function warning(bool $reverse = false): void
+    {
         $this->writeLevel('warning', $reverse, 'out');
     }
 
     /**
-     * Output 'ERROR' message  
+     * Output 'ERROR' message
      *
      * @param  bool $reverse Print leading tag in reverse colours
      * @return void
      */
-    public function error(bool $reverse = false):void {
+    public function error(bool $reverse = false): void
+    {
         $this->writeLevel('error', $reverse, 'error');
     }
 
     /**
-     * Output 'CRITICAL' message  
+     * Output 'CRITICAL' message
      *
      * @param  bool $reverse Print leading tag in reverse colours
      * @return void
      */
-    public function critical(bool $reverse = false):void {
+    public function critical(bool $reverse = false): void
+    {
         $this->writeLevel('critical', $reverse, 'error');
     }
 
     /**
-     * Output 'ALERT' message  
+     * Output 'ALERT' message
      *
      * @param  bool $reverse Print leading tag in reverse colours
      * @return void
      */
-    public function alert(bool $reverse = false):void {
+    public function alert(bool $reverse = false): void
+    {
         $this->writeLevel('alert', $reverse, 'out');
     }
 
     /**
-     * Output 'EMERGENCY' message  
+     * Output 'EMERGENCY' message
      *
      * @param  bool $reverse Print leading tag in reverse colours
      * @return void
      */
-    public function emergency(bool $reverse = false):void {
+    public function emergency(bool $reverse = false): void
+    {
         $this->writeLevel('emergency', $reverse, 'error');
     }
 
@@ -572,14 +627,13 @@ class MacrameText {
      *
      * @return ?String
      */
-    private function format():?String{
-        if(is_null($this->text)) {
+    private function format(): ?String
+    {
+        if (is_null($this->text)) {
             return null;
         }
         $text = $this->applyMarkup($this->text);
         $text = $this->applyStyles($text);
-        #$text = $this->wrap ? $this->applyAnsiWrapper($text, $this->getColWidth()) : $text;
-        #$text = $this->align($text, $this->alignment, $this->getColWidth());
         $text = $this->wrap ? $this->applyAnsiWrapper($text, IO::getColWidth()) : $text;
         $text = $this->align($text, $this->alignment, IO::getColWidth());
         return $text;
@@ -592,11 +646,11 @@ class MacrameText {
      * @param  String $text
      * @return String The marked up text
      */
-    public function applyMarkup(String $text):String
+    public function applyMarkup(String $text): String
     {
         return preg_replace(array_keys($this->ansiTags), array_values($this->ansiTags), $text);
     }
-    
+
     /**
      * Apply ANSI style and colour codes to $text and return
      *
@@ -604,10 +658,26 @@ class MacrameText {
      * @access private
      * @return String
      */
-    private function applyStyles(String $text):String {
+    private function applyStyles(String $text): String
+    {
         $formatting = join(array_filter($this->formatting));
         $formattingClose = count(array_filter($this->formatting)) ? CLOSE_ANSI : null;
         return $formatting.$text.$formattingClose;
+    }
+
+    /**
+     * Remove all ansi and macrame tag formatting from a string
+     *
+     * @param  String $text The line of potentially formatted text
+     * @return String
+     */
+    public static function stripFormatting(String $text): String
+    {
+        $text = preg_replace('/<![A-Za-z]+!>/', '', $text);
+        $text = preg_replace('/[\x09|\t]/', '    ', $text);
+        $text = preg_replace('/\x1b(\[|\(|\))[;?0-9]*[0-9A-Za-z]/', "", $text);
+        $text = preg_replace('/[\x03|\x1a|\x7f]/', "", $text);
+        return $text;
     }
 
     /**
@@ -616,7 +686,7 @@ class MacrameText {
      * @param  String $text The line of text to count
      * @return Int
      */
-    public function mb_strwidth_ansi(String $text):int
+    public function mb_strwidth_ansi(String $text): Int
     {
         // replace tabs with spaces
         $text = preg_replace('/[\x09|\t]/', '    ', $text);
@@ -628,27 +698,26 @@ class MacrameText {
         $text = preg_replace('/[\x03|\x1a|\x7f]/', "", $text);
 
         // count of backspace chars plus char backspaced over to remove from width
-        $backspaceAdjustments = function(String $string):Int
-        {
+        $backspaceAdjustments = function (String $string): Int {
             $arr = array_reverse(mb_str_split($string));
 
             $delcount = 0;
             $delwidth = 0;
-            foreach($arr as $c) {
-                if($delcount > 0 && $c != "\x08") {
+            foreach ($arr as $c) {
+                if ($delcount > 0 && $c != "\x08") {
                     $delcount--;
                     $delwidth += 2;
                 }
-                if($c == "\x08") {
+                if ($c == "\x08") {
                     $delcount++;
                 }
-            }   
+            }
             return $delwidth;
         };
         $backspaces = $backspaceAdjustments($text);
 
         return mb_strwidth($text) - $backspaces;
-    } 
+    }
 
     /**
      * Aligns all lines in a multi-line string either left, centre or right
@@ -662,9 +731,9 @@ class MacrameText {
      * @return String The text padded to align
      * @see mb_strwidth_ansi()
      */
-    private function align(String $text, int $alignment, int $colWidth):String
+    private function align(String $text, int $alignment, int $colWidth): String
     {
-        if($alignment == LEFT) {
+        if ($alignment == LEFT) {
             return $text;
         }
 
@@ -672,9 +741,9 @@ class MacrameText {
         $textArray = explode(PHP_EOL, $text);
 
         // function to pad one line to the alignment
-        $padder = function($text) use($alignment, $colWidth) {
-            $padAmount = (int)floor(($colWidth - $this->mb_strwidth_ansi($text))/$alignment);
-            $pad = array_fill(0, $padAmount, ".");
+        $padder = function ($text) use ($alignment, $colWidth) {
+            $padAmount = (int)floor(($colWidth - $this->mb_strwidth_ansi($text)) / $alignment);
+            $pad = array_fill(0, $padAmount, " ");
             return join('', array_fill(0, $padAmount, ' ')).$text;
         };
 
@@ -692,17 +761,17 @@ class MacrameText {
      * @param  Int    $cols The number of columns to wrap on
      * @return String The wrapped text
      */
-    public function applyAnsiWrapper(String $text, Int $cols):String
+    public function applyAnsiWrapper(String $text, Int $cols): String
     {
         /**
-         * Tail call to build an accumulator array of lines broken on last 
+         * Tail call to build an accumulator array of lines broken on last
          * break character (ie. space or tab) before $cols length.
          *
          * @param  String $tail
          * @param  Array  $accumulator
          * @return Array
          */
-        $wrapper = function(String $tail, Array $accumulator = []) use(&$wrapper, $cols):Array {
+        $wrapper = function (String $tail, array $accumulator = []) use (&$wrapper, $cols): array {
             // the list of characters we break lines on.
             $breakChars = [
                 ' ',
@@ -714,7 +783,7 @@ class MacrameText {
             $cols = $cols + 1;
 
             // handle last line
-            if(strlen($tail) < $cols) {
+            if (strlen($tail) < $cols) {
                 $accumulator[] = $tail;
                 return $accumulator;
             }
@@ -732,20 +801,20 @@ class MacrameText {
             $lastBreakPosition = 0;
 
             // handle empty lines
-            if($tail[$charCounter] == PHP_EOL) {
+            if ($tail[$charCounter] == PHP_EOL) {
                 $lastBreakPosition = $charCounter;
             }
 
             // loop over the tail til we hit the last break chacter before the col length
-            while($charCounter < strlen($tail)) {
+            while ($charCounter < strlen($tail)) {
 
                 // if we have an ESC char, we stop counting towards wrapCounter
-                if(ord($tail[$charCounter]) == 27) {
+                if (ord($tail[$charCounter]) == 27) {
                     $increment = 0;
                 }
 
                 // note position of last candidate to break the line
-                if(in_array($tail[$charCounter], $breakChars)) {
+                if (in_array($tail[$charCounter], $breakChars)) {
                     $lastBreakPosition = $charCounter;
                 }
 
@@ -753,29 +822,29 @@ class MacrameText {
                 $wrapCounter = $wrapCounter + $increment;
 
                 // if we have an 'm' after an ESC, we resume counting toward wrapCounter
-                if($tail[$charCounter] == 'm' && !$increment) {
+                if ($tail[$charCounter] == 'm' && !$increment) {
                     $increment = 1;
                 }
 
                 // wrapCounter has reached the wrap length, stop advancing
-                if($wrapCounter == $cols) {
+                if ($wrapCounter == $cols) {
                     break;
                 }
 
                 // handle paragraph breaks, ie 2 or more PHP_EOL in a row
-                if($tail[$charCounter] == PHP_EOL && $tail[$charCounter + 1] == PHP_EOL) {
+                if ($tail[$charCounter] == PHP_EOL && $tail[$charCounter + 1] == PHP_EOL) {
                     // wrap on paragraph break
                     $lastBreakPosition = $charCounter;
 
                     // calculate and add head to accumulator
-                    $accumulator[] = substr($tail, 0, $lastBreakPosition); 
+                    $accumulator[] = substr($tail, 0, $lastBreakPosition);
 
                     // calculate tail
                     $tail = substr($tail, $lastBreakPosition);
 
                     // add blank line to accumulator for each PHP_EOL after the first
-                    for($i=1;$i<strlen($tail);$i++) {
-                        if($tail[$i] != PHP_EOL) {
+                    for ($i = 1;$i < strlen($tail);$i++) {
+                        if ($tail[$i] != PHP_EOL) {
                             break;
                         }
                         $accumulator[] = null;
@@ -788,13 +857,13 @@ class MacrameText {
                 $charCounter++;
 
                 // if we get to the end of the tail without breaking on the wrap counter, wrap on end of file.
-                if($charCounter == strlen($tail)) {
+                if ($charCounter == strlen($tail)) {
                     $lastBreakPosition = $charCounter;
                 }
             }
 
             // calculate and add head to accumulator
-            $accumulator[] = substr($tail, 0, $lastBreakPosition); 
+            $accumulator[] = substr($tail, 0, $lastBreakPosition);
 
             // calculate tail
             $tail = substr($tail, $lastBreakPosition);
@@ -814,14 +883,14 @@ class MacrameText {
      * @param  bool   $reverse Print leading tag in reverse colours
      * @param  String $stream  One of 'out' or 'error'
      */
-    private function writeLevel(String $level, bool $reverse, $stream):void
+    private function writeLevel(String $level, bool $reverse, $stream): void
     {
         $output = $this->levelOutputs[$reverse ? 'reverse' : 'normal'][$level].' '.$this->format().PHP_EOL;
 
-        if($stream == 'out') {
+        if ($stream == 'out') {
             IO::writeStdout($output);
         }
-        if($stream == 'error') {
+        if ($stream == 'error') {
             IO::writeStderr($output);
         }
     }

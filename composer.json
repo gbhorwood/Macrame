@@ -3,6 +3,7 @@
     "description": "A library for building command line applications",
     "type": "library",
     "license": "MIT",
+    "homepage": "https://macrame.fruitbat.io",
     "autoload": {
         "psr-4": {
             "Gbhorwood\\Macrame\\": "src/"
@@ -11,12 +12,16 @@
     "authors": [
         {
             "name": "grant horwood",
-            "email": "ghorwood@fruitbat.studio"
+            "email": "ghorwood@fruitbat.studio",
+            "homepage": "https://gbh.fruitbat.io",
+            "role": "Developer"
         }
     ],
     "require": {
         "php": "^7.4|^8.0",
-        "mikey179/vfsstream": "^1.6"
+        "mikey179/vfsstream": "^1.6",
+        "povils/figlet": "dev-master",
+        "gbhorwood/tabletown": "^1.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.10",

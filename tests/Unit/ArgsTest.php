@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
@@ -21,7 +22,7 @@ class ArgsTest extends TestCase
         /**
          * Tests and  Assertions
          */
-        foreach($expected as $argName => $results) {
+        foreach ($expected as $argName => $results) {
             $GLOBALS['argv'] = $argv;
 
             $cli = new \Gbhorwood\Macrame\MacrameArgs($argName);
@@ -54,7 +55,7 @@ class ArgsTest extends TestCase
      *
      * @return Array
      */
-    public static function argvProvider():Array
+    public static function argvProvider(): array
     {
         return [
             [ ['macrame', '--foo', '--foo'], ['foo' => ['count' => 2, 'first' => null, 'last' => null, 'all' => [], 'positional' => [] ]] ],

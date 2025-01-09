@@ -1,20 +1,58 @@
 <?php
+
 namespace Gbhorwood\Macrame;
 
+/**
+ * ANSI: Convenience defines
+ */
+if (!defined('ESC')) {
+    define('ESC', "\033");
+}
+
+/**
+ * ANSI: Cursor control
+ */
+if (!defined('LINE_UP')) {
+    define('LINE_UP', ESC."[F");
+}
+if (!defined('LINE_ERASE')) {
+    define('LINE_ERASE', ESC."[2K");
+}
+if (!defined('LINE_ERASE_TO_END')) {
+    define('LINE_ERASE_TO_END', ESC."[0K");
+}
+if (!defined('CLEAR_SCREEN')) {
+    define('CLEAR_SCREEN', ESC."[2J");
+}
+if (!defined('HOME_CURSOR')) {
+    define('HOME_CURSOR', ESC."[0;0f");
+}
+if (!defined('LINE_START_CURSOR')) {
+    define('LINE_START_CURSOR', ESC."[1;2H");
+}
+if (!defined('BACKSPACE')) {
+    define('BACKSPACE', chr(8));
+}
+if (!defined('HIDE_CURSOR')) {
+    define('HIDE_CURSOR', ESC."[?25l");
+}
+if (!defined('SHOW_CURSOR')) {
+    define('SHOW_CURSOR', ESC."[?25h");
+}
 
 /**
  * Handle input and output
  *
  */
-class MacrameIO {
-
+class MacrameIO
+{
     /**
      * Writes $string to STDOUT
      *
      * @param  ?String $string The string to write to STDOUT
      * @return void
      */
-    public static function writeStdout(?String $string):void
+    public static function writeStdout(?String $string): void
     {
         fwrite(self::outStream('out'), $string);
     }
@@ -25,7 +63,7 @@ class MacrameIO {
      * @param  ?String $string The string to write to STDERR
      * @return void
      */
-    public static function writeStderr(?String $string):void
+    public static function writeStderr(?String $string): void
     {
         fwrite(self::outStream('error'), $string);
     }
@@ -35,9 +73,41 @@ class MacrameIO {
      *
      * @return void
      */
-    public static function eraseLine():void
+    public static function eraseLine(): void
     {
-        self::writeStdout("\033[F\033[2K");
+        self::writeStdout(LINE_UP.LINE_ERASE);
+    }
+
+    /**
+     * Erase $count lines and move cursor up
+     *
+     * @return void
+     */
+    public static function eraseLines(Int $count): void
+    {
+        for ($i = 0;$i < $count;$i++) {
+            self::writeStdout(LINE_UP.LINE_ERASE);
+        }
+    }
+
+    /**
+     * Hide cursor
+     *
+     * @return void
+     */
+    public static function hideCursor(): void
+    {
+        self::writeStdout(HIDE_CURSOR);
+    }
+
+    /**
+     * Show cursor
+     *
+     * @return void
+     */
+    public static function showCursor(): void
+    {
+        self::writeStdout(SHOW_CURSOR);
     }
 
     /**
@@ -45,9 +115,9 @@ class MacrameIO {
      *
      * @return void
      */
-    public static function backspace():void
+    public static function backspace(): void
     {
-        self::writeStdout(chr(8));
+        self::writeStdout(BACKSPACE);
     }
 
     /**
@@ -55,34 +125,53 @@ class MacrameIO {
      *
      * @return void
      */
-    public static function eraseToEndOfLine():void
+    public static function eraseToEndOfLine(): void
     {
-        self::writeStdout("\033[0K");
+        self::writeStdout(LINE_ERASE_TO_END);
     }
 
     /**
-     * Read exactly one keystroke and return 
+     * Clear screen and home cursor to top
+     *
+     * @return void
+     */
+    public static function clearScreen(): void
+    {
+        self::writeStdout(CLEAR_SCREEN);
+        self::writeStdout(HOME_CURSOR);
+    }
+
+    /**
+     * Read exactly one keystroke and return
      *
      * @return String
      */
-    public static function keyStroke(?String $prompt = null):String
+    public static function keyStroke(): String
     {
         $c = null;
-        readline_callback_handler_install($prompt, function () { });
+        readline_callback_handler_install('', function () { });
         while (true) {
             $r = array(STDIN);
             $w = null;
             $e = null;
-            $n = stream_select($r, $w, $e, null);
+            $n = @stream_select($r, $w, $e, null);
             if ($n && in_array(STDIN, $r)) {
                 $c = stream_get_contents(STDIN, 1);
-                self::writeStdout(PHP_EOL);
                 break;
             }
         }
         return $c;
-    } // anyKey
+    }
 
+    /**
+     * Output a newline
+     *
+     * @return void
+     */
+    public static function newline(): void
+    {
+        self::writeStdout(PHP_EOL);
+    }
 
     /**
      * Returns the number of cols to wrap output on.
@@ -92,7 +181,7 @@ class MacrameIO {
      * @return Int
      * @note On systems without stty, this returns 80.
      */
-    public static function getColWidth():int
+    public static function getColWidth(): int
     {
         // poll stty for the width and height of the terminal, discarding errors
         $ph = popen("/usr/bin/env stty size 2> /dev/null", 'r');
@@ -101,22 +190,22 @@ class MacrameIO {
         $sizeArray = explode(' ', $size);
 
         // bad return data probably means no stty. return 80.
-        if(count($sizeArray) != 2) {
+        if (count($sizeArray) != 2) {
             return 80;
         }
         $columns = $sizeArray[1];
-        if(filter_var($columns, FILTER_VALIDATE_INT) === false) {
+        if (filter_var($columns, FILTER_VALIDATE_INT) === false) {
             return 80;
         }
 
         // if terminal is less than 80, use full width
-        if($columns < 80) {
+        if ($columns < 80) {
             return (int)$columns;
         }
 
         // return 75% of terminal width or 80, whichever is higher
         $columns = (int)$columns;
-        return $columns*.75 > 80 ? (int)floor($columns*.75) : 80;
+        return $columns * .75 > 80 ? (int)floor($columns * .75) : 80;
     }
 
     /**
@@ -124,7 +213,7 @@ class MacrameIO {
      *
      * @return Int
      */
-    public static function getRowHeight():int
+    public static function getRowHeight(): int
     {
         // poll stty for the width and height of the terminal, discarding errors
         $ph = popen("/usr/bin/env stty size 2> /dev/null", 'r');
@@ -133,11 +222,11 @@ class MacrameIO {
         $sizeArray = explode(' ', $size);
 
         // bad return data probably means no stty. return 25.
-        if(count($sizeArray) != 2) {
+        if (count($sizeArray) != 2) {
             return 25;
         }
         $rows = $sizeArray[0];
-        if(filter_var($rows, FILTER_VALIDATE_INT) === false) {
+        if (filter_var($rows, FILTER_VALIDATE_INT) === false) {
             return 25;
         }
 
@@ -149,7 +238,7 @@ class MacrameIO {
      *
      * @return bool True if piped content exists.
      */
-    public static function pipedContentExists():bool
+    public static function pipedContentExists(): bool
     {
         $streams = [STDIN];
         $write_array = [];
@@ -163,10 +252,10 @@ class MacrameIO {
      *
      * @return ?String The piped content, if any
      */
-    public static function getPipedContent():?String
+    public static function getPipedContent(): ?String
     {
         $pipedContent = null;
-        if(self::pipedContentExists()) {
+        if (self::pipedContentExists()) {
             while ($line = fgets(STDIN)) {
                 $pipedContent .= $line;
             }
@@ -180,13 +269,12 @@ class MacrameIO {
      *
      * @return \Iterator
      */
-    public static function getPipedContentGenerator():\Iterator
+    public static function getPipedContentGenerator(): \Iterator
     {
-        if(!self::pipedContentExists()) {
+        if (!self::pipedContentExists()) {
             //yield;
             return [];
-        }
-        else {
+        } else {
             while ($line = fgets(STDIN)) {
                 yield rtrim($line, PHP_EOL);
             }
@@ -206,11 +294,11 @@ class MacrameIO {
      */
     private static function outStream(String $stream) // @phpstan-ignore-line
     {
-        if(getenv('TESTENVIRONMENT')) {
+        if (getenv('TESTENVIRONMENT')) {
             return fopen("php://output", "w");
         }
 
-        if(strtolower($stream) == 'error') {
+        if (strtolower($stream) == 'error') {
             return STDERR;
         }
 
