@@ -26,5 +26,5 @@ jobs:
     - name: run phpunit
       run: ./vendor/bin/phpunit
 
-    - name: run phpunit
+    - name: run phpstan
       run: ./vendor/bin/phpstan analyse
