@@ -1,0 +1,30 @@
+name: phpunitandstan
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: validate composer.json
+      run: composer validate --strict
+
+    - name: install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: run phpunit
+      run: ./vendor/bin/phpunit
+
+    - name: run phpunit
+      run: ./vendor/bin/phpstan analyse
