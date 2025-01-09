@@ -1,4 +1,4 @@
-name: PHP Composer
+name: phpunitandstan
 
 on:
   push:
@@ -17,17 +17,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Validate composer.json and composer.lock
+    - name: validate composer.json
       run: composer validate --strict
 
-    - name: Install dependencies
+    - name: install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: Run PHPUnit
+    - name: run phpunit
       run: ./vendor/bin/phpunit
 
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
-
-    # - name: Run test suite
-    #   run: composer run-script test
+    - name: run phpunit
+      run: ./vendor/bin/phpstan analyse
