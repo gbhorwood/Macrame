@@ -20,7 +20,7 @@
     "require": {
         "php": "^7.4|^8.0",
         "mikey179/vfsstream": "^1.6",
-        "povils/figlet": "1.0.0",
+        "povils/figlet": "^1.0",
         "gbhorwood/tabletown": "^1.0"
     },
     "require-dev": {
