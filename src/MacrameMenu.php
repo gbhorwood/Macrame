@@ -898,7 +898,7 @@ class InteractiveMenu
      */
     private static function leftPad(Int $maxWidth, Int $menuAlignment): String
     {
-        $padamt = $menuAlignment ? (IO::getColWidth() - $maxWidth) / $menuAlignment : 0;
+        $padamt = $menuAlignment ? (int)floor((IO::getColWidth() - $maxWidth) / $menuAlignment) : 0;
         return $padamt ? join(array_fill(0, $padamt, ' ')) : '';
     }
 }

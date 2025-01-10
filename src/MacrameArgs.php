@@ -98,7 +98,7 @@ class MacrameArgs
      */
     public function first(): ?String
     {
-        return array_values(array_filter($this->argval->values, fn ($v) => strlen($v) > 0))[0] ?? null;
+        return array_values(array_filter($this->argval->values, fn ($v) => $this->hasContent($v)))[0] ?? null;
     }
 
     /**
@@ -109,7 +109,7 @@ class MacrameArgs
      */
     public function last(): ?String
     {
-        $vals = array_values(array_filter($this->argval->values, fn ($v) => strlen($v) > 0));
+        $vals = array_values(array_filter($this->argval->values, fn ($v) => $this->hasContent($v) > 0));
         return $vals[array_key_last($vals)] ?? null;
     }
 
@@ -122,6 +122,20 @@ class MacrameArgs
     public function all(): array
     {
         return array_values(array_filter($this->argval->values));
+    }
+
+    /**
+     * Determines if string value passed is non-null and has at least one byte.
+     *
+     * @param  ?String $val
+     * @return bool True if string has content
+     */
+    private function hasContent(?String $val): bool
+    {
+        if (is_null($val)) {
+            return false;
+        }
+        return strlen($val) > 0;
     }
 }
 

@@ -290,7 +290,7 @@ class MacrameValidator
      */
     public static function displayError(?String $message = null): void
     {
-        if (strlen(trim($message)) > 0) {
+        if(!is_null($message)) {
             $output = new \Gbhorwood\Macrame\MacrameText($message);
             $output->error();
         }
