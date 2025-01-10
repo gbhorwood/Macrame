@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ecd848caa23f8b2678b9173089cd4e09",
+    "content-hash": "baf1385854271ec8beca5734dad2d68f",
     "packages": [
         {
             "name": "gbhorwood/tabletown",
@@ -106,26 +106,25 @@
         },
         {
             "name": "povils/figlet",
-            "version": "dev-master",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/povils/figlet.git",
-                "reference": "2346ffa5141dfc487ecb4fa42ff3d305bc4b0203"
+                "reference": "55146960901e6157ee6b961e8586a3d8936db62e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/povils/figlet/zipball/2346ffa5141dfc487ecb4fa42ff3d305bc4b0203",
-                "reference": "2346ffa5141dfc487ecb4fa42ff3d305bc4b0203",
+                "url": "https://api.github.com/repos/povils/figlet/zipball/55146960901e6157ee6b961e8586a3d8936db62e",
+                "reference": "55146960901e6157ee6b961e8586a3d8936db62e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5",
-                "symfony/console": "^3.0"
+                "php": ">=5.4",
+                "symfony/console": "~3.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8 || ^6.5 || ^7.0"
+                "phpunit/phpunit": "~4.2"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -159,7 +158,7 @@
                 "issues": "https://github.com/povils/figlet/issues",
                 "source": "https://github.com/povils/figlet/tree/master"
             },
-            "time": "2022-07-02T15:04:12+00:00"
+            "time": "2016-12-15T16:43:09+00:00"
         },
         {
             "name": "psr/log",
@@ -2338,9 +2337,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "povils/figlet": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
