@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e46197d4af57dcfbd94da10dbf659902",
+    "content-hash": "ecd848caa23f8b2678b9173089cd4e09",
     "packages": [
         {
             "name": "gbhorwood/tabletown",
@@ -2337,11 +2337,11 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {
         "povils/figlet": 20
     },
-    "prefer-stable": false,
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^7.4|^8.0"
