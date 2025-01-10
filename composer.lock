@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "baf1385854271ec8beca5734dad2d68f",
+    "content-hash": "bce24e63e6f5a3e87394a05f4c40f546",
     "packages": [
         {
             "name": "gbhorwood/tabletown",
