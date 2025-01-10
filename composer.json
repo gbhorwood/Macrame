@@ -27,7 +27,5 @@
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^10.2",
         "php-mock/php-mock-phpunit": "^2.7"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }

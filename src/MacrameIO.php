@@ -54,7 +54,9 @@ class MacrameIO
      */
     public static function writeStdout(?String $string): void
     {
-        fwrite(self::outStream('out'), $string);
+        if(!is_null($string)) {
+            fwrite(self::outStream('out'), $string);
+        }
     }
 
     /**
