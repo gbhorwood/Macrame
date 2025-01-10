@@ -566,9 +566,10 @@ class InputTest extends TestCase
         /**
          * Override fwrite() to suppress dots echo to STDOUT
          */
+        $nulls = array_fill(0, count($passwordChars)+1, null);
         $fwrite = $this->getFunctionMock('Gbhorwood\Macrame', "fwrite");
         $fwrite->expects($this->any())
-                 ->willReturnOnConsecutiveCalls(null);
+                 ->willReturnOnConsecutiveCalls(...$nulls);
 
         /**
          * test
@@ -576,12 +577,12 @@ class InputTest extends TestCase
         $input = new \Gbhorwood\Macrame\MacrameInput(new \Gbhorwood\Macrame\MacrameText());
         ob_start();
         $result = $input->readPassword();
+        ob_end_clean();
 
         /**
          * assertions
          */
         $this->assertEquals($password, $result);
-        ob_end_clean();
     }
 
     /**
@@ -597,6 +598,7 @@ class InputTest extends TestCase
         $passwordChars = str_split($password);
         $passwordChars[] = chr(10);
 
+
         /**
          * Override stream_get_contents() to return $validPassword one char
          * at a time
@@ -608,9 +610,10 @@ class InputTest extends TestCase
         /**
          * Override fwrite() to suppress dots echo to STDOUT
          */
+        $nulls = array_fill(0, 50, null);
         $fwrite = $this->getFunctionMock('Gbhorwood\Macrame', "fwrite");
         $fwrite->expects($this->any())
-                 ->willReturnOnConsecutiveCalls(null);
+                 ->willReturnOnConsecutiveCalls(...$nulls);
 
         /**
          * test
@@ -645,13 +648,14 @@ class InputTest extends TestCase
         $streamGetContents = $this->getFunctionMock('Gbhorwood\Macrame', "stream_get_contents");
         $streamGetContents->expects($this->any())
                  ->willReturnOnConsecutiveCalls(...$passwordChars);
-
+        
         /**
          * Override fwrite() to suppress dots echo to STDOUT
          */
+        $nulls = array_fill(0, 50, null);
         $fwrite = $this->getFunctionMock('Gbhorwood\Macrame', "fwrite");
         $fwrite->expects($this->any())
-                 ->willReturnOnConsecutiveCalls(null);
+                 ->willReturnOnConsecutiveCalls(...$nulls);
 
         /**
          * test
@@ -676,8 +680,16 @@ class InputTest extends TestCase
         $validPipedContent = <<<TXT
         line one
         line two
+        three
         TXT;
         $validPipedContentArray = array_map(fn ($line) => $line.PHP_EOL, explode(PHP_EOL, $validPipedContent));
+
+        /**
+         * NOTE: this is necessary because code under test uses fgets() until false, but getFunctionMock() will
+         * throw NoMoreReturnValuesConfiguredException when it runs out of values, so fgets never gets its false.
+         * null here forces this to happen.
+         */
+        $validPipedContentArray[] = null;
 
         /**
          * Override stream_select to return true
@@ -731,6 +743,13 @@ class InputTest extends TestCase
         line two
         TXT;
         $validPipedContentArray = array_map(fn ($line) => $line.PHP_EOL, explode(PHP_EOL, $validPipedContent));
+
+        /**
+         * NOTE: this is necessary because code under test uses fgets() until false, but getFunctionMock() will
+         * throw NoMoreReturnValuesConfiguredException when it runs out of values, so fgets never gets its false.
+         * null here forces this to happen.
+         */
+        $validPipedContentArray[] = null;
 
         /**
          * Override stream_select to return true
