@@ -1,5 +1,3 @@
-<img src="https://picsum.photos/800/100" class="img-responsive" />
-
 <p />
 <div class="larger">
 Macrame is library for building interactive command line scripts in PHP.

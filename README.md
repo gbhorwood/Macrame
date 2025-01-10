@@ -13,7 +13,7 @@ Full documentation and a set of examples are found on the [documentation site](h
 
 * [Quick Start](https://macrame.fruitbat.studio/Quick_Start.html)
 * [Crash Course](https://macrame.fruitbat.studio/Overview.html)
-* [Full Manual](https://macrame.fruitbat.studio/Manual/Getting_Started.html)
+* [Full Manual](https://macrame.fruitbat.studio/Manual/Handling_Arguments.html)
 * [Examples](https://macrame.fruitbat.studio/Cookbook/Intro.html)
 
 ## Hello world
