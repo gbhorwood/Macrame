@@ -246,7 +246,8 @@ class MacrameInput
         readline_completion_function(fn ($line, $index) => $tabCompletions);
 
         do {
-            $input = trim(readline($prompt));
+            IO::writeStdout($prompt);
+            $input = trim(readline());
             readline_add_history($input);
         } while (!$this->isValid($input));
 
