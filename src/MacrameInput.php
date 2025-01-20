@@ -242,6 +242,7 @@ class MacrameInput
      */
     public function readline(String $prompt = null, array $tabCompletions = []): String
     {
+        readline_callback_handler_remove();
         readline_completion_function(fn ($line, $index) => $tabCompletions);
 
         do {
