@@ -2,8 +2,6 @@
 
 namespace Gbhorwood\Macrame;
 
-require __DIR__ . '/../vendor/autoload.php';
-
 /**
  * Alignment definitions
  */
