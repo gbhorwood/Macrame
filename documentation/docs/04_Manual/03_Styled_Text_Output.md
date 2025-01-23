@@ -430,7 +430,7 @@ Text that is too long
 for the terminal height.
 TEXT;
 
-$macrame->text($pagedText)->wrap()->page()->write();  // page on terminal height. note usage of wrap()
+$macrame->text($pagedText)->wrap()->page();  // page on terminal height. note usage of wrap()
 ```
 
 The `page()` method outputs a number of lines of text to fill the current terminal size and then prompts the user for the next page. The user can respond to the prompt in three ways:
