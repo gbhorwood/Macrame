@@ -327,27 +327,27 @@ The available tags are:
 
 | tag | description |
 | ---- | ----- |
-| <tt><!BLACK!></tt> | Black text |
-| <tt><!RED!></tt> | Red text |
-| <tt><!GREEN!></tt> | Green text |
-| <tt><!YELLOW!></tt> | Yellow text |
-| <tt><!BLUE!></tt> | Blue text |
-| <tt><!MAGENTA!></tt> | Magenta text |
-| <tt><!CYAN!></tt> | Cyan text |
-| <tt><!WHITE!></tt> | White text |
-| <tt><!BACKGROUND_BLACK!></tt> | Black background for text |
-| <tt><!BACKGROUND_RED!></tt> | Red background for text |
-| <tt><!BACKGROUND_GREEN!></tt> | Green background for text |
-| <tt><!BACKGROUND_YELLOW!></tt> | Yellow background for text |
-| <tt><!BACKGROUND_BLUE!></tt> | Blue background for text |
-| <tt><!BACKGROUND_MAGENTA!></tt> | Magenta background for text |
-| <tt><!BACKGROUND_CYAN!></tt> | Cyan background for text |
-| <tt><!BACKGROUND_WHITE!></tt> | White background for text |
-| <tt><!BOLD!></tt> | Bold style text |
-| <tt><!ITALIC!></tt> | Italic style text |
-| <tt><!UNDERLINE!></tt> | Underline style text |
-| <tt><!STRIKE!></tt> | Strikethrough style text |
-| <tt><!CLOSE!></tt> | Close <i>all</i> preceeding tags |
+| <tt>\<!BLACK!></tt> | Black text |
+| <tt>\<!RED!></tt> | Red text |
+| <tt>\<!GREEN!></tt> | Green text |
+| <tt>\<!YELLOW!></tt> | Yellow text |
+| <tt>\<!BLUE!></tt> | Blue text |
+| <tt>\<!MAGENTA!></tt> | Magenta text |
+| <tt>\<!CYAN!></tt> | Cyan text |
+| <tt>\<!WHITE!></tt> | White text |
+| <tt>\<!BACKGROUND_BLACK!></tt> | Black background for text |
+| <tt>\<!BACKGROUND_RED!></tt> | Red background for text |
+| <tt>\<!BACKGROUND_GREEN!></tt> | Green background for text |
+| <tt>\<!BACKGROUND_YELLOW!></tt> | Yellow background for text |
+| <tt>\<!BACKGROUND_BLUE!></tt> | Blue background for text |
+| <tt>\<!BACKGROUND_MAGENTA!></tt> | Magenta background for text |
+| <tt>\<!BACKGROUND_CYAN!></tt> | Cyan background for text |
+| <tt>\<!BACKGROUND_WHITE!></tt> | White background for text |
+| <tt>\<!BOLD!></tt> | Bold style text |
+| <tt>\<!ITALIC!></tt> | Italic style text |
+| <tt>\<!UNDERLINE!></tt> | Underline style text |
+| <tt>\<!STRIKE!></tt> | Strikethrough style text |
+| <tt>\<!CLOSE!></tt> | Close <i>all</i> preceeding tags |
 
 ## The <tt><!CLOSE!></tt> tag behaviour
 The `<!CLOSE!>` tag closes _all_ preceeding tags. Unlike HTML, there is no nested closing of tags. This is a feature of ANSI escape codes. 
