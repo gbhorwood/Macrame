@@ -2,8 +2,6 @@
 
 namespace Gbhorwood\Macrame;
 
-require __DIR__ . '/../vendor/autoload.php';
-
 use Gbhorwood\Macrame\MacrameIO as IO;
 use Gbhorwood\Macrame\MacrameText as Text;
 use Povils\Figlet\Figlet;
